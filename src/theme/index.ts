@@ -1,0 +1,1 @@
+export { theme, Text } from './theme'
