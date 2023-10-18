@@ -32,10 +32,11 @@ export const useFoodLogMacrosByDate = ({ date }: {date: string}) => {
         carbs: 0
     });
     useEffect(()=>{
+        console.log('get macros for new date - ', date);
         setMacros(
             FoodLogsService.getMacrosByDate({ foodLogs, date })
         );
-    }, [foodLogs])
+    }, [foodLogs, date])
 
     return { macros }
 };
@@ -49,10 +50,11 @@ export const useFoodLogMealCaloriesByDate = ({ date }: {date: string}) => {
         snacks: 0,
     });
     useEffect(()=>{
+        console.log('get new calorie count for date - ', date)
         setMealCalories(
             FoodLogsService.getCalorieMealStatsByDate({ foodLogs, date })
         );
-    }, [foodLogs])
+    }, [foodLogs, date])
 
     return { mealCalories }
 };
@@ -69,7 +71,7 @@ export const useFoodLogsByDateAndMealType = ({ date, mealType }: {date: string, 
             setFilteredFoodLogs(FoodLogsService.getFoodLogsByMealTypeAndDate({ foodLogs, date, mealType}));
         }
 
-    }, [foodLogs, setFilteredFoodLogs, mealType]);
+    }, [foodLogs, setFilteredFoodLogs, mealType, date]);
     
     return { foodLogs: filteredFoodLogs };
 };

@@ -12,8 +12,8 @@ import {
     RoundStats,
     MealsDisplay
 } from "../components";
-import FoodLogsService from '../domains/foodLog/services';
-import { todaysDateRegular } from '../utility';
+import { Macros } from '../domains/foodLog/types';
+import { todaysDateRegular, getDaysOfCurrentWeek, formatDateHeader } from '../utility/dates';
 import { useFoodLogMacrosByDate, useFoodLogMealCaloriesByDate } from '../domains/foodLog/hooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,18 +23,37 @@ type HomeScreenProps = {
   navigation: HomeScreenNavigationProp;
 };
 
+type MealStat = { title: string; stat: any; }
+
+type MealStats = MealStat[];
+
 export const HomeScreen = ({ navigation }: HomeScreenProps) => {
-    const [ date, setDate] = useState(todaysDateRegular)
-    const goToSearchScreen = () => {
-        navigation.navigate('SearchScreen');
-    };
     const { 
         user: { data: user },
     } = useAppState();
+    const [ date, setDate] = useState(todaysDateRegular);
+    const [mealStats, setMealStats] = useState<MealStats>([]);
     const { macros } = useFoodLogMacrosByDate({ date });
     const { mealCalories } = useFoodLogMealCaloriesByDate({ date });
+    
+    const goToSearchScreen = () => {
+        navigation.navigate('SearchScreen');
+    };
 
-    const mealStats = Object.keys(mealCalories).map(key => ({title: key, stat: mealCalories[key]}));
+    const goToCalendarScreen = () => {
+        navigation.navigate('Calendar');
+    };
+    const handleDaySelect = (date: string) => {
+        setDate(date);
+    };
+    const dateHeader = formatDateHeader(date)?.toUpperCase()
+
+    useEffect(()=>{
+        if(mealCalories){
+           const result =  Object.keys(mealCalories)?.map(key => ({title: key, stat: mealCalories[key]}));
+           setMealStats(result);
+        }
+    }, [mealCalories]);
 
     return (
         <SafeAreaView style={{height: '100%', backgroundColor: 'white'}}>
@@ -46,10 +65,13 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
                             <Text variant='header1'>{user?.name?.split(' ')[0]}</Text>
                         </View>
                         <AddMealButton handleOnPress={goToSearchScreen} />
-                    </View>
-
+                    </View>  
+                    <Text marginBottom='m' variant='paragraph3'>{dateHeader}</Text>       
                     <View>
-                        <CalendarWeekPills />
+                        <CalendarWeekPills 
+                            handleCalendarIconPress={goToCalendarScreen} 
+                            handleCalendarDayPress={handleDaySelect}
+                        />
                     </View>
                 </View>
                 <View style={styles.spacing}></View>
@@ -62,21 +84,8 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
                     <MacrosDisplay macros={macros} />
                 </View>
                 <View>
-                    <MealsDisplay />
+                    <MealsDisplay date={date} />
                 </View>
-                {/* {foodLogIsLoading && <Text>loading food...</Text>}
-                {foodLogs?.map((log)=> {
-                    return <View key={`food-log-${log.id}`} style={{marginBottom:20}}>
-                        <Text>{log.date}</Text>
-                        <Text>{log.meal_type}</Text>
-                        <Text>{log.quantity}</Text>
-                        <Text>{log.food?.name}</Text>
-                        <Text>{log.food?.calories}</Text>
-                        <Text>{log.food?.fat}g</Text>
-                        <Text>{log.food?.carbs}g</Text>
-                        <Text>{log.food?.protein}g</Text>
-                    </View>
-                })} */}
             </ScrollView>
         </SafeAreaView>
     )
@@ -87,8 +96,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 36,
+        marginBottom: 24,
     },
+
     gutter: {
         padding: 14
     },

@@ -1,25 +1,27 @@
 import { Macros } from "../domains/foodLog/types";
 import { StyleSheet, View } from "react-native";
 import { Text } from "../theme";
+import { StyleProp, ViewStyle, FlexStyle } from "react-native";
 
 type MacrosProps = {
-    macros: Macros
+    macros: Macros,
+    containerStyle?: StyleProp<ViewStyle | FlexStyle>
 }
 
-export const MacrosDisplay = ({ macros }: MacrosProps) => {
+export const MacrosDisplay = ({ macros, containerStyle }: MacrosProps) => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <View style={styles.row}>
                 <Text variant="paragraph2">FAT</Text>
-                <Text variant="paragraph2">{macros.fat} G</Text>
+                <Text variant="paragraph2">{macros?.fat} G</Text>
             </View>
             <View style={styles.row}>
                 <Text variant="paragraph2">PROTEIN</Text>
-                <Text variant="paragraph2">{macros.protein} G</Text>
+                <Text variant="paragraph2">{macros?.protein} G</Text>
             </View>
             <View style={styles.row}>
                 <Text variant="paragraph2">CARBS</Text>
-                <Text variant="paragraph2">{macros.carbs} G</Text>
+                <Text variant="paragraph2">{macros?.carbs} G</Text>
             </View>
         </View>
     );

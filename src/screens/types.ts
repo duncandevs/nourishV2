@@ -5,5 +5,7 @@ export type RootStackParamList = {
     HomeScreen: undefined;
     SearchScreen: undefined;
     SearchResultScreen: undefined;
+    SignUpLoginScreen: undefined;
+    Calendar: undefined;
     DetailsScreen: { itemId: number; otherParam?: string };
 };

@@ -11,7 +11,7 @@ export const fetchFoodLogsAction = ({ set }: ActionParams) =>
             state.foodLogs.isLoading = true 
         }));
         // get the supabase food logs records
-        const { data, error } = await FoodLogService.fetchWeeklyFoodLogsByUserId({ userId });
+        const { data, error } = await FoodLogService.fetchFoodLogByUserId({ userId });
         if(error) {
             set(produce((state: any) => {
                 state.foodLogs.error = error

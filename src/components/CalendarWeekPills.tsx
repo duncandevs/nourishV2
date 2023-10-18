@@ -1,40 +1,76 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Text } from "../theme";
-import CalendarSvg from "../../assets/calendar-svg.svg"
+import CalendarSvg from "../../assets/calendar-svg.svg";
+import { getDaysOfCurrentWeek, getDayOfTheWeek } from "../utility/dates";
 
 type CalendarPillProps = {
-    day:string;
+    date: string;
+    dayString:string;
+    handleOnPress: (date:string) => void;
+    disabled: boolean;
+    highlighted: boolean;
+};
+
+type CalendarIconPillProps = {
     handleOnPress: () => void;
 };
 
-const CalendarDayPill = ({ day, handleOnPress }: CalendarPillProps) => {
-    const highlighted = day === 'Thu';
-    const highlightedStyle = highlighted ? { backgroundColor: '#C3FF76', color: 'black'} : null;
-    const highlightedFontColor = highlighted ? "black" : "white";
+type CalendarWeekPillsProps = {
+    handleCalendarIconPress: () => void;
+    handleCalendarDayPress: (date:string) => void
+}
+
+const CalendarDayPill = ({ dayString, date, handleOnPress, disabled, highlighted }: CalendarPillProps) => {
+    let backgroundStyles = {} as Record<string, string>;
+    let fontColor = 'white' as 'white' | 'black';
+
+    if(disabled){
+        backgroundStyles['backgroundColor'] = '#D9D9D9';
+    } else if(highlighted){
+        backgroundStyles['backgroundColor'] = '#C3FF76';
+        fontColor = "black";
+    }
+
+    const handlePress = () => {
+        handleOnPress(date)
+    }
+
     return (
-        <View style={[styles.pill, highlightedStyle]}>
-            <Text variant="paragraph4" color={highlightedFontColor}>{day}</Text>
-        </View>
+        <TouchableOpacity disabled={disabled} style={[styles.pill, backgroundStyles]} onPress={handlePress}>
+            <Text variant="paragraph4" color={fontColor}>{dayString}</Text>
+        </TouchableOpacity>
     );
 };
 
-const CalendarIconPill = () => {
+const CalendarIconPill = ({ handleOnPress }: CalendarIconPillProps) => {
     return (
-        <View style={[styles.pill, styles.calendarIcon]}>
+        <TouchableOpacity style={[styles.pill, styles.calendarIcon]} onPress={handleOnPress}>
             <CalendarSvg />
-        </View>
+        </TouchableOpacity>
     );
 }
 
 
-export const CalendarWeekPills = () => {
-    const calendarDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+export const CalendarWeekPills = ({ handleCalendarIconPress, handleCalendarDayPress }: CalendarWeekPillsProps) => {
+    const daysOfTheWeekMap = getDaysOfCurrentWeek();
+    const daysOfTheWeekArray = Object.keys(daysOfTheWeekMap);
+    const dayOfTheWeek = getDayOfTheWeek().toLowerCase();
 
     return (
         <View style={styles.calendarContainer}>
-            <CalendarIconPill />
-            {calendarDays.map((day) => {
-                return <CalendarDayPill day={day} handleOnPress={()=>console.log('pressed')} />
+            <CalendarIconPill handleOnPress={handleCalendarIconPress}/>
+            {daysOfTheWeekArray.map((fullDay) => {
+                const highlighted = fullDay === dayOfTheWeek;
+                const dayString = fullDay.substring(0, 3);
+                const isDisabled = new Date(daysOfTheWeekMap[dayOfTheWeek]) < new Date(daysOfTheWeekMap[fullDay]);
+                const date = daysOfTheWeekMap[fullDay];
+                return <CalendarDayPill 
+                    date={date} 
+                    dayString={dayString} 
+                    handleOnPress={handleCalendarDayPress} 
+                    highlighted={highlighted} 
+                    disabled={isDisabled}
+                />
             })}
         </View>
     );

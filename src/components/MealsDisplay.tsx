@@ -8,9 +8,13 @@ import { todaysDateRegular } from "../utility";
 import { FlatList } from "react-native-gesture-handler";
 import { FoodLog } from "../domains/foodLog/types";
 
-export const MealsDisplay = () => {
+type MealsDisplayProps = {
+    date: string
+}
+
+export const MealsDisplay = ({ date }: MealsDisplayProps) => {
     const [selectedMealType, setSelectedMealType] = useState<FoodMealType | null>(null);
-    const { foodLogs } = useFoodLogsByDateAndMealType({ date: "2023-10-08", mealType: selectedMealType });
+    const { foodLogs } = useFoodLogsByDateAndMealType({ date, mealType: selectedMealType });
     const handleMealSelect = (mealType: FoodMealType) => {
         if(mealType === selectedMealType){
             setSelectedMealType(null)

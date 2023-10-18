@@ -1,4 +1,14 @@
-import { format, endOfDay, startOfDay, subDays } from 'date-fns';
+import { 
+    format, 
+    endOfDay, 
+    startOfDay, 
+    subDays, 
+    startOfMonth, 
+    endOfMonth, 
+    startOfWeek, 
+    endOfWeek, 
+    eachDayOfInterval,
+} from 'date-fns';
 
 const END_OF_DAY_STRING = "T23:59:59.999Z";
 const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -23,6 +33,25 @@ export const getDateRangeFromToday = (days: number) => {
     };
 };
 
+export const getMonthlyRange = (month?:number | null, year?:number | null) => {
+    let date;
+    
+    // Check if a month & year is provided
+    if (month && year) {
+        date = new Date(year, month - 1, 1);  // Months are 0-based in JavaScript
+    } else {
+        date = new Date();
+    }
+
+    const monthStart = startOfMonth(date);
+    const monthEnd = endOfMonth(date);
+
+    return { 
+        startOfPeriod: format(monthStart, DATE_FORMAT),
+        endOfPeriod: format(monthEnd, DATE_FORMAT)
+    };
+};
+
 export const getDateNow = () => format(new Date(), DATE_FORMAT);
 
 export const getTodaysDateByFormat = (dateFormat: string = REGULAR_DATE): string => {
@@ -30,3 +59,40 @@ export const getTodaysDateByFormat = (dateFormat: string = REGULAR_DATE): string
 }
 
 export const todaysDateRegular = getTodaysDateByFormat(REGULAR_DATE);
+
+export const formatDateFromDateTime = (date: string):string => format(new Date(date), REGULAR_DATE);
+
+export const getDaysOfCurrentWeek = () => {
+    const today = new Date();
+    const start = startOfWeek(today, { weekStartsOn: 1 }); // Considering Monday as the start of the week
+    const end = endOfWeek(today, { weekStartsOn: 1 });
+
+    const dates = eachDayOfInterval({ start, end });
+    
+    let result = {} as Record<string, string>
+
+    const dayDateMap = dates.reduce((acc, date) => {
+        const dayName = format(date, 'EEEE').toLowerCase(); // Day of the week
+        acc[dayName] = format(date, 'yyyy-MM-dd'); // Date in 'YYYY-MM-DD' format
+        return acc;
+    }, result);
+    return dayDateMap;
+};
+
+export const getDayOfTheWeek = () => {
+    const today = new Date();
+    return format(today, 'EEEE');
+};
+
+export const formatDateHeader = (inputDate: string) => {
+    const date = new Date(inputDate);
+
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  
+    const day = inputDate.split('-')[2];
+    const month = monthNames[date.getMonth()];
+    const dayOfWeek = dayNames[date.getDay()];
+  
+    return `${month} ${day}, ${dayOfWeek}`;
+  }
