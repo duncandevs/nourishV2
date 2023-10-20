@@ -11,7 +11,11 @@ export type CreateFoodArgs = {
     food: Food
 };
 
-export type CreateFoodResponse = Promise<{
+export type FetchFoodArgs = {
+    foodName: string
+};
+
+export type FoodResponse = Promise<{
     data: Food | null,
     error: string | null | unknown
 }>;

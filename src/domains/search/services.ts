@@ -15,7 +15,7 @@ import { FetchMethod } from '../types';
 const getOpenAISearchPromptResult = async (searchTerm:string): FetchMethod => {
     try {
         const response = await asyncFetchOpenAICompletion({ searchTerm });
-        console.log(response.choices)
+        console.log(response)
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
         const data = generatedText ? JSON.parse(generatedText) : null
         return { data, error:null};   

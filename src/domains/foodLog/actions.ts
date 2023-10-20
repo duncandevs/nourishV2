@@ -11,7 +11,7 @@ export const fetchFoodLogsAction = ({ set }: ActionParams) =>
             state.foodLogs.isLoading = true 
         }));
         // get the supabase food logs records
-        const { data, error } = await FoodLogService.fetchFoodLogByUserId({ userId });
+        const { data, error } = await FoodLogService.fetchWeeklyFoodLogsByUserId({ userId });
         if(error) {
             set(produce((state: any) => {
                 state.foodLogs.error = error
@@ -29,21 +29,30 @@ export const fetchFoodLogsAction = ({ set }: ActionParams) =>
 
 export const createFoodLogAction = ({ set, get }: ActionParams) =>
     async ({ foodData, mealType, date, quantity }: CreateFoodLogActionArgs) => {
+        let foodError = '';
+        let food = null;
         // set is loading to true
         set(produce((state: any) => { 
             state.foodLogs.createFoodLogIsLoading = true 
         }));
 
-        // create a new food
-        const {data: food, error: foodError} = await FoodService.createFood({ food: foodData});
-        
+        if(foodData?.id){
+            food = foodData
+        }
+
+        if(!foodData?.id){
+            // create a new food
+            const {data: createFoodData, error: foodError} = await FoodService.createFood({ food: foodData});
+            food = createFoodData;
+        };
+        console.log('food in food log action - ', food)
         if(foodError){
             set(produce((state: any) => {
                 state.foodLogs.createFoodLogError = foodError
             }))
         };
 
-        // create new foodLog with new food
+        // create new foodLog with new or existing food
         if(food){
             const userId = get().user.data.id
             const foodLogData = {

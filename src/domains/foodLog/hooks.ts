@@ -32,7 +32,6 @@ export const useFoodLogMacrosByDate = ({ date }: {date: string}) => {
         carbs: 0
     });
     useEffect(()=>{
-        console.log('get macros for new date - ', date);
         setMacros(
             FoodLogsService.getMacrosByDate({ foodLogs, date })
         );

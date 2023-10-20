@@ -22,7 +22,7 @@ const App = () => {
         <Stack.Navigator initialRouteName="AuthScreen">
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="SearchScreen" component={SearchScreen} />
+          <Stack.Screen name="SearchScreen" component={SearchScreen}  />
           <Stack.Screen name="SearchResultScreen" component={SearchResultScreen} />
           <Stack.Screen name="SignUpLoginScreen" component={SignUpLoginScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Calendar" component={CalendarScreen} />
