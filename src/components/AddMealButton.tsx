@@ -1,6 +1,4 @@
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import {RootStackParamList} from "../screens/types";
 
 import ForkKnifeSvg from '../../assets/fork-knife.svg';
 import { Text } from "../theme";

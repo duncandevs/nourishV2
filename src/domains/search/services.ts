@@ -15,12 +15,10 @@ import { FetchMethod } from '../types';
 const getOpenAISearchPromptResult = async (searchTerm:string): FetchMethod => {
     try {
         const response = await asyncFetchOpenAICompletion({ searchTerm });
-        console.log(response)
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
         const data = generatedText ? JSON.parse(generatedText) : null
         return { data, error:null};   
     } catch (error) {
-        console.log('error - ', error)
         return { data: null, error}
     }
 };

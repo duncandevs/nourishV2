@@ -1,33 +1,27 @@
 import {produce} from 'immer';
-import UserService from "./services";
-import { SupabaseAuthArgs } from '../../clients/supabaseClient';
 import { ActionParams } from '../types';
 
-export const handleLoginAction = ({ set }: ActionParams): Function => 
-     async ({ email, password }: SupabaseAuthArgs) => {
-        // set is loading to true
+type handleLoginArgs = {
+   data: { 
+        "created_at": string,
+        "email": string,
+        "id": string,
+        "name": string,
+        "updated_at": string | null,
+    }
+};
+
+
+export const handleLoginSuccessAction = ({ set }: ActionParams): Function => 
+     async ({ data }: handleLoginArgs) => {
         set(produce((state: any) => { 
-            state.user.isLoading = true 
+            state.user.data = data 
         }));
+    };
 
-        // attempt login
-        const { data: authData, error: authError } = await UserService.handleLogin({email, password});
-        set(produce((state: any) => {
-            state.user.error = authError
-            if(!authError && authData) state.user.session = authData.session
-        }));
-
-        // if login is successful fetch user 
-        if(!authError && authData) {
-            const { data: userData, error: userError } = await UserService.handleFetchUser({ userId: authData.session.user.id})
-            set(produce((state: any) => {
-                state.user.error = userError
-                if(!userError && userData) state.user.data = userData
-            }));
-        };
-
-        // set isLoading to false
+export const handleLogOutAction = ({ set }: ActionParams): Function => 
+    async () => {
         set(produce((state: any) => { 
-            state.user.isLoading = false
+            state = {} 
         }));
     };

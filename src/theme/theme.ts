@@ -1,8 +1,7 @@
 // theme.ts
 import { createTheme, createText } from '@shopify/restyle';
 
-export const theme = createTheme({
-  colors: {
+export const Colors = {
     white: "#FFFFFF",
     black: "#191a1a",
     gray00: "#F5F7F7",
@@ -16,7 +15,10 @@ export const theme = createTheme({
     secondary: '#2c3e50',
     background: '#ecf0f1',
     text: '#333',
-  },
+}
+
+export const theme = createTheme({
+  colors: {...Colors},
   spacing: {
     s: 8,
     m: 16,

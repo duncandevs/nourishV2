@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "../theme";
 import { TextPillButton } from "./TextPillButton";
 import { FoodMealType } from "../domains/food/types";
 import { useFoodLogsByDateAndMealType } from "../domains/foodLog/hooks";
-import { todaysDateRegular } from "../utility";
-import { FlatList } from "react-native-gesture-handler";
 import { FoodLog } from "../domains/foodLog/types";
 
 type MealsDisplayProps = {
@@ -22,14 +20,23 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
             setSelectedMealType(mealType)
         }
     };
-
+    console.log('meals - ',  foodLogs)
     const renderList = (foodLogs: FoodLog[]) => {
         return (
             <View style={styles.mealsContainer}>
-                {foodLogs?.map((log)=> {
+                {foodLogs?.map((log, index)=> {
                     return (
                         <View>
-                            <Text color="white" margin="m">{log?.food?.name}</Text>
+                            <View style={[styles.row, styles.foodItemRow]}>
+                                <Text color="white" margin="m" style={styles.foodName}>{log?.food?.name}</Text>
+                                <View style={[styles.row, styles.foodItemMacros]}>
+                                    <Text variant="paragraph3" color="white">{log.food.calories}</Text>
+                                    <Text variant="paragraph3" color="white">{log.food.fat}g</Text>
+                                    <Text variant="paragraph3" color="white">{log.food.protein}g</Text>
+                                    <Text variant="paragraph3" color="white">{log.food.carbs}g</Text>
+                                </View>
+                            </View>
+                            {(index !== foodLogs.length - 1) && <View style={{height: 1, backgroundColor: '#383838'}}></View>}
                         </View>
                     )}
                 )}
@@ -41,7 +48,7 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
         <View>
             <View style={styles.mealTypesContainer}>
                 <Text variant='header2' padding='s'>MEALS</Text>
-                <View style={[{flexDirection: 'row'}]}>
+                <View style={[styles.row]}>
                     <TextPillButton 
                         title="breakfast" 
                         handleOnPress={()=>handleMealSelect('breakfast')}
@@ -64,6 +71,15 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
                     />
                 </View>
             </View>
+            <View style={styles.foodItemWrapper}>
+                <View style={styles.foodItemHeader}>
+                    <Text variant="paragraph3" color="white">calories</Text>
+                    <Text variant="paragraph3" color="white">fat</Text>
+                    <Text variant="paragraph3" color="white">protein</Text>
+                    <Text variant="paragraph3" color="white">carbs</Text>
+                </View>
+            </View>
+            <View style={{height: 1, backgroundColor: '#383838'}}></View>
             {renderList(foodLogs)}
         </View>
     );
@@ -77,5 +93,31 @@ const styles = StyleSheet.create({
     },
     mealTypesContainer: {
         padding: 16
+    },
+    row: {
+        flexDirection:'row'
+    },
+    foodName: {
+        maxWidth: 180
+    },
+    foodItemRow: {
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    foodItemMacros: {
+        width: 160,
+        justifyContent: 'space-between'
+    },
+    foodItemWrapper: {
+        width: '100%',
+        paddingTop: 16,
+        paddingBottom: 16,
+        backgroundColor: '#1F1F1F',
+    },
+    foodItemHeader: {
+        width: 200,
+        flexDirection:'row',
+        marginLeft: 'auto',
+        justifyContent: 'space-around'
     }
 })

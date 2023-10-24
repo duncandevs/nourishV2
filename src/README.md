@@ -43,3 +43,8 @@ ASSETS CACHING
 
 LOADING SPINNERS
 - https://loading.io/
+
+FULL UI KIT
+- https://www.figma.com/file/WF0LRZmhqu8C5QHexGMGkf/Universal-Icon-Set-v2.6-%7C-Preview?type=design&node-id=0-1&mode=design&t=BBLw4ADpO9E47z3H-0
+
+

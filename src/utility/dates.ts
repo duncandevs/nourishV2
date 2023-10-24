@@ -10,7 +10,6 @@ import {
     eachDayOfInterval,
 } from 'date-fns';
 
-const END_OF_DAY_STRING = "T23:59:59.999Z";
 const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 const REGULAR_DATE = "yyyy-MM-dd";
 

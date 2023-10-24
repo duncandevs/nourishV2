@@ -6,6 +6,8 @@ export type RootStackParamList = {
     HomeScreen: undefined;
     SearchScreen: undefined;
     SearchResultScreen: {data: Food | null};
-    SignUpLoginScreen: undefined;
+    SignInScreen: undefined;
+    SignUpScreen: undefined;
     Calendar: undefined;
+    Profile: undefined;
 };

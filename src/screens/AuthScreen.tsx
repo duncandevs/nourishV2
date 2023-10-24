@@ -12,61 +12,22 @@ type AuthScreenProps = {
 };
 
 export const AuthScreen = ({ navigation }: AuthScreenProps ) => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { user: { error: loginError, isLoading, handleLogin, data: userData} } = useAppState();
-  const [isFormsShown, setShowForms] = useState(false);
+  const { user: { isLoading, data: userData} } = useAppState();
 
   async function signInWithEmail() {
-    // await handleLogin({ email, password })
-    navigation.navigate('SignUpLoginScreen')
+    navigation.navigate('SignInScreen')
   };
 
   async function signUpWithEmail() {
-    // const { error, data } = await supabaseClient.signUp({
-    //   email: email,
-    //   password: password,
-    // })
-
-    // if (error) Alert.alert(error)
-    navigation.navigate('SignUpLoginScreen')
+    navigation.navigate('SignUpScreen')
   };
 
-  useEffect(()=>{
-    if(userData) navigation.replace('HomeScreen')
-    if(loginError) Alert.alert(loginError)
-  }, [userData, loginError])
-
-  const renderForms = () => {
-    return <View>
-        <View style={[styles.verticallySpaced, styles.mt20]}>
-          <Input
-            label="Email"
-            leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-            onChangeText={(text) => setEmail(text)}
-            value={email}
-            placeholder="email@address.com"
-            autoCapitalize={'none'}
-          />
-        </View>
-        <View style={styles.verticallySpaced}>
-          <Input
-            label="Password"
-            leftIcon={{ type: 'font-awesome', name: 'lock' }}
-            onChangeText={(text) => setPassword(text)}
-            value={password}
-            secureTextEntry={true}
-            placeholder="Password"
-            autoCapitalize={'none'}
-          />
-        </View>
-    </View>
-  }
+  // useEffect(()=>{
+  //   if(userData) navigation.replace('HomeScreen')
+  // }, [userData])
 
   return (
     <ImageBackground source={require('.././../assets/nourish-cover-w-logo.jpeg')} style={styles.container}>
-      {isFormsShown && renderForms()}
-      {/* {!isFormsShown && <Image source={require('../../assets/nourish-cover-logo.png')}  style={styles.logo}/>} */}
       <View style={styles.authContainer}>
         <View style={styles.verticallySpaced}>
           <Button titleStyle={{color:"black"}} title="Sign up" buttonStyle={styles.signUpButton} disabled={isLoading} onPress={() => signUpWithEmail()} />

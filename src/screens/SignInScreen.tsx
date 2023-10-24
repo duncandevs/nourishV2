@@ -1,34 +1,66 @@
 import { useState } from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { Button, Input } from 'react-native-elements';
+import { Text } from "../theme";
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAppState  } from '../state';
+import { validateEmail, validatePassword } from "../utility";
+import UserService from "../domains/users/services";
 
-type SignUpLoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUpLoginScreen'>;
+type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignInScreen'>;
 
-type SignUpLoginScreenProps = {
-  navigation: SignUpLoginScreenNavigationProp;
+type SignInScreenProps = {
+  navigation: SignInScreenNavigationProp;
 };
 
-export const SignUpLoginScreen = ({ navigation }: SignUpLoginScreenProps) => {
+export const SignInScreen = ({ navigation }: SignInScreenProps) => {
     const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
-    const { user: { error: loginError, isLoading, handleLogin, data: userData} } = useAppState();
+    const [passwordError, setPasswordError] = useState('');
+    const [signInError, setSignInError ] = useState('');
+    const { user: { 
+        handleLoginSuccess, 
+      } 
+    } = useAppState();
 
-    async function signInWithEmail() {
-      await handleLogin({ email, password })
-      navigation.navigate('HomeScreen')
+    const handleEmailValidation = (email: string): boolean => {
+      const { isValid, error } = validateEmail(email);
+      setEmailError(error)
+      return isValid
     };
-  
-    async function signUpWithEmail() {
-      // const { error, data } = await supabaseClient.signUp({
-      //   email: email,
-      //   password: password,
-      // })
-  
-      // if (error) Alert.alert(error)
-      navigation.navigate('SignUpLoginScreen')
+
+    const handlePasswordValidation = (password: string): boolean => {
+      const { isValid, error } = validatePassword(password);
+      console.log({ isValid, error })
+      setPasswordError(error)
+      return isValid
+    };
+
+    const isSignInValidated = (): boolean => {
+      const validations = [
+        handleEmailValidation(email),
+        handlePasswordValidation(password),
+      ];
+      return !validations.includes(false);
+    }
+
+    async function handleSignIn() {
+      let signInSuccess = false;
+
+      if(isSignInValidated()){
+        const { data, error } = await UserService.handleLogin({email, password});
+        if(error) setSignInError(error);
+        if(!error) setSignInError('');
+        if(data) { 
+          signInSuccess = true
+          console.log('push to handle login success - ', data)
+          handleLoginSuccess({ data });
+        }
+      };
+
+      if(signInSuccess) navigation.navigate('HomeScreen')
     };
 
     return (
@@ -43,6 +75,7 @@ export const SignUpLoginScreen = ({ navigation }: SignUpLoginScreenProps) => {
                   autoCapitalize={'none'}
                   inputContainerStyle={styles.input}
                   labelStyle={styles.label}
+                  errorMessage={emailError}
               />
               <Input
                   label="Password"
@@ -54,8 +87,10 @@ export const SignUpLoginScreen = ({ navigation }: SignUpLoginScreenProps) => {
                   autoCapitalize={'none'}
                   inputContainerStyle={styles.input}
                   labelStyle={styles.label}
+                  errorMessage={passwordError}
               />
-              <Button title="Sign in" buttonStyle={styles.signInButton} disabled={isLoading} onPress={() => signInWithEmail()} />
+              <Text color="warn" textAlign="center">{signInError}</Text>
+              <Button title="Sign in" buttonStyle={styles.signInButton} onPress={() => handleSignIn()} />
           </View>
       </ImageBackground>
     )
@@ -87,12 +122,6 @@ const styles = StyleSheet.create({
     signInButton: {
       margin: 8,
       backgroundColor: 'black',
-      borderRadius: 16,
-    },
-    signUpButton: {
-      width: 180,
-      backgroundColor: '#C3FF76',
-      color: 'black',
       borderRadius: 16,
     },
 })

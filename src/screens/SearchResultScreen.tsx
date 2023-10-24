@@ -42,7 +42,6 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
         protein: 0,
         carbs: 0
     })
-    console.log(createFoodLogError)
     const handleSaveFoodLog = async () => {
         if(!mealType) {
             showMealTypeError(true) 

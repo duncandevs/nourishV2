@@ -5,3 +5,5 @@ export { MacrosDisplay } from "./MacrosDisplay";
 export { RoundStat, RoundStats } from "./RoundStat";
 export { TextPillButton } from "./TextPillButton";
 export { MealsDisplay } from "./MealsDisplay";
+export { AppHeader } from "./AppHeader";
+export { DeleteAccountModal } from "./DeleteAccountModal";

@@ -49,7 +49,7 @@ export const fetchFoodByName = async ({ foodName }: FetchFoodArgs): FoodResponse
     } catch (error) {
         return { error, data: null }
     };
-}
+};
 
 export default {
     createFood,

@@ -49,7 +49,6 @@ export const useFoodLogMealCaloriesByDate = ({ date }: {date: string}) => {
         snacks: 0,
     });
     useEffect(()=>{
-        console.log('get new calorie count for date - ', date)
         setMealCalories(
             FoodLogsService.getCalorieMealStatsByDate({ foodLogs, date })
         );
@@ -74,3 +73,21 @@ export const useFoodLogsByDateAndMealType = ({ date, mealType }: {date: string, 
     
     return { foodLogs: filteredFoodLogs };
 };
+
+export const useRecentFoodLogs = () => {
+    const { user: { data: user } } = useAppState();
+    const [ data, setData ] = useState<FoodLog[] | null | undefined>(null);
+    
+    useEffect(()=>{
+        FoodLogsService.fetchRecentFoodLogs({ userId: user?.id }).then((result)=>{
+            const filteredResults = result?.filter((obj, index, self) => 
+                index === self.findIndex((el) => (
+                    el.food.name === obj.food.name
+                ))
+            );
+            setData(filteredResults)
+        })
+    }, [user]);
+
+    return data;
+}

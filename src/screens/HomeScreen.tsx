@@ -10,10 +10,11 @@ import {
     CaloriesHomeDisplay, 
     MacrosDisplay,
     RoundStats,
-    MealsDisplay
+    MealsDisplay,
+    AppHeader
 } from "../components";
-import { Macros } from '../domains/foodLog/types';
-import { todaysDateRegular, getDaysOfCurrentWeek, formatDateHeader } from '../utility/dates';
+
+import { todaysDateRegular, formatDateHeader } from '../utility/dates';
 import { useFoodLogMacrosByDate, useFoodLogMealCaloriesByDate } from '../domains/foodLog/hooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -57,6 +58,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
 
     return (
         <SafeAreaView style={{height: '100%', backgroundColor: 'white'}}>
+            <AppHeader navigation={navigation}/>
             <ScrollView> 
                 <View style={[styles.gutter, styles.calendarHeader]}>
                     <View style={styles.header}>
@@ -66,7 +68,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
                         </View>
                         <AddMealButton handleOnPress={goToSearchScreen} />
                     </View>  
-                    <Text marginBottom='m' variant='paragraph3'>{dateHeader}</Text>       
+                    <Text marginBottom='m' variant='header3' color="gray03">{dateHeader}</Text>       
                     <View>
                         <CalendarWeekPills 
                             handleCalendarIconPress={goToCalendarScreen} 

@@ -100,7 +100,22 @@ const fetchMonthlyFoodLogsByUserId = async ({ userId, month, year }: FetchMonthl
     } catch (error) {
         return { error, data: null }
     };
-}
+};
+
+const fetchRecentFoodLogs = async ({ userId }:{userId: string}) => {
+    try {
+        const { data, error } = await supabase
+        .from('foodLogs')
+        .select('*, food(*)')
+        .eq('user_id', userId)
+        .order('date', { ascending: false })
+        .limit(10);
+      if (error) return null;
+      return data;   
+    } catch (error) {
+        return null;
+    }
+};
 
 const createFoodLog = async ({ foodLog }: CreateFoodLogArgs ): FetchMethod => {
     try {
@@ -130,6 +145,7 @@ const getFoodLogsByDate = ({ foodLogs, date }: {foodLogs: FoodLog[], date: strin
         return log.date.startsWith(date)
     });
 };
+
 
 const getMacrosByDate = ({
     foodLogs,
@@ -279,6 +295,7 @@ export default {
     fetchTodaysFoodLogsByUserId,
     fetchWeeklyFoodLogsByUserId,
     fetchMonthlyFoodLogsByUserId,
+    fetchRecentFoodLogs,
     createFoodLog,
     getCalorieCount,
     getMacrosByDate,

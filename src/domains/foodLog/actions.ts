@@ -35,7 +35,7 @@ export const createFoodLogAction = ({ set, get }: ActionParams) =>
         set(produce((state: any) => { 
             state.foodLogs.createFoodLogIsLoading = true 
         }));
-
+        console.log('add new foodData - ', foodData)
         if(foodData?.id){
             food = foodData
         }
@@ -47,6 +47,7 @@ export const createFoodLogAction = ({ set, get }: ActionParams) =>
         };
         console.log('food in food log action - ', food)
         if(foodError){
+            console.log('foodError - ', foodError)
             set(produce((state: any) => {
                 state.foodLogs.createFoodLogError = foodError
             }))
@@ -65,6 +66,7 @@ export const createFoodLogAction = ({ set, get }: ActionParams) =>
 
             const { data: foodLog , error: foodLogError} = await FoodLogService.createFoodLog({ foodLog: foodLogData });
             if(foodLogError){
+                console.log('foodLogError - ', foodLogError);
                 set(produce((state: any) => {
                     state.foodLogs.createFoodLogError = foodLogError
                 }))

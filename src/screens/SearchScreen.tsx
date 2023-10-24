@@ -7,6 +7,11 @@ import { useAppState } from "../state";
 import { Text } from "../theme";
 import ForkKnifeSvg from '../../assets/fork-knife.svg';
 import FoodService from '../domains/food/services';
+import FoodLogService from '../domains/foodLog/services';
+import { useRecentFoodLogs } from "../domains/foodLog/hooks";
+import { FoodLog } from "../domains/foodLog/types";
+import { Food } from "../domains/food/types";
+import { ScrollView } from "react-native-gesture-handler";
 
 type SearchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SearchScreen'>;
 
@@ -17,18 +22,26 @@ type SearchScreenProps = {
 export const SearchScreen = ({ navigation }: SearchScreenProps) => {
     const [ searchTerm, setSearchTerm ] = useState('');
     const { search: {isLoading, error, handleSearch, data: searchResults } } = useAppState();
+    const recents = useRecentFoodLogs();
 
     const handleOnSearch = async () => {
-        const { data: food, error: foodError } = await FoodService.fetchFoodByName({foodName: searchTerm });
-        // only search if this term doesn't match an existing Food
-        if(!food) handleSearch({ searchTerm });
-        navigation.navigate('SearchResultScreen', { food });
+        let existingFood: Food | null = null;
+        // check if food exists in recent logs;
+        const recentFoodLog = recents?.find((item)=>item.food.name === searchTerm);
+        if(recentFoodLog) existingFood = recentFoodLog?.food;
+        console.log('recentFoodLog - ', recentFoodLog)
+        if(!recentFoodLog){
+          const {data }= await FoodService.fetchFoodByName({foodName: searchTerm});
+          if(data) existingFood = data
+        }
+        console.log('existingFood - ', existingFood)
+        if(!existingFood) handleSearch({ searchTerm });
+        navigation.navigate('SearchResultScreen', { food: existingFood });
     };
-
-    const recents = ["Egg & toast", "Cappuccino", "Salad with salmon", "Steak and potatoes"]
-    const handleRecentOnPress = (recent: string) => {
-      setSearchTerm(recent)
-    }
+    
+    const handleRecentOnPress = (recent: FoodLog) => {
+      setSearchTerm(recent.food.name)
+    };
 
     return <View style={styles.container}>
         <Input
@@ -40,10 +53,12 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
         />
         <View style={styles.recents}>
           <Text variant="paragraph2" color="gray03" style={styles.recentTitle}>Recent:</Text>
-          {recents.map((item)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)}>
-              <Text variant="paragraph2" style={styles.recentItem}>{item}</Text>
-            </TouchableOpacity>
-          )}
+          <ScrollView>
+            {recents?.map((item)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)}>
+                <Text variant="paragraph2" style={styles.recentItem}>{item.food.name}</Text>
+              </TouchableOpacity>
+            )}
+          </ScrollView>
         </View>
         <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
     </View>
@@ -70,7 +85,9 @@ const styles = StyleSheet.create({
   },
   recents: {
     alignSelf: "flex-start",
-    margin: 16
+    margin: 16,
+    maxHeight: 180,
+    width: '90%',
   },
   recentTitle:{
     marginBottom: 8
