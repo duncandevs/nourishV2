@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableHighlight, View } from "react-native";
+import { StyleSheet, TouchableHighlight } from "react-native";
 import { Text } from "../theme";
 
 type TextPillButtonProps = {

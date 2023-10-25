@@ -11,7 +11,8 @@ import {
     MacrosDisplay,
     RoundStats,
     MealsDisplay,
-    AppHeader
+    AppHeader,
+    EditMacrosBottomSheet
 } from "../components";
 
 import { todaysDateRegular, formatDateHeader } from '../utility/dates';
@@ -32,11 +33,12 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
     const { 
         user: { data: user },
     } = useAppState();
+    console.log('user - ', user)
     const [ date, setDate] = useState(todaysDateRegular);
     const [mealStats, setMealStats] = useState<MealStats>([]);
     const { macros } = useFoodLogMacrosByDate({ date });
     const { mealCalories } = useFoodLogMealCaloriesByDate({ date });
-    
+    const [isEditMacrosVisible, setIsMacrosVisible] = useState(false);
     const goToSearchScreen = () => {
         navigation.navigate('SearchScreen');
     };
@@ -47,7 +49,11 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
     const handleDaySelect = (date: string) => {
         setDate(date);
     };
-    const dateHeader = formatDateHeader(date)?.toUpperCase()
+    const dateHeader = formatDateHeader(date)?.toUpperCase();
+
+    const onEditMacrosVisibility = () => {
+        setIsMacrosVisible(!isEditMacrosVisible)
+    };
 
     useEffect(()=>{
         if(mealCalories){
@@ -59,6 +65,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
     return (
         <SafeAreaView style={{height: '100%', backgroundColor: 'white'}}>
             <AppHeader navigation={navigation}/>
+            <EditMacrosBottomSheet isVisible={isEditMacrosVisible} onClose={onEditMacrosVisibility} startingValue={user?.calorie_target}/>
             <ScrollView> 
                 <View style={[styles.gutter, styles.calendarHeader]}>
                     <View style={styles.header}>
@@ -78,7 +85,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
                 </View>
                 <View style={styles.spacing}></View>
                 <View>
-                    <CaloriesHomeDisplay calories={macros?.calories} target={1700} handleEdit={()=>console.log('handle edit')}/>
+                    <CaloriesHomeDisplay calories={macros?.calories} target={user?.calorie_target} handleEdit={onEditMacrosVisibility}/>
                 </View>
                 <View style={styles.spacing}></View>
                 <RoundStats data={mealStats} />
@@ -116,4 +123,4 @@ const styles = StyleSheet.create({
     spacing:{
         margin: 16
     }
-})
+});

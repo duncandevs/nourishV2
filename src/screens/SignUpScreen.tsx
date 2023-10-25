@@ -3,7 +3,6 @@ import { ImageBackground, StyleSheet, View } from "react-native";
 import { Button, Input } from 'react-native-elements';
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useAppState  } from '../state';
 import { validateEmail, validateName, validatePasswordWithConfirmation } from "../utility";
 import { Text } from "../theme";
 import UserService from "../domains/users/services";
@@ -60,7 +59,7 @@ export const SignUpScreen = ({ navigation }: SignUpScreenProps) => {
         });
         if(authData) {
           const userId = authData?.user?.id
-          await UserService.updateUser({ userId, name })
+          await UserService.updateUserProfile({ userId, name })
         };
         if(error) setSignUpError(error);
         if(!error) signUpSuccess = true

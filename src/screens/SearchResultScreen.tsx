@@ -102,7 +102,7 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
                 <View style={styles.mealTypes}>
                     <View style={[styles.row]}>
                         {mealTypes.map((i)=>{
-                            return <TextPillButton title={i} handleOnPress={()=>handleSelectMealType(i)} active={i === mealType}/>
+                            return <TextPillButton key={i} title={i} handleOnPress={()=>handleSelectMealType(i)} active={i === mealType}/>
                         })}
                     </View>
                     {mealTypeError && <Text color="warn">please select a meal</Text>}

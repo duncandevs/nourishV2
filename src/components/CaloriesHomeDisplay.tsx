@@ -14,13 +14,14 @@ export const CaloriesHomeDisplay = ({ calories, target, handleEdit }: CaloriesHo
             resizeMode="cover" // or "contain", "stretch", etc.
             style={styles.imageBackground}
         >
-            <Text style={styles.editLink} variant="link2" color="white" onPress={handleEdit}>edit</Text>
+            <Text style={styles.editLink} variant="link1" color="gray02" onPress={handleEdit}>edit</Text>
             <View style={[styles.row, styles.container]}>
                 <Text variant="header3" style={styles.caloriesText} color="white">CALORIES</Text>
                 <View style={styles.row}>
                     <View style={styles.column}>
-                        <Text variant="display1" color="alert">{calories}</Text>
-                        <Text variant="display2" style={styles.target} color="white">{target}</Text>
+                        <Text variant="display1" color="alert">{calories || 0}</Text>
+                        {target && <Text variant="display2" style={styles.target} color="white">{target}</Text>}
+                        {!target && <Text variant="display2" style={styles.target} color="white">-</Text>}
                     </View>
                     <Text variant="header3" style={styles.targetText} color="white">TARGET</Text>
                 </View>

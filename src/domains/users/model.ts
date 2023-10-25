@@ -1,5 +1,9 @@
 import { User } from "./types"
-import { handleLoginSuccessAction, handleLogOutAction } from './actions'
+import { 
+    handleLoginSuccessAction, 
+    handleLogOutAction, 
+    updateUserStateAction, 
+} from './actions'
 
 type UserModel= {
     user: User,
@@ -14,7 +18,8 @@ export const createUserModel = (set: Function, get: Function) => ({
         isLoading: false, 
         data: null,
         handleLoginSuccess: handleLoginSuccessAction({ set }),
-        handleLogOut: handleLogOutAction({ set })
+        handleLogOut: handleLogOutAction({ set }),
+        updateUserState: updateUserStateAction({ set, get }),
     },
 });
 

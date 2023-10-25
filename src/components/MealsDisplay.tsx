@@ -20,13 +20,12 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
             setSelectedMealType(mealType)
         }
     };
-    console.log('meals - ',  foodLogs)
     const renderList = (foodLogs: FoodLog[]) => {
         return (
             <View style={styles.mealsContainer}>
                 {foodLogs?.map((log, index)=> {
                     return (
-                        <View>
+                        <View key={`${log?.food?.name}-${index}`}>
                             <View style={[styles.row, styles.foodItemRow]}>
                                 <Text color="white" margin="m" style={styles.foodName}>{log?.food?.name}</Text>
                                 <View style={[styles.row, styles.foodItemMacros]}>

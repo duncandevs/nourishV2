@@ -13,7 +13,6 @@ import {
 } from './src/screens';
 import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
-import { AppHeader } from './src/components/AppHeader';
 
 // Create the Stack Navigator
 const Stack = createStackNavigator();
@@ -25,12 +24,12 @@ const App = () => {
         <Stack.Navigator initialRouteName="AuthScreen">
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerTitle: 'back'}} />
-          <Stack.Screen name="SearchResultScreen" component={SearchResultScreen} options={{headerTitle: 'back'}} />
+          <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
+          <Stack.Screen name="SearchResultScreen" component={SearchResultScreen} options={{headerTitle: '', headerBackTitle:"back"}} />
           <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Calendar" component={CalendarScreen}  />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

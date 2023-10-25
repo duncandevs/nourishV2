@@ -64,13 +64,15 @@ export const CalendarWeekPills = ({ handleCalendarIconPress, handleCalendarDayPr
                 const dayString = fullDay.substring(0, 3);
                 const isDisabled = new Date(daysOfTheWeekMap[dayOfTheWeek]) < new Date(daysOfTheWeekMap[fullDay]);
                 const date = daysOfTheWeekMap[fullDay];
-                return <CalendarDayPill 
-                    date={date} 
-                    dayString={dayString} 
-                    handleOnPress={handleCalendarDayPress} 
-                    highlighted={highlighted} 
-                    disabled={isDisabled}
-                />
+                return <View key={fullDay}>
+                    <CalendarDayPill 
+                        date={date} 
+                        dayString={dayString} 
+                        handleOnPress={handleCalendarDayPress} 
+                        highlighted={highlighted} 
+                        disabled={isDisabled}
+                    />
+                </View>
             })}
         </View>
     );

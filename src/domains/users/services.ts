@@ -1,7 +1,7 @@
 import { SupabaseAuthArgs } from "../../clients/supabaseClient";
 import { supabase, supabaseAdminClient } from '../../../lib/supabase';
 import { FetchMethod } from '../types';
-import { SignUpArgs, UpdateUserArgs } from './types';
+import { SignUpArgs, UpdateUserProfileArgs, UpdateUserCalorieTargetArgs } from './types';
 
 const handleAuth = async ({ email, password }: SupabaseAuthArgs): FetchMethod => {
     try {
@@ -64,7 +64,7 @@ const handleSignUp = async ({ email, password, name }: SignUpArgs) => {
 }
 
 
-const updateUser = async ({ userId, name, email, password }: UpdateUserArgs) => {
+const updateUserProfile = async ({ userId, name, email, password }: UpdateUserProfileArgs) => {
     try {
         console.log({ userId, name, email, password })
         if(email) {
@@ -85,7 +85,6 @@ const updateUser = async ({ userId, name, email, password }: UpdateUserArgs) => 
         }
         return { error: '', data: null };
     } catch (error) {
-        console.log(error)
         const errorMsg = 'something went wrong please try again'
         return { error: errorMsg, data: null };
     }
@@ -100,12 +99,22 @@ const deleteAccount = async ({ userId }: {userId: string}) => {
     if(error) alert('something went wrong please try later!');
 };
 
+const updateUserCalorieTarget = async ({ userId, target }: UpdateUserCalorieTargetArgs) => {
+    try {
+        const { data, error } = await supabase.from("users").update({ calorie_target: target }).eq('id', userId);
+        return { data, error: error?.message}
+    } catch (error) {
+        return { data: null, error}
+    };
+};
+
 export default {
     handleAuth,
     handleFetchUser,
     handleLogin,
     handleSignUp,
-    updateUser,
+    updateUserProfile,
+    updateUserCalorieTarget,
     logOutUser,
     deleteAccount,
 }

@@ -15,6 +15,7 @@ export const Colors = {
     secondary: '#2c3e50',
     background: '#ecf0f1',
     text: '#333',
+    blue: '#246EC4'
 }
 
 export const theme = createTheme({
@@ -72,11 +73,16 @@ export const theme = createTheme({
       color: 'text',
     },
     link1:{
-      fontSize: 14,
+      fontSize: 20,
       color: 'text',
       textDecorationLine: 'underline',
     },
     link2:{
+      fontSize: 14,
+      color: 'text',
+      textDecorationLine: 'underline',
+    },
+    link3:{
       fontSize: 12,
       color: 'text',
       textDecorationLine: 'underline',

@@ -21,7 +21,7 @@ type SearchScreenProps = {
 
 export const SearchScreen = ({ navigation }: SearchScreenProps) => {
     const [ searchTerm, setSearchTerm ] = useState('');
-    const { search: {isLoading, error, handleSearch, data: searchResults } } = useAppState();
+    const { search: { handleSearch } } = useAppState();
     const recents = useRecentFoodLogs();
 
     const handleOnSearch = async () => {
@@ -29,12 +29,12 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
         // check if food exists in recent logs;
         const recentFoodLog = recents?.find((item)=>item.food.name === searchTerm);
         if(recentFoodLog) existingFood = recentFoodLog?.food;
-        console.log('recentFoodLog - ', recentFoodLog)
+
         if(!recentFoodLog){
           const {data }= await FoodService.fetchFoodByName({foodName: searchTerm});
           if(data) existingFood = data
         }
-        console.log('existingFood - ', existingFood)
+
         if(!existingFood) handleSearch({ searchTerm });
         navigation.navigate('SearchResultScreen', { food: existingFood });
     };
@@ -54,7 +54,7 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
         <View style={styles.recents}>
           <Text variant="paragraph2" color="gray03" style={styles.recentTitle}>Recent:</Text>
           <ScrollView>
-            {recents?.map((item)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)}>
+            {recents?.map((item, index)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)} key={`${item.food.name}-${index}`}>
                 <Text variant="paragraph2" style={styles.recentItem}>{item.food.name}</Text>
               </TouchableOpacity>
             )}

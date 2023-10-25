@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Text } from '../theme';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 type DeleteAccountModalProps = {
   isOpen: boolean;
@@ -18,14 +18,16 @@ export const DeleteAccountModal = ({ isOpen, onCancel, onConfirm }: DeleteAccoun
   return (
       <Modal
         visible={isOpen}
-        animationType="slide"
         transparent={true}
         onRequestClose={onCancel}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Delete Account</Text>
-            <Text variant="paragraph4" style={styles.modalMessage}>Are you sure you want to delete your account? This action will permanently erase all your data, settings, and preferences.</Text>
+            <Text variant="paragraph4" style={styles.modalMessage}>
+                Are you sure you want to delete your account?
+                This action will permanently erase all your data, settings, and preferences.
+            </Text>
             <View style={styles.modalActions}>
               <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
                 <Text style={styles.buttonText}>Cancel</Text>
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cancelButton: {
-    backgroundColor: '#e57373',
+    backgroundColor: '#81c784',
     padding: 10,
     borderRadius: 5,
     flex: 1,
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   confirmButton: {
-    backgroundColor: '#81c784',
+    backgroundColor: '#e57373',
     padding: 10,
     borderRadius: 5,
     flex: 1,

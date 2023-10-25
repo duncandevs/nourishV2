@@ -1,5 +1,5 @@
 import {produce} from 'immer';
-import { ActionParams } from '../types';
+import { ActionParams, UserModel } from '../types';
 
 type handleLoginArgs = {
    data: { 
@@ -25,3 +25,10 @@ export const handleLogOutAction = ({ set }: ActionParams): Function =>
             state = {} 
         }));
     };
+
+export const updateUserStateAction = ({ set, get }: ActionParams): Function =>
+    async (newProps: UserModel) => {
+        set(produce((state: any) => { 
+            state.user.data = {...state.user.data, ...{...newProps}} 
+        }));
+    }

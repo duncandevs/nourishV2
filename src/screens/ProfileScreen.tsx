@@ -9,7 +9,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { validateEmail, validatePasswordWithConfirmation} from "../utility";
 import UserService from "../domains/users/services";
 import { DeleteAccountModal } from "../components";
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 export const ProfileScreen = ({ navigation }) => {
     const { user: {data: user, handleLogOut } } = useAppState();
@@ -67,7 +67,7 @@ export const ProfileScreen = ({ navigation }) => {
         };
 
         if(!validations.includes(false)) {
-            const {error} = await UserService.updateUser({ userId: user?.id, name, email, password });
+            const {error} = await UserService.updateUserProfile({ userId: user?.id, name, email, password });
             if(error) {
                 setSaveError(error)
             } else {
@@ -95,7 +95,7 @@ export const ProfileScreen = ({ navigation }) => {
     const onConfirmDeleteAccount = () => {
         setIsDeleteModalOpen(false);
         UserService.deleteAccount({ userId: user?.id });
-    }
+    };
 
     return (
 
