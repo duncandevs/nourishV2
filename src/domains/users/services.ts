@@ -66,11 +66,9 @@ const handleSignUp = async ({ email, password, name }: SignUpArgs) => {
 
 const updateUserProfile = async ({ userId, name, email, password }: UpdateUserProfileArgs) => {
     try {
-        console.log({ userId, name, email, password })
         if(email) {
             const {error: emailError, data} = await supabase.auth.updateUser({ email });
             if(emailError) throw(emailError);
-            console.log('email data - ', data)
         };
 
         if(password){
@@ -80,7 +78,6 @@ const updateUserProfile = async ({ userId, name, email, password }: UpdateUserPr
 
         if(name){
             const {error: userError, data} = await supabase.from('users').update({ name }).eq('id', userId);
-            console.log('name change - ', data);
             if(userError) throw(userError);
         }
         return { error: '', data: null };

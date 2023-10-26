@@ -33,7 +33,6 @@ export const SignInScreen = ({ navigation }: SignInScreenProps) => {
 
     const handlePasswordValidation = (password: string): boolean => {
       const { isValid, error } = validatePassword(password);
-      console.log({ isValid, error })
       setPasswordError(error)
       return isValid
     };
@@ -55,7 +54,6 @@ export const SignInScreen = ({ navigation }: SignInScreenProps) => {
         if(!error) setSignInError('');
         if(data) { 
           signInSuccess = true
-          console.log('push to handle login success - ', data)
           handleLoginSuccess({ data });
         }
       };
