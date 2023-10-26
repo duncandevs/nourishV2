@@ -9,17 +9,10 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^4.5.1",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/stack": "^6.3.18",
     "@shopify/restyle": "^2.4.2",
-    "@splinetool/react-spline": "^2.2.6",
-    "@splinetool/runtime": "^0.9.460",
-    "@supabase/auth-helpers-nextjs": "^0.8.1",
-    "@supabase/auth-helpers-react": "^0.4.2",
-    "@supabase/auth-ui-react": "^0.4.5",
-    "@supabase/auth-ui-shared": "^0.1.7",
     "@supabase/supabase-js": "^2.37.0",
     "date-fns": "^2.30.0",
     "expo": "~49.0.13",
