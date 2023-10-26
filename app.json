@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "nourish",
-    "slug": "nourish",
+    "slug": "nourish-fit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nourish.fit"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.nourish.fit"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "53eedea4-a767-42a9-95de-35fadd75f38d"
+      }
+    },
+    "owner": "theaifirstco"
   }
 }

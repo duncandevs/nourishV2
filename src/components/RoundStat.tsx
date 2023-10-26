@@ -31,7 +31,7 @@ export const RoundStats = ({ data }) => {
     return (
         <View>
             <View style={styles.statsList}>
-                {data.map((item)=> <RoundStat title={item.title} stat={item.stat} />)}
+                {data.map((item)=> <RoundStat key={item.title} title={item.title} stat={item.stat} />)}
             </View>
         </View>
     )};

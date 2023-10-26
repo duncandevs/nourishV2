@@ -17,6 +17,7 @@ export type FetchMonthlyFoodLogsByUserIdArgs = {
 }
 
 export type FoodLog = {
+    id: string;
     food_id: string;
     user_id: string;
     food: Food;
@@ -38,7 +39,8 @@ export type FoodLogsModel = {
         createFoodLog: Function;
         createFoodLogIsLoading: boolean;
         createFoodLogError: string | null;
-        getCalorieCount: Function
+        getCalorieCount: Function;
+        deleteFoodLog: Function;
     }
 }
 

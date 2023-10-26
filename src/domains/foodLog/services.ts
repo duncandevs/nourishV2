@@ -288,6 +288,13 @@ export const getAverageMacrosPerMonth = ({ dailyAverages}: {dailyAverages: FoodL
     };
 };
 
+// NOTE: EXTREMELY SENSETIVE FUNCTION HANDLE WITH CARE;
+export const deleteFoodLog = async ({ foodLogId }:{foodLogId: string}) => {
+    if(foodLogId){
+        const {data, error } = await supabase.from("foodLogs").delete({ count: 'exact'}).eq("id", foodLogId);
+    };
+};
+
 
 
 export default {
@@ -305,4 +312,5 @@ export default {
     reduceMonthlyFoodLogsByDates,
     getAverageMacrosPerDay,
     getAverageMacrosPerMonth,
+    deleteFoodLog,
 };

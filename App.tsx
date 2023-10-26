@@ -29,7 +29,7 @@ const App = () => {
           <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Calendar" component={CalendarScreen}  />
-          <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
+          <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: 'profile', headerBackTitle:"back"}} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

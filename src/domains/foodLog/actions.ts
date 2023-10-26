@@ -1,7 +1,7 @@
 import {produce} from 'immer';
 import FoodLogService from "./services";
 import FoodService from "../food/services";
-import { CreateFoodLogActionArgs } from "./types";
+import { CreateFoodLogActionArgs, FoodLog } from "./types";
 import { ActionParams } from '../types';
 
 export const fetchFoodLogsAction = ({ set }: ActionParams) => 
@@ -86,4 +86,12 @@ export const createFoodLogAction = ({ set, get }: ActionParams) =>
         }));
 
         return { success: !get().foodLogs.createFoodLogError}
+    };
+
+export const deleteFoodLogAction = ({ set, get }: ActionParams) =>
+    async ({ foodLogId }: { foodLogId: string}) => {
+        set(produce((draft: any)  => {
+            draft.foodLogs.data = draft.foodLogs.data.filter((item: FoodLog) => item.id !== foodLogId);
+            FoodLogService.deleteFoodLog({ foodLogId })
+        }));
     };

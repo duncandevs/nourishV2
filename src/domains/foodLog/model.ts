@@ -1,4 +1,4 @@
-import { createFoodLogAction, fetchFoodLogsAction } from "./actions"
+import { createFoodLogAction, fetchFoodLogsAction, deleteFoodLogAction } from "./actions"
 import { FoodLogsModel  } from "./types"
 
 export const createFoodLogsModel = (set: Function, get: Function): FoodLogsModel => ({
@@ -10,5 +10,6 @@ export const createFoodLogsModel = (set: Function, get: Function): FoodLogsModel
         createFoodLogIsLoading: false,
         createFoodLogError: null,
         createFoodLog: createFoodLogAction({ set, get }),
+        deleteFoodLog: deleteFoodLogAction({ set, get }),
     }
 })

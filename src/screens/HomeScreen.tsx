@@ -18,6 +18,7 @@ import {
 import { todaysDateRegular, formatDateHeader } from '../utility/dates';
 import { useFoodLogMacrosByDate, useFoodLogMealCaloriesByDate } from '../domains/foodLog/hooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { SwipeToDeleteItem } from '../components/SwipeToDeleteItem';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HomeScreen'>;
 
@@ -33,7 +34,6 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
     const { 
         user: { data: user },
     } = useAppState();
-    console.log('user - ', user)
     const [ date, setDate] = useState(todaysDateRegular);
     const [mealStats, setMealStats] = useState<MealStats>([]);
     const { macros } = useFoodLogMacrosByDate({ date });
@@ -65,6 +65,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
     return (
         <SafeAreaView style={{height: '100%', backgroundColor: 'white'}}>
             <AppHeader navigation={navigation}/>
+            {/* <SwipeToDeleteItem /> */}
             <EditMacrosBottomSheet isVisible={isEditMacrosVisible} onClose={onEditMacrosVisibility} startingValue={user?.calorie_target}/>
             <ScrollView> 
                 <View style={[styles.gutter, styles.calendarHeader]}>

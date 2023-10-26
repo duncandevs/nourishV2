@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Text } from "../theme";
 import { TextPillButton } from "./TextPillButton";
 import { FoodMealType } from "../domains/food/types";
-import { useFoodLogsByDateAndMealType } from "../domains/foodLog/hooks";
+import { useDeleteFoodLog, useFoodLogsByDateAndMealType } from "../domains/foodLog/hooks";
 import { FoodLog } from "../domains/foodLog/types";
+import { Button } from "react-native-elements";
 
 type MealsDisplayProps = {
     date: string
@@ -12,7 +13,9 @@ type MealsDisplayProps = {
 
 export const MealsDisplay = ({ date }: MealsDisplayProps) => {
     const [selectedMealType, setSelectedMealType] = useState<FoodMealType | null>(null);
+    // const [foodLogs, setFoodLogs] = useState([]);
     const { foodLogs } = useFoodLogsByDateAndMealType({ date, mealType: selectedMealType });
+    const { deleteFoodLog } = useDeleteFoodLog();
     const handleMealSelect = (mealType: FoodMealType) => {
         if(mealType === selectedMealType){
             setSelectedMealType(null)
@@ -20,13 +23,27 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
             setSelectedMealType(mealType)
         }
     };
+    const [itemClicked, setItemClicked ] = useState<number | null>(null);
+    const handleItemClicked = (index: number) => {
+        const newIndex = index === itemClicked ? null : index;
+        setItemClicked(newIndex);
+    };
+    const handleDeleteItem = async (index: number) => {
+       await deleteFoodLog({foodLogId: foodLogs[index].id });
+       setItemClicked(null);
+    }
+    
     const renderList = (foodLogs: FoodLog[]) => {
         return (
             <View style={styles.mealsContainer}>
                 {foodLogs?.map((log, index)=> {
+                    const isItemClicked = itemClicked === index
                     return (
-                        <View key={`${log?.food?.name}-${index}`}>
+                        <TouchableOpacity key={`${log?.food?.name}-${index}`} onPress={()=>handleItemClicked(index)}>
                             <View style={[styles.row, styles.foodItemRow]}>
+                                {isItemClicked && <View style={{margin: 8}}>
+                                    <Button title="delete" buttonStyle={{backgroundColor: 'red'}} onPress={()=>handleDeleteItem(index)}/>
+                                </View>}
                                 <Text color="white" margin="m" style={styles.foodName}>{log?.food?.name}</Text>
                                 <View style={[styles.row, styles.foodItemMacros]}>
                                     <Text variant="paragraph3" color="white">{log.food.calories}</Text>
@@ -36,7 +53,7 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
                                 </View>
                             </View>
                             {(index !== foodLogs.length - 1) && <View style={{height: 1, backgroundColor: '#383838'}}></View>}
-                        </View>
+                        </TouchableOpacity>
                     )}
                 )}
             </View>
@@ -88,24 +105,23 @@ const styles = StyleSheet.create({
     mealsContainer: {
         backgroundColor: '#1F1F1F',
         minHeight: 300,
-        padding:16
     },
     mealTypesContainer: {
-        padding: 16
+        padding: 16,
     },
     row: {
         flexDirection:'row'
     },
     foodName: {
-        maxWidth: 180
+        maxWidth: 160
     },
     foodItemRow: {
         alignItems: 'center',
         justifyContent: 'space-between'
     },
     foodItemMacros: {
-        width: 160,
-        justifyContent: 'space-between'
+        width: 200,
+        justifyContent: 'space-around'
     },
     foodItemWrapper: {
         width: '100%',

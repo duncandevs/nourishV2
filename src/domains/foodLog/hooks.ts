@@ -90,4 +90,16 @@ export const useRecentFoodLogs = () => {
     }, [user]);
 
     return data;
-}
+};
+
+export const useDeleteFoodLog = () => {
+    const { data: foodLogs } = useFoodLogsByUser();
+    const { foodLogs: {deleteFoodLog} } = useAppState();
+
+    // const handleDelete = (foodLogId:string) => {
+    //     const item = foodLogs?.find((foodLog: FoodLog)=>foodLog.id === foodLogId)
+    //     if(item) console.log('delete item - ', item.food.name);
+    //     return item
+    // };
+    return { deleteFoodLog }
+};
