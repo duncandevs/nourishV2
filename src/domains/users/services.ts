@@ -77,7 +77,7 @@ const updateUserProfile = async ({ userId, name, email, password }: UpdateUserPr
         };
 
         if(name){
-            const {error: userError, data} = await supabase.from('users').update({ name }).eq('id', userId);
+            const {error: userError } = await supabase.from('users').update({ name }).eq('id', userId);
             if(userError) throw(userError);
         }
         return { error: '', data: null };

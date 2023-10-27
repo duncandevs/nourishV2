@@ -53,18 +53,21 @@ export const SignUpScreen = ({ navigation }: SignUpScreenProps) => {
     const SignUpWithEmail = async () => {
       let signUpSuccess = false;
       if(isSignUpValidated()){
+        // handle sign up
         const { data: authData, error } = await UserService.handleSignUp({
           email,
           password,
         });
+        // update user
         if(authData) {
           const userId = authData?.user?.id
           await UserService.updateUserProfile({ userId, name })
         };
+        
         if(error) setSignUpError(error);
         if(!error) signUpSuccess = true
       };
-      if(signUpSuccess) navigation.navigate('HomeScreen');
+      if(signUpSuccess) navigation.navigate('SignInScreen');
     };
 
     return (

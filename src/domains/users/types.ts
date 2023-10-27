@@ -1,4 +1,4 @@
-type UserModel = {
+export type UserModel = {
     name?: string;
     created_at: string,
     id: string,

@@ -54,7 +54,7 @@ export const SignInScreen = ({ navigation }: SignInScreenProps) => {
         if(!error) setSignInError('');
         if(data) { 
           signInSuccess = true
-          handleLoginSuccess({ data });
+          await handleLoginSuccess({ data });
         }
       };
 

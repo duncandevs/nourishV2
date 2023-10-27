@@ -78,8 +78,8 @@ export const ProfileScreen = ({ navigation }) => {
     };
 
     const logOut = () => {
-        UserService.logOutUser().then(()=>{
-            handleLogOut();
+        UserService.logOutUser().then(async ()=>{
+            await handleLogOut();
             navigation.navigate('AuthScreen');
         })
     };
