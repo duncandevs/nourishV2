@@ -9,7 +9,6 @@ export const createFoodLogsModel = (set: Function, get: Function): FoodLogsModel
         getFoodLogs: Actions.fetchFoodLogsAction({ set, get }),
         createFoodLogIsLoading: false,
         createFoodLogError: null,
-        createFoodLog: Actions.createFoodLogAction({ set, get }),
         deleteFoodLog: Actions.deleteFoodLogAction({ set, get }),
         setNewFoodLog: Actions.setNewFoodLogAction({ set, get }),
     }
