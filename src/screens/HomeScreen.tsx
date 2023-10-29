@@ -60,7 +60,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
         }
     }, [mealCalories]);
 
-    return (
+    return (    
         <SafeAreaView style={{height: '100%', backgroundColor: 'white'}}>
             <AppHeader navigation={navigation}/>
             <EditMacrosBottomSheet isVisible={isEditMacrosVisible} onClose={onEditMacrosVisibility} startingValue={user?.calorie_target}/>
