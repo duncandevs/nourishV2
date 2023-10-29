@@ -12,7 +12,7 @@ export const createFood = async ({ food }: CreateFoodArgs): FoodResponse => {
         if(error) return {error: error.message, data: null};
         return { data, error };
     } catch (error) {
-        return { error, data: null }
+        return { error: 'something went wrong', data: null }
     };
 };
 
@@ -33,7 +33,7 @@ export const createOrGetFood = async ({ food }: CreateFoodArgs): FoodResponse =>
         if(error) return {error: error.message, data: null};
         return { data, error };
     } catch (error) {
-        return { error, data: null }
+        return { error: 'something went wrong', data: null }
     };
 };
 
@@ -47,7 +47,7 @@ export const fetchFoodByName = async ({ foodName }: FetchFoodArgs): FoodResponse
         if(error) return {error: error.message, data: null};
         return { data, error };
     } catch (error) {
-        return { error, data: null }
+        return { error: 'something went wrong', data: null }
     };
 };
 

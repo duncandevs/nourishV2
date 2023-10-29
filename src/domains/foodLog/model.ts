@@ -1,4 +1,4 @@
-import { createFoodLogAction, fetchFoodLogsAction, deleteFoodLogAction } from "./actions"
+import Actions from "./actions"
 import { FoodLogsModel  } from "./types"
 
 export const createFoodLogsModel = (set: Function, get: Function): FoodLogsModel => ({
@@ -6,10 +6,11 @@ export const createFoodLogsModel = (set: Function, get: Function): FoodLogsModel
         data: null,
         isLoading: false,
         error: null,
-        getFoodLogs: fetchFoodLogsAction({ set, get }),
+        getFoodLogs: Actions.fetchFoodLogsAction({ set, get }),
         createFoodLogIsLoading: false,
         createFoodLogError: null,
-        createFoodLog: createFoodLogAction({ set, get }),
-        deleteFoodLog: deleteFoodLogAction({ set, get }),
+        createFoodLog: Actions.createFoodLogAction({ set, get }),
+        deleteFoodLog: Actions.deleteFoodLogAction({ set, get }),
+        setNewFoodLog: Actions.setNewFoodLogAction({ set, get }),
     }
 })

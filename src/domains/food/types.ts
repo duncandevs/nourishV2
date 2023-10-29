@@ -17,7 +17,7 @@ export type FetchFoodArgs = {
 
 export type FoodResponse = Promise<{
     data: Food | null,
-    error: string | null | unknown
+    error: string | null
 }>;
 
 export type FoodMealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';

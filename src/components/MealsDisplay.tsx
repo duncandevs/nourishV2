@@ -3,9 +3,10 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Text } from "../theme";
 import { TextPillButton } from "./TextPillButton";
 import { FoodMealType } from "../domains/food/types";
-import { useDeleteFoodLog, useFoodLogsByDateAndMealType } from "../domains/foodLog/hooks";
+import { useFoodLogsByDateAndMealType } from "../domains/foodLog/hooks";
 import { FoodLog } from "../domains/foodLog/types";
 import { Button } from "react-native-elements";
+import { useAppState } from "../state";
 
 type MealsDisplayProps = {
     date: string
@@ -15,7 +16,7 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
     const [selectedMealType, setSelectedMealType] = useState<FoodMealType | null>(null);
     // const [foodLogs, setFoodLogs] = useState([]);
     const { foodLogs } = useFoodLogsByDateAndMealType({ date, mealType: selectedMealType });
-    const { deleteFoodLog } = useDeleteFoodLog();
+    const { foodLogs: { deleteFoodLog } } = useAppState();
     const handleMealSelect = (mealType: FoodMealType) => {
         if(mealType === selectedMealType){
             setSelectedMealType(null)

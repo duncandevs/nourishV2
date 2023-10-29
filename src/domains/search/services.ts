@@ -1,5 +1,9 @@
 import { asyncFetchOpenAICompletion } from "../../clients/openAiClient";
 import { FetchMethod } from '../types';
+import SearchService from '../../domains/search/services';
+import FoodService from '../../domains/food/services';
+import { Food } from "../../domains/food/types";
+import { FoodLog } from "../foodLog/types";
 
 // const completionResponse = async (prompt: string) => 
 //     await openAiClient.completions.create({ model: MODEL, prompt, max_tokens:512, temperature: 0 });
@@ -12,17 +16,64 @@ import { FetchMethod } from '../types';
         4. beware of time complexity in <Array> vs <Object> especially with lookUps
 */
 
-const getOpenAISearchPromptResult = async (searchTerm:string): FetchMethod => {
+const MAX_RETRIES = 3;
+
+const isValidData = (data) => {
+    // Add validation logic for your data here, for example:
+    return data && typeof data === 'object' && data.name && data.calories;
+};
+
+const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
     try {
         const response = await asyncFetchOpenAICompletion({ searchTerm });
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
-        const data = generatedText ? JSON.parse(generatedText) : null
-        return { data, error:null};   
+        const data = generatedText ? JSON.parse(generatedText) : null;
+        
+        // Check if the data is valid
+        if (!isValidData(data)) {
+            // If not valid and we haven't reached our max retries, retry the function
+            if (retryCount < MAX_RETRIES) {
+                return getOpenAISearchPromptResult(searchTerm, retryCount + 1);
+            } else {
+                // TODO: log the error
+                // Max retries reached, return an error
+                return { data: null, error: 'Maximum retries reached and data is still invalid.' };
+            }
+        }
+
+        return { data, error: null };
     } catch (error) {
-        return { data: null, error}
+        return { data: null, error };
     }
 };
 
+type UseAISearchResult = Promise<{data: Food | null, error:string | null}> 
+
+export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[] | null | undefined, searchTerm: string }): UseAISearchResult => {
+    let food: Food | null = null;
+    let error: string | null = null;
+    const foodName = searchTerm.trim();
+    // check if food exists in recent logs;
+    const recentFoodLog = recents?.find((item)=>item.food.name === foodName);
+    if(recentFoodLog) food = recentFoodLog?.food;
+
+    // check if food is in the db
+    if(!recentFoodLog){
+      const { data }= await FoodService.fetchFoodByName({ foodName });
+      if(data) food = data
+    };
+
+    // get ai search result
+    if(!food) {
+      const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult(foodName);
+      food = newFood;
+      if(searchError) error = searchError;
+    };
+
+    return { data: food, error }
+}
+
 export default {
     getOpenAISearchPromptResult,
+    useFoodSearch,
 }

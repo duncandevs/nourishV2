@@ -41,6 +41,7 @@ export type FoodLogsModel = {
         createFoodLogError: string | null;
         getCalorieCount: Function;
         deleteFoodLog: Function;
+        setNewFoodLog: Function;
     }
 }
 
@@ -50,6 +51,19 @@ export type CreateFoodLogActionArgs = {
     mealType: FoodMealType;
     quantity: number;
 };
+
+export type CreateFoodLogFromSearchArgs = {
+    userId: string;
+    date: string;
+    foodData: Food;
+    mealType: FoodMealType;
+    quantity: number;
+};
+
+export type CreateFoodLogFromSearchResults = Promise<{
+    data: FoodLog | null,
+    error: string | null
+}>;
 
 export type Macros = {
     calories: number;
@@ -77,3 +91,4 @@ export type Day = {
   }
 
 export type FoodLogsAvgMacros = Record<string, Macros>
+

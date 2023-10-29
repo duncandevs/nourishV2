@@ -41,7 +41,6 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
     const goToSearchScreen = () => {
         navigation.navigate('SearchScreen');
     };
-
     const goToCalendarScreen = () => {
         navigation.navigate('Calendar');
     };

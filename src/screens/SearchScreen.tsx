@@ -1,16 +1,13 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Input } from 'react-native-elements';
 import { useState } from "react";
-import { useAppState } from "../state";
 import { Text } from "../theme";
 import ForkKnifeSvg from '../../assets/fork-knife.svg';
-import FoodService from '../domains/food/services';
-import FoodLogService from '../domains/foodLog/services';
+import SearchService from '../domains/search/services';
 import { useRecentFoodLogs } from "../domains/foodLog/hooks";
 import { FoodLog } from "../domains/foodLog/types";
-import { Food } from "../domains/food/types";
 import { ScrollView } from "react-native-gesture-handler";
 
 type SearchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SearchScreen'>;
@@ -19,24 +16,23 @@ type SearchScreenProps = {
   navigation: SearchScreenNavigationProp;
 };
 
+
 export const SearchScreen = ({ navigation }: SearchScreenProps) => {
+    const ripple = require('../../assets/ripple.gif');
     const [ searchTerm, setSearchTerm ] = useState('');
-    const { search: { handleSearch } } = useAppState();
+    const [ searchError, setSearchError ] = useState('');
+    const [ isLoading, setIsLoading ] = useState(false);
     const recents = useRecentFoodLogs();
 
     const handleOnSearch = async () => {
-        let existingFood: Food | null = null;
-        // check if food exists in recent logs;
-        const recentFoodLog = recents?.find((item)=>item.food.name === searchTerm);
-        if(recentFoodLog) existingFood = recentFoodLog?.food;
+        setIsLoading(true);
 
-        if(!recentFoodLog){
-          const {data }= await FoodService.fetchFoodByName({foodName: searchTerm});
-          if(data) existingFood = data
-        }
+        const {data: food, error } = await SearchService.useFoodSearch({ recents, searchTerm });
+      
+        setIsLoading(false);
 
-        if(!existingFood) handleSearch({ searchTerm });
-        navigation.navigate('SearchResultScreen', { food: existingFood });
+        if(food) navigation.navigate('SearchResultScreen', { food });
+        if(error) setSearchError('Something went wrong please try again!');
     };
     
     const handleRecentOnPress = (recent: FoodLog) => {
@@ -44,23 +40,27 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
     };
 
     return <View style={styles.container}>
-        <Input
-          leftIcon={{ type: 'font-awesome', name: 'search', size:18 }}
-          onChangeText={(text) => setSearchTerm(text)}
-          value={searchTerm}
-          placeholder="A bowl of strawberries"
-          inputStyle={styles.inputStyle}
-        />
-        <View style={styles.recents}>
-          <Text variant="paragraph2" color="gray03" style={styles.recentTitle}>Recent:</Text>
-          <ScrollView>
-            {recents?.map((item, index)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)} key={`${item.food.name}-${index}`}>
-                <Text variant="paragraph2" style={styles.recentItem}>{item.food.name}</Text>
-              </TouchableOpacity>
-            )}
-          </ScrollView>
-        </View>
-        <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
+        {isLoading && <Image source={ripple} style={styles.loading} />}
+        {!isLoading && <>
+          <Input
+            leftIcon={{ type: 'font-awesome', name: 'search', size:18 }}
+            onChangeText={(text) => setSearchTerm(text)}
+            value={searchTerm}
+            placeholder="A bowl of strawberries"
+            inputStyle={styles.inputStyle}
+          />
+          {searchError && <Text color="warn">{searchError}</Text>}
+          <View style={styles.recents}>
+            <Text variant="paragraph2" color="gray03" style={styles.recentTitle}>Recent:</Text>
+            <ScrollView>
+              {recents?.map((item, index)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)} key={`${item.food.name}-${index}`}>
+                  <Text variant="paragraph2" style={styles.recentItem}>{item.food.name}</Text>
+                </TouchableOpacity>
+              )}
+            </ScrollView>
+          </View>
+          <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
+        </>}
     </View>
 };
 
@@ -94,5 +94,10 @@ const styles = StyleSheet.create({
   },
   recentItem: {
     marginBottom: 8
-  }
+  },
+  loading: { 
+    width: 200, 
+    height: 200,
+    alignSelf: 'center'
+},
 });

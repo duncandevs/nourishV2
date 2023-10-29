@@ -71,8 +71,7 @@ export const ProfileScreen = ({ navigation }) => {
             if(error) {
                 setSaveError(error)
             } else {
-                setSaveError('')
-                alert('saved!')
+                setSaveError('');
             }
         }
     };

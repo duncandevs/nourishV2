@@ -16,8 +16,12 @@ import {
     FetchFoodLogByDateRangeArgs, 
     FetchMonthlyFoodLogsByUserIdArgs,
     FoodLogsAvgMacros,
-    FoodLogsDateMap 
+    FoodLogsDateMap,
+    CreateFoodLogFromSearchArgs,
+    CreateFoodLogFromSearchResults,
+
 } from './types';
+import FoodService from "../food/services";
 
 // Add service method to Get the most recent
 const fetchFoodLogByUserId = async ({userId }: FetchFoodLogArgs): FetchMethod => {
@@ -295,6 +299,34 @@ export const deleteFoodLog = async ({ foodLogId }:{foodLogId: string}) => {
     };
 };
 
+export const createFoodLogFromSearch = async ({ userId, foodData, mealType, date, quantity }: CreateFoodLogFromSearchArgs): CreateFoodLogFromSearchResults => {
+        let foodId = foodData?.id;
+
+        // check if this is an entry for an existing food
+        if(!foodId){
+            // create a new food
+            const {data: newFood, error: foodError} = await FoodService.createFood({ food: foodData});
+            foodId = newFood?.id;
+            if(foodError) return { error: foodError, data: null}
+        };
+
+        // create new foodLog with new or existing food
+        if(foodId){
+            const foodLogData = {
+                food_id: foodId,
+                user_id: userId,
+                meal_type: mealType,
+                date,
+                quantity,
+            };
+
+            const { data: foodLog , error: foodLogError} = await createFoodLog({ foodLog: foodLogData });
+            return { error: foodLogError, data: foodLog}
+        };
+
+        return {error: null, data: null}
+};
+
 
 
 export default {
@@ -313,4 +345,5 @@ export default {
     getAverageMacrosPerDay,
     getAverageMacrosPerMonth,
     deleteFoodLog,
+    createFoodLogFromSearch,
 };

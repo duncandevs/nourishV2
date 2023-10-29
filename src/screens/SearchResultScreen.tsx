@@ -10,6 +10,7 @@ import CircleCheck from "../../assets/circle-check.svg";
 import { TextPillButton } from "../components";
 import { FoodMealType } from "../domains/food/types";
 import { Food } from "../domains/food/types";
+import FoodLogService from "../domains/foodLog/services";
 
 type SearchResultScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SearchResultScreen'>;
 
@@ -27,12 +28,12 @@ const mealTypes: FoodMealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
 export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) => {
     const [mealType, setMealType] = useState(null)
     const {
-        search: { data: searchResults, isLoading },
-        foodLogs: { createFoodLog, createFoodLogError }
+        user: {data: user},
+        foodLogs: { setNewFoodLog }
     } = useAppState();
     const gradient = require('../../assets/round-gradient-blue-green.png');
-    const ripple = require('../../assets/ripple.gif');
     const [mealTypeError, showMealTypeError] = useState(false);
+    const [foodLogError, setFoodLogError ] = useState('');
     const {params: { food }} = route; // check if there's an existing food item
     const [ foodData, setFoodData ] = useState<Food>({
         id: '',
@@ -41,7 +42,9 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
         fat: 0,
         protein: 0,
         carbs: 0
-    })
+    });
+    const userId: string = user?.id
+
     const handleSaveFoodLog = async () => {
         if(!mealType) {
             showMealTypeError(true) 
@@ -53,9 +56,11 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
             mealType,
             date: getDateNow(),
             quantity: 1
-        }
-        const { success } = await createFoodLog(newFoodLog);
-        if(success) navigation.navigate('HomeScreen');
+        };
+        const { data, error } = await FoodLogService.createFoodLogFromSearch({ ...newFoodLog, userId });
+        if(data) setNewFoodLog({ foodLog: data })
+        if(!error) navigation.navigate('HomeScreen');
+        if(error) setFoodLogError(error);
     };
 
     const handleSelectMealType = (mealType: string) => {
@@ -65,56 +70,47 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
 
     useEffect(()=>{
         // if an existing food item is available set foodData to this
-        if(food){
-            setFoodData({...food});
-        } else if(searchResults) {
-            setFoodData({...searchResults});
-        }
-    }, [food, searchResults])
+        if(food) setFoodData({...food});
+    }, [food])
 
     return <View style={styles.container}>
-        {isLoading && <Image source={ripple} style={styles.loading} />}
-        { !isLoading && foodData && 
-            <>
-                <ImageBackground source={gradient} style={styles.outerCircle}>
-                    <View style={styles.innerCircle}>
-                        <Text variant="header1">{foodData.calories}</Text>
-                    </View>
-                </ImageBackground> 
-                <View>
-                    <Text marginTop="m" variant="paragraph2" style={styles.resultText}>Estimated calorie count for</Text>
-                    <Text variant="paragraph2" style={styles.resultText}>{foodData.name}</Text>
-                    <View style={[styles.row, styles.macros]}>
-                        <View style={styles.macroWrapper}>
-                            <Text variant="paragraph1">Fat</Text>
-                            <Text variant="header2">{foodData.fat}G</Text>
-                        </View>
-                        <View style={styles.macroWrapper}>
-                            <Text variant="paragraph1">Protein</Text>
-                            <Text variant="header2">{foodData.protein}G</Text>
-                        </View>
-                        <View style={styles.macroWrapper}>
-                            <Text variant="paragraph1">Carbs</Text>
-                            <Text variant="header2">{foodData.carbs}G</Text>
-                        </View>
-                    </View>
+        <ImageBackground source={gradient} style={styles.outerCircle}>
+            <View style={styles.innerCircle}>
+                <Text variant="header1">{foodData.calories}</Text>
+            </View>
+        </ImageBackground> 
+        <View>
+            <Text marginTop="m" variant="paragraph2" style={styles.resultText}>Estimated calorie count for</Text>
+            <Text variant="paragraph2" style={styles.resultText}>{foodData.name}</Text>
+            <View style={[styles.row, styles.macros]}>
+                <View style={styles.macroWrapper}>
+                    <Text variant="paragraph1">Fat</Text>
+                    <Text variant="header2">{foodData.fat}G</Text>
                 </View>
-                <View style={styles.mealTypes}>
-                    <View style={[styles.row]}>
-                        {mealTypes.map((i)=>{
-                            return <TextPillButton key={i} title={i} handleOnPress={()=>handleSelectMealType(i)} active={i === mealType}/>
-                        })}
-                    </View>
-                    {mealTypeError && <Text color="warn">please select a meal</Text>}
+                <View style={styles.macroWrapper}>
+                    <Text variant="paragraph1">Protein</Text>
+                    <Text variant="header2">{foodData.protein}G</Text>
                 </View>
-                <Button 
-                    buttonStyle={styles.addToLogButton} 
-                    title="add to log" onPress={handleSaveFoodLog}
-                    icon={<CircleCheck />}
-                    iconPosition="right"
-                /> 
-            </>
-        }
+                <View style={styles.macroWrapper}>
+                    <Text variant="paragraph1">Carbs</Text>
+                    <Text variant="header2">{foodData.carbs}G</Text>
+                </View>
+            </View>
+        </View>
+        <View style={styles.mealTypes}>
+            <View style={[styles.row]}>
+                {mealTypes.map((i)=>{
+                    return <TextPillButton key={i} title={i} handleOnPress={()=>handleSelectMealType(i)} active={i === mealType}/>
+                })}
+            </View>
+            {mealTypeError && <Text color="warn">please select a meal</Text>}
+        </View>
+        <Button 
+            buttonStyle={styles.addToLogButton} 
+            title="add to log" onPress={handleSaveFoodLog}
+            icon={<CircleCheck />}
+            iconPosition="right"
+        /> 
     </View>
 };
 

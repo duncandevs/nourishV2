@@ -4,7 +4,7 @@ import FoodService from "../food/services";
 import { CreateFoodLogActionArgs, FoodLog } from "./types";
 import { ActionParams } from '../types';
 
-export const fetchFoodLogsAction = ({ set }: ActionParams) => 
+const fetchFoodLogsAction = ({ set }: ActionParams) => 
     async ({ userId }: {userId: string}) => {
         // set is loading to true
         set(produce((state: any) => { 
@@ -27,7 +27,7 @@ export const fetchFoodLogsAction = ({ set }: ActionParams) =>
         }));
     };
 
-export const createFoodLogAction = ({ set, get }: ActionParams) =>
+const createFoodLogAction = ({ set, get }: ActionParams) =>
     async ({ foodData, mealType, date, quantity }: CreateFoodLogActionArgs) => {
         let foodError = '';
         let food = null;
@@ -44,6 +44,7 @@ export const createFoodLogAction = ({ set, get }: ActionParams) =>
             const {data: createFoodData, error: foodError} = await FoodService.createFood({ food: foodData});
             food = createFoodData;
         };
+
         if(foodError){
             set(produce((state: any) => {
                 state.foodLogs.createFoodLogError = foodError
@@ -84,10 +85,24 @@ export const createFoodLogAction = ({ set, get }: ActionParams) =>
         return { success: !get().foodLogs.createFoodLogError}
     };
 
-export const deleteFoodLogAction = ({ set, get }: ActionParams) =>
+const deleteFoodLogAction = ({ set, get }: ActionParams) =>
     async ({ foodLogId }: { foodLogId: string}) => {
         set(produce((draft: any)  => {
             draft.foodLogs.data = draft.foodLogs.data.filter((item: FoodLog) => item.id !== foodLogId);
             FoodLogService.deleteFoodLog({ foodLogId })
         }));
     };
+
+const setNewFoodLogAction = ({ set }: ActionParams) =>
+    async({ foodLog }: {foodLog: FoodLog }) => {
+        set(produce((state: any) => {
+            state.foodLogs.data = [foodLog, ...state.foodLogs.data]
+        }))
+    };
+
+export default {
+    fetchFoodLogsAction,
+    createFoodLogAction,
+    deleteFoodLogAction,
+    setNewFoodLogAction,
+}
