@@ -53,7 +53,6 @@ export type CreateFoodLogActionArgs = {
 };
 
 export type CreateFoodLogFromSearchArgs = {
-    userId: string;
     date: string;
     foodData: Food;
     mealType: FoodMealType;

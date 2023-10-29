@@ -105,6 +105,16 @@ const updateUserCalorieTarget = async ({ userId, target }: UpdateUserCalorieTarg
     };
 };
 
+const getUserFromAuth = async () => {
+    try {
+        const{data: userData, error } = await supabase.auth.getUser();
+        if(error) return {error: error.message, data: null };
+        return { data: userData.user, error: null };
+    } catch (error) {
+        return { error, data: null }; 
+    }
+}
+
 export default {
     handleAuth,
     handleFetchUser,
@@ -114,4 +124,5 @@ export default {
     updateUserCalorieTarget,
     logOutUser,
     deleteAccount,
+    getUserFromAuth,
 }

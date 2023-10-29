@@ -16,14 +16,19 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.nourish.fit"
+      "bundleIdentifier": "com.nourish.fit",
+      "runtimeVersion": {
+        "policy": "nativeVersion",
+        "buildNumber": "2"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nourish.fit"
+      "package": "com.nourish.fit",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,6 +38,9 @@
         "projectId": "53eedea4-a767-42a9-95de-35fadd75f38d"
       }
     },
-    "owner": "theaifirstco"
+    "owner": "theaifirstco",
+    "updates": {
+      "url": "https://u.expo.dev/53eedea4-a767-42a9-95de-35fadd75f38d"
+    }
   }
 }

@@ -22,6 +22,7 @@ import {
 
 } from './types';
 import FoodService from "../food/services";
+import UserService from "../users/services";
 
 // Add service method to Get the most recent
 const fetchFoodLogByUserId = async ({userId }: FetchFoodLogArgs): FetchMethod => {
@@ -299,8 +300,14 @@ export const deleteFoodLog = async ({ foodLogId }:{foodLogId: string}) => {
     };
 };
 
-export const createFoodLogFromSearch = async ({ userId, foodData, mealType, date, quantity }: CreateFoodLogFromSearchArgs): CreateFoodLogFromSearchResults => {
+export const createFoodLogFromSearch = async ({ foodData, mealType, date, quantity }: CreateFoodLogFromSearchArgs): CreateFoodLogFromSearchResults => {
         let foodId = foodData?.id;
+        let userId = null;
+
+        // get the userId from the Auth
+        const{ data: user } = await UserService.getUserFromAuth();
+        userId = user?.id;
+        alert(`user id from auth - ${userId}`);
 
         // check if this is an entry for an existing food
         if(!foodId){
@@ -309,9 +316,10 @@ export const createFoodLogFromSearch = async ({ userId, foodData, mealType, date
             foodId = newFood?.id;
             if(foodError) return { error: foodError, data: null}
         };
-
+        
         // create new foodLog with new or existing food
         if(foodId){
+            alert(`food id - ${foodId}`);
             const foodLogData = {
                 food_id: foodId,
                 user_id: userId,
@@ -323,7 +331,7 @@ export const createFoodLogFromSearch = async ({ userId, foodData, mealType, date
             const { data: foodLog , error: foodLogError} = await createFoodLog({ foodLog: foodLogData });
             return { error: foodLogError, data: foodLog}
         };
-
+        alert('no food id')
         return {error: null, data: null}
 };
 
