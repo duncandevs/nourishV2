@@ -93,7 +93,6 @@ const logOutUser = () => supabase.auth.signOut();
 const deleteAccount = async ({ userId }: {userId: string}) => {
     const { data, error } = await supabaseAdminClient.auth.admin.deleteUser(userId);
     if(!error) logOutUser();
-    if(error) alert('something went wrong please try later!');
 };
 
 const updateUserCalorieTarget = async ({ userId, target }: UpdateUserCalorieTargetArgs) => {

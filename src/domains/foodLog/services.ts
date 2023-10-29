@@ -307,7 +307,6 @@ export const createFoodLogFromSearch = async ({ foodData, mealType, date, quanti
         // get the userId from the Auth
         const{ data: user } = await UserService.getUserFromAuth();
         userId = user?.id;
-        alert(`user id from auth - ${userId}`);
 
         // check if this is an entry for an existing food
         if(!foodId){
@@ -319,7 +318,6 @@ export const createFoodLogFromSearch = async ({ foodData, mealType, date, quanti
         
         // create new foodLog with new or existing food
         if(foodId){
-            alert(`food id - ${foodId}`);
             const foodLogData = {
                 food_id: foodId,
                 user_id: userId,
@@ -331,7 +329,6 @@ export const createFoodLogFromSearch = async ({ foodData, mealType, date, quanti
             const { data: foodLog , error: foodLogError} = await createFoodLog({ foodLog: foodLogData });
             return { error: foodLogError, data: foodLog}
         };
-        alert('no food id')
         return {error: null, data: null}
 };
 
