@@ -19,7 +19,7 @@
       "bundleIdentifier": "com.nourish.fit",
       "runtimeVersion": {
         "policy": "nativeVersion",
-        "buildNumber": "2"
+        "buildNumber": "1"
       }
     },
     "android": {
@@ -28,7 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.nourish.fit",
-      "versionCode": 2
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
