@@ -9,6 +9,9 @@ export default {
         eas: {
             projectId: "f4669a33-c3ab-47c6-8988-4952ccb8587c"
         }
+    },
+    ios: {
+        bundleIdentifier: "com.nourish.fit"
     }
   },
 };
