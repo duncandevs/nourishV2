@@ -16,11 +16,7 @@
       ],
       "ios": {
         "supportsTablet": true,
-        "bundleIdentifier": "com.nourish.fit",
-        "runtimeVersion": {
-          "policy": "nativeVersion",
-          "buildNumber": "1"
-        }
+        "bundleIdentifier": "com.nourish.fit"
       },
       "android": {
         "adaptiveIcon": {
