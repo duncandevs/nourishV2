@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Alert, ImageBackground, StyleSheet, View } from 'react-native'
+import React from 'react'
+import { ImageBackground, StyleSheet, View } from 'react-native'
 import { Button } from 'react-native-elements';
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';

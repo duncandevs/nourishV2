@@ -1,6 +1,9 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "target": "es6",
+    "module": "commonjs",
+    "jsx": "react", // or "react-native" for React Native projects
   }
 }
