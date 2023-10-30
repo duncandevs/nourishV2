@@ -1,5 +1,5 @@
 import { SupabaseAuthArgs } from "../../clients/supabaseClient";
-import { supabase, supabaseAdminClient } from '../../../lib/supabase';
+import { supabase, supabaseAdminClient } from '../../clients/supabase';
 import { FetchMethod } from '../types';
 import { SignUpArgs, UpdateUserProfileArgs, UpdateUserCalorieTargetArgs } from './types';
 

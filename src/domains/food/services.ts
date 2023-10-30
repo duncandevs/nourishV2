@@ -1,5 +1,5 @@
 import { CreateFoodArgs } from "./types";
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../clients/supabase';
 import { FoodResponse, FetchFoodArgs } from "./types";
 
 export const createFood = async ({ food }: CreateFoodArgs): FoodResponse => {
