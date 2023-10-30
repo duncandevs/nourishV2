@@ -2,7 +2,7 @@
   "expo": {
     "name": "nourish",
     "slug": "nourish-fit",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/nourish-app-icon.png",
     "userInterfaceStyle": "light",
