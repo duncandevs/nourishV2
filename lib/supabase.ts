@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
-
+console.log('Constants - ', Constants.expoConfig?.extra);
 // const SUPABASE_DB_URL = Constants.expoConfig?.extra?.SUPABASE_DB_URL;
 // const SUPABASE_DB_ANON_KEY = Constants.expoConfig?.extra?.SUPABASE_DB_ANON_KEY;
 // const SUPABASE_DB_SERVICE_ROLE_KEY = Constants.expoConfig?.extra?.SUPABASE_DB_SERVICE_ROLE_KEY;
