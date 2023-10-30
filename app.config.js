@@ -1,5 +1,4 @@
-// REQUIRED TO LOAD THE ENVIRONMENT VARIABLES IN .ENV
-import 'dotenv/config';
+require('dotenv').config();
 
 export default {
   expo: {
