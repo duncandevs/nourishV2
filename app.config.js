@@ -11,7 +11,6 @@ export default {
         }
     },
     ios: {
-        version: "1.0.7",
         bundleIdentifier: "com.nourish.fit"
     }
   },
