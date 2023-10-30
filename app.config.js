@@ -19,10 +19,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
-      "runtimeVersion": {
-        "policy": "nativeVersion",
-        "buildNumber": "2"
-      }
+      "runtimeVersion": "nativeVersion"
     },
     "android": {
       "adaptiveIcon": {
