@@ -4,7 +4,7 @@ export default {
   expo: {
     "name": "nourish",
     "slug": "nourish-fit",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "orientation": "portrait",
     "icon": "./assets/nourish-app-icon.png",
     "userInterfaceStyle": "light",
