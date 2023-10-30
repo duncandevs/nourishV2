@@ -1,10 +1,10 @@
-require('dotenv').config();
+// require('dotenv').config();
 
 export default {
   expo: {
     "name": "nourish",
     "slug": "nourish-fit",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "orientation": "portrait",
     "icon": "./assets/nourish-app-icon.png",
     "userInterfaceStyle": "light",
