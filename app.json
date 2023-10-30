@@ -2,7 +2,6 @@
   "expo": {
     "name": "nourish",
     "slug": "nourish-fit",
-    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/nourish-app-icon.png",
     "userInterfaceStyle": "light",
@@ -18,11 +17,13 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
       "runtimeVersion": {
+        "version": "1.0.7",
         "policy": "nativeVersion",
         "buildNumber": "1"
       }
     },
     "android": {
+      "version": "1.0.7",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
