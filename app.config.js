@@ -2,7 +2,6 @@ require('dotenv').config();
 
 export default {
   expo: {
-    "runtimeVersion": "<remove this key>",
     "name": "nourish",
     "slug": "nourish-fit",
     "version": "1.0.12",
@@ -27,9 +26,7 @@ export default {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "runtimeVersion": {
-          "policy": "exposdk:49.0.13"
-        }
+        "runtimeVersion": "exposdk:49.0.13"
       },
       "package": "com.nourish.fit",
       "versionCode": 1
