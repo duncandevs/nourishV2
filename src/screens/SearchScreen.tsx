@@ -1,3 +1,4 @@
+import React from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';

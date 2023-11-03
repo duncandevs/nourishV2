@@ -4,6 +4,7 @@ import { FoodResponse, FetchFoodArgs } from "./types";
 
 export const createFood = async ({ food }: CreateFoodArgs): FoodResponse => {
     try {
+        food.name = food.name.toLocaleLowerCase();
         const { data, error } = await supabase
             .from('food')
             .insert({...food})

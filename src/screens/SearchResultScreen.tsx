@@ -43,7 +43,6 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
         protein: 0,
         carbs: 0
     });
-    const userId: string = user?.id
 
     const handleSaveFoodLog = async () => {
         if(!mealType) {

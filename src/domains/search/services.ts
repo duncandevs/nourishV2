@@ -40,7 +40,9 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
                 return { data: null, error: 'Maximum retries reached and data is still invalid.' };
             }
         }
-
+        // set data name with search term
+        if(data) data.name = searchTerm;
+        
         return { data, error: null };
     } catch (error) {
         return { data: null, error };
@@ -52,14 +54,14 @@ type UseAISearchResult = Promise<{data: Food | null, error:string | null}>
 export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[] | null | undefined, searchTerm: string }): UseAISearchResult => {
     let food: Food | null = null;
     let error: string | null = null;
-    const foodName = searchTerm.trim();
+    const foodName = searchTerm.trim().toLocaleLowerCase();
     // check if food exists in recent logs;
     const recentFoodLog = recents?.find((item)=>item.food.name === foodName);
     if(recentFoodLog) food = recentFoodLog?.food;
 
     // check if food is in the db
     if(!recentFoodLog){
-      const { data }= await FoodService.fetchFoodByName({ foodName });
+      const { data, error: fetchFoodError }= await FoodService.fetchFoodByName({ foodName });
       if(data) food = data
     };
 
