@@ -2,6 +2,7 @@ require('dotenv').config();
 
 export default {
   expo: {
+    "runtimeVersion": "<remove this key>",
     "name": "nourish",
     "slug": "nourish-fit",
     "version": "1.0.12",
