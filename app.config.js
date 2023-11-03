@@ -42,5 +42,13 @@ export default {
     "updates": {
       "url": "https://u.expo.dev/53eedea4-a767-42a9-95de-35fadd75f38d"
     },
+    "plugins": [
+      [
+        "expo-updates",
+        {
+          "username": "theaifirstco"
+        }
+      ]
+    ],
   },
 };
