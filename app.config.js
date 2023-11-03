@@ -20,7 +20,8 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
-      "runtimeVersion": "nativeVersion"
+      "runtimeVersion": "nativeVersion",
+      "buildNumber": 1,
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +32,7 @@ export default {
         }
       },
       "package": "com.nourish.fit",
-      "versionCode": 2
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
