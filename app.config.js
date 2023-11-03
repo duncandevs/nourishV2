@@ -5,7 +5,7 @@ export default {
     "runtimeVersion": "exposdk:49.0.13",
     "name": "nourish",
     "slug": "nourish-fit",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "orientation": "portrait",
     "icon": "./assets/nourish-app-icon.png",
     "userInterfaceStyle": "light",
