@@ -5,7 +5,7 @@ export default {
     "runtimeVersion": "<remove this key>",
     "name": "nourish",
     "slug": "nourish-fit",
-    "version": "1.0.12",
+    "version": "exposdk:1.0.12",
     "orientation": "portrait",
     "icon": "./assets/nourish-app-icon.png",
     "userInterfaceStyle": "light",
@@ -32,7 +32,7 @@ export default {
         }
       },
       "package": "com.nourish.fit",
-      "versionCode": "1"
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
