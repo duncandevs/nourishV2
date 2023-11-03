@@ -2,6 +2,7 @@ require('dotenv').config();
 
 export default {
   expo: {
+    "runtimeVersion": "<remove this key>",
     "name": "nourish",
     "slug": "nourish-fit",
     "version": "1.0.12",
@@ -19,7 +20,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
-      "runtimeVersion": "nativeVersion",
+      "runtimeVersion": "exposdk:49.0.13",
       "buildNumber": "1",
     },
     "android": {
