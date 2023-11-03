@@ -28,7 +28,7 @@ export default {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
         "runtimeVersion": {
-          "policy": "appVersion"
+          "policy": "exposdk:49.0.13"
         }
       },
       "package": "com.nourish.fit",
