@@ -4,6 +4,6 @@
     "strict": true,
     "target": "es6",
     "module": "commonjs",
-    "jsx": "react", // or "react-native" for React Native projects
+    "jsx": "react-jsx", // or "react-native" for React Native projects
   }
 }
