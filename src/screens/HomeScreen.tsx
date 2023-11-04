@@ -11,7 +11,6 @@ import {
     MacrosDisplay,
     RoundStats,
     MealsDisplay,
-    AppHeader,
     EditMacrosBottomSheet
 } from "../components";
 
@@ -61,8 +60,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
     }, [mealCalories]);
 
     return (    
-        <SafeAreaView style={{height: '100%', backgroundColor: 'white'}}>
-            <AppHeader navigation={navigation}/>
+        <View style={styles.container}>
             <EditMacrosBottomSheet isVisible={isEditMacrosVisible} onClose={onEditMacrosVisibility} startingValue={user?.calorie_target}/>
             <ScrollView> 
                 <View style={[styles.gutter, styles.calendarHeader]}>
@@ -94,11 +92,15 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
                     <MealsDisplay date={date} />
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 };
 
 const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        backgroundColor: 'white'
+    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',

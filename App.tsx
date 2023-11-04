@@ -1,4 +1,4 @@
-import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { 
@@ -11,12 +11,30 @@ import {
   ProfileScreen,
   SignUpScreen,
 } from './src/screens';
+import ProfileIcon from "./assets/profile.svg";
 import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
 import * as Updates from 'expo-updates';
 
 // Create the Stack Navigator
 const Stack = createStackNavigator();
+
+const ProfileHeader = ({ navigation }: {navigation: any}) => {
+  const goToProfile = () => {
+    navigation.navigate('Profile');
+  };
+
+  return (
+    <TouchableOpacity onPress={goToProfile} style={{paddingLeft: 16}}>
+      <ProfileIcon width={24} height={24}/>
+    </TouchableOpacity>
+  )
+};
+
+const headerOptionsWithProfileNav = ({ navigation }: {navigation: any}) => ({ 
+  headerTitle: "Nourish", 
+  headerLeft: () => <ProfileHeader navigation={navigation} />
+})
 
 const App = () => {
   // Check if any updates are available and fetch updates
@@ -42,7 +60,7 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="AuthScreen">
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={headerOptionsWithProfileNav}/>
           <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
           <Stack.Screen name="SearchResultScreen" component={SearchResultScreen} options={{headerTitle: '', headerBackTitle:"back"}} />
           <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }}/>
