@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View , Image, StyleSheet, ImageBackground} from "react-native";
 import { Text } from "../theme";
 import {RootStackParamList} from "./types";

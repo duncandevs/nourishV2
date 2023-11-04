@@ -8,3 +8,4 @@ export { MealsDisplay } from "./MealsDisplay";
 export { AppHeader } from "./AppHeader";
 export { DeleteAccountModal } from "./DeleteAccountModal";
 export { EditMacrosBottomSheet } from "./EditMacrosBottomSheet";
+export { ProfileIconHeader } from "./ProfileIconHeader";

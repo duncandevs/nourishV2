@@ -1,4 +1,3 @@
-import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { 
@@ -11,29 +10,17 @@ import {
   ProfileScreen,
   SignUpScreen,
 } from './src/screens';
-import ProfileIcon from "./assets/profile.svg";
 import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
 import * as Updates from 'expo-updates';
+import { ProfileIconHeader } from "./src/components";
 
 // Create the Stack Navigator
 const Stack = createStackNavigator();
 
-const ProfileHeader = ({ navigation }: {navigation: any}) => {
-  const goToProfile = () => {
-    navigation.navigate('Profile');
-  };
-
-  return (
-    <TouchableOpacity onPress={goToProfile} style={{paddingLeft: 16}}>
-      <ProfileIcon width={24} height={24}/>
-    </TouchableOpacity>
-  )
-};
-
 const headerOptionsWithProfileNav = ({ navigation }: {navigation: any}) => ({ 
   headerTitle: "Nourish", 
-  headerLeft: () => <ProfileHeader navigation={navigation} />
+  headerLeft: () => <ProfileIconHeader navigation={navigation} />
 })
 
 const App = () => {
