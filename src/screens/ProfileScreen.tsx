@@ -8,11 +8,11 @@ import CircluarUpArrow from "../../assets/circular-up-arrow.svg"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { validateEmail, validatePasswordWithConfirmation} from "../utility";
 import UserService from "../domains/users/services";
-import { DeleteAccountModal } from "../components";
+import { DeleteAccountModal, Toast } from "../components";
 
 
 export const ProfileScreen = ({ navigation }) => {
-    const { user: {data: user, handleLogOut } } = useAppState();
+    const { user: {data: user, handleLogOut, updateUserState } } = useAppState();
     const [ name, setName ] = useState('');
     const [ nameError, setNameError ] = useState('');
     const [ email, setEmail ] = useState('');
@@ -20,12 +20,13 @@ export const ProfileScreen = ({ navigation }) => {
     const [ password, setPassword ] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [ passwordConfirmation, setPasswordConfirmation ] = useState('');
-    const [passwordConfirmationError, setPasswordConfirmationError] = useState('');
+    const [ passwordConfirmationError, setPasswordConfirmationError] = useState('');
     const [ saveError, setSaveError ] = useState('');
     const [ isPasswordGroupShown, setIsPasswordGroupShown ] = useState(false);
     const [ isProfileInfoGroupShown, setIsProfileInfoGroupShown ] = useState(false);
     const [ isAccountInfoGroupShown, setIsAccountInfoGroupShown ] = useState(false);
     const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState(false);
+    const [ isSuccessToastShow, setIsSuccessToastShown ] = useState(false);
     
     useEffect(()=>{
         setName(user?.name);
@@ -72,6 +73,8 @@ export const ProfileScreen = ({ navigation }) => {
                 setSaveError(error)
             } else {
                 setSaveError('');
+                await updateUserState({ name, email });
+                setIsSuccessToastShown(true)
             }
         }
     };
@@ -98,8 +101,9 @@ export const ProfileScreen = ({ navigation }) => {
 
     return (
 
-        <ScrollView>
-            <View style={styles.container}>
+        <ScrollView style={styles.container}>
+            <Toast visible={isSuccessToastShow} message="updated successfully!" onDismiss={()=>setIsSuccessToastShown(false)} />
+            <View style={styles.forms}>
                 <View>
                     <View style={[styles.row, styles.infoGroup]}>
                         <Text variant="paragraph2" style={styles.title}>Profile Info</Text>
@@ -177,11 +181,13 @@ export const ProfileScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: Colors.gray00,
+        height: '100%'
+    },
+    forms: {
         padding: 16,
         gap: 32,
         paddingTop: 32,
-        backgroundColor: Colors.gray00,
-        height: '100%'
     },
     row: {
         flexDirection: 'row',

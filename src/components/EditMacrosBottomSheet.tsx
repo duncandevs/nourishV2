@@ -121,12 +121,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   thumbStyle: {
-    backgroundColor: Colors.alert, 
+    backgroundColor: Colors.highlight, 
     width: 24,
   },
   trackStyle: {
     height: 24,
-    backgroundColor: Colors.alert,
+    backgroundColor: Colors.highlight,
   },
   submitButton: {
     borderRadius: 10,

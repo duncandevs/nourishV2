@@ -9,13 +9,14 @@ export const Colors = {
     gray02: "#CACCCC",
     gray03: "#7E7F80",
     gray04: "#414042",
-    alert: "#C3FF76",
+    highlight: "#C3FF76",
     warn: "#AD1D00",
+    success: "#28a745",
     primary: '#3498db',
     secondary: '#2c3e50',
     background: '#ecf0f1',
     text: '#333',
-    blue: '#246EC4'
+    blue: '#246EC4',
 }
 
 export const theme = createTheme({
