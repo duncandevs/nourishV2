@@ -16,7 +16,7 @@ export const AddMealButton = ({ handleOnPress }: AddMealButtonProps) => {
                     <ForkKnifeSvg />
                 </View>
             </View>
-            <Text style={styles.title}>add meals</Text>
+            <Text style={styles.title}>add meal</Text>
         </TouchableOpacity>
     )
 };
