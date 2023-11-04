@@ -28,7 +28,8 @@ export default {
         "backgroundColor": "#ffffff",
       },
       "package": "com.nourish.fit",
-      "versionCode": 2
+      "versionCode": 2,
+      "icon": "./assets/nourish-app-icon.png",
     },
     "web": {
       "favicon": "./assets/favicon.png"
