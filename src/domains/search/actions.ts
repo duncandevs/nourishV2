@@ -12,7 +12,7 @@ export const handleSearchAction = ({ set }: ActionParams): Function =>
 
         // get search results
         const { data: searchResults, error: searchError } = 
-            await SearchService.getOpenAISearchPromptResult(searchTerm);
+            await SearchService.getAISearchResultByText(searchTerm);
 
         set(produce((state: any) => {
             state.search.error = searchError

@@ -1,4 +1,4 @@
-import { asyncFetchOpenAICompletion } from "../../clients/openAiClient";
+import { fetchGptByText, fetchGptByImage } from "../../clients/openAiClient";
 import { FetchMethod } from '../types';
 import SearchService from '../../domains/search/services';
 import FoodService from '../../domains/food/services';
@@ -23,9 +23,9 @@ const isValidData = (data) => {
     return data && typeof data === 'object' && data.name && data.calories;
 };
 
-const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
+const getAISearchResultByText = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
     try {
-        const response = await asyncFetchOpenAICompletion({ searchTerm });
+        const response = await fetchGptByText({ searchTerm });
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
         const data = generatedText ? JSON.parse(generatedText) : null;
         
@@ -33,7 +33,7 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
         if (!isValidData(data)) {
             // If not valid and we haven't reached our max retries, retry the function
             if (retryCount < MAX_RETRIES) {
-                return getOpenAISearchPromptResult(searchTerm, retryCount + 1);
+                return getAISearchResultByText(searchTerm, retryCount + 1);
             } else {
                 // TODO: log the error
                 // Max retries reached, return an error
@@ -48,6 +48,15 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
         return { data: null, error };
     }
 };
+
+const getAISearchResultByImage = async () => {
+    try {
+        const response = await fetchGptByImage();
+        console.log('response - ', response?.choices[0]?.message?.content);
+    } catch (error) {
+        console.log('oops something went wrong - ', error);
+    }
+}
 
 type UseAISearchResult = Promise<{data: Food | null, error:string | null}> 
 
@@ -67,7 +76,7 @@ export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[
 
     // get ai search result
     if(!food) {
-      const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult(foodName);
+      const {data: newFood, error: searchError} = await SearchService.getAISearchResultByText(foodName);
       food = newFood;
       if(searchError) error = searchError;
     };
@@ -76,6 +85,7 @@ export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[
 }
 
 export default {
-    getOpenAISearchPromptResult,
+    getAISearchResultByText,
+    getAISearchResultByImage,
     useFoodSearch,
 }
