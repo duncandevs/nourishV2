@@ -1,4 +1,3 @@
-import React from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -10,6 +9,7 @@ import SearchService from '../domains/search/services';
 import { useRecentFoodLogs } from "../domains/foodLog/hooks";
 import { FoodLog } from "../domains/foodLog/types";
 import { ScrollView } from "react-native-gesture-handler";
+import { RoundCameraButton } from "../components/RoundCameraButton";
 
 type SearchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SearchScreen'>;
 
@@ -61,6 +61,7 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
             </ScrollView>
           </View>
           <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
+          <RoundCameraButton title="Try food vision" onPress={()=>console.log('pressed camera button')}/>
         </>}
     </View>
 };
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
     padding: 16,
-    paddingTop: '50%',
+    paddingTop: '30%',
     alignItems: 'center',
   },
   buttonStyle: {

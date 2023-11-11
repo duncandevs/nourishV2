@@ -71,18 +71,19 @@ export const fetchGptByText = async ({ searchTerm }: {searchTerm: string}) => {
 };
 
 export const fetchGptByImage = async () => {
-    const prompt = "estimate the macros of the food or drink in this image. return results in json with the format {name: string, calories:number, fat:number, protein:number, carbs:number}. please do not respond with any other text even if you are unsure."
+    const prompt = "whats the name of the meal or drink in this photo?"
     return openai.chat.completions.create({
         model: "gpt-4-vision-preview",
         messages: [
-          {
-            role: "user",
-            content: [
-              { type: "text", text: prompt },
-              // Accepts Either a URL of the image or the base64 encoded image data.
-              { type: "image_url", image_url: {url: "https://www.africanbites.com/wp-content/uploads/2020/07/IMG_8963-2.jpg"}},
-            ],
-          },
+            { role: "system", content: "an assistant which only responds with names" },
+            {
+                role: "user",
+                content: [
+                    { type: "text", text: prompt },
+                    // Accepts Either a URL of the image or the base64 encoded image data.
+                    { type: "image_url", image_url: {url: "https://www.themediterraneandish.com/wp-content/uploads/2019/07/Homemade-Chicken-Gyro-Recipe-8.jpg"}},
+                ],
+            },
         ]
       });
 }

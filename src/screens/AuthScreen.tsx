@@ -13,7 +13,6 @@ type AuthScreenProps = {
 
 export const AuthScreen = ({ navigation }: AuthScreenProps ) => {
   const { user: { isLoading, data: userData} } = useAppState();
-
   async function signInWithEmail() {
     navigation.navigate('SignInScreen')
   };

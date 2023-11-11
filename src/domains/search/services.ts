@@ -52,9 +52,17 @@ const getAISearchResultByText = async (searchTerm: string, retryCount: number = 
 const getAISearchResultByImage = async () => {
     try {
         const response = await fetchGptByImage();
-        console.log('response - ', response?.choices[0]?.message?.content);
+        const prompt = response?.choices[0]?.message?.content;
+        console.log('image food prompt - ', prompt);
+        if(prompt) {
+            const {data, error} = await getAISearchResultByText(prompt, 2);
+            console.log({data, error})
+            if(data) data.name = prompt; // set data name with search term
+            if(data) return { data, error: null }
+            if(error) return { data: null, error }
+        };
     } catch (error) {
-        console.log('oops something went wrong - ', error);
+        return { data: null, error }
     }
 }
 
