@@ -1,4 +1,3 @@
-import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { Food } from '../domains/food/types';
 
 export type RootStackParamList = {
@@ -10,4 +9,5 @@ export type RootStackParamList = {
     SignUpScreen: undefined;
     Calendar: undefined;
     Profile: undefined;
+    CameraScreen: undefined;
 };

@@ -19,7 +19,7 @@ type SearchScreenProps = {
 
 
 export const SearchScreen = ({ navigation }: SearchScreenProps) => {
-    const ripple = require('../../assets/ripple.gif');
+    const rippleGif = require('../../assets/ripple.gif');
     const [ searchTerm, setSearchTerm ] = useState('');
     const [ searchError, setSearchError ] = useState('');
     const [ isLoading, setIsLoading ] = useState(false);
@@ -40,8 +40,10 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
       setSearchTerm(recent.food.name)
     };
 
+    const goToCameraScreen = () => navigation.navigate('CameraScreen');
+
     return <View style={styles.container}>
-        {isLoading && <Image source={ripple} style={styles.loading} />}
+        {isLoading && <Image source={rippleGif} style={styles.loading} />}
         {!isLoading && <>
           <Input
             leftIcon={{ type: 'font-awesome', name: 'search', size:18 }}
@@ -61,7 +63,7 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
             </ScrollView>
           </View>
           <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
-          <RoundCameraButton title="Try food vision" onPress={()=>console.log('pressed camera button')}/>
+          <RoundCameraButton title="Try food vision" onPress={goToCameraScreen}/>
         </>}
     </View>
 };

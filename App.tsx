@@ -9,6 +9,7 @@ import {
   CalendarScreen,
   ProfileScreen,
   SignUpScreen,
+  CameraScreen,
 } from './src/screens';
 import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
@@ -54,6 +55,7 @@ const App = () => {
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Calendar" component={CalendarScreen}  options={{headerBackTitle:"back"}}/>
           <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: 'profile', headerBackTitle:"back"}} />
+          <Stack.Screen name="CameraScreen" component={CameraScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

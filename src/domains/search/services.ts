@@ -49,9 +49,21 @@ const getAISearchResultByText = async (searchTerm: string, retryCount: number = 
     }
 };
 
-const getAISearchResultByImage = async () => {
+const getAISearchPromptByImage = async  ({ base64Image }: {base64Image: string}) => {
     try {
-        const response = await fetchGptByImage();
+        const response = await fetchGptByImage(base64Image);
+        console.log('response - ', response)
+        const prompt = response?.choices[0]?.message?.content;
+        if(prompt) return { data: prompt, error: null}
+        return { data: null, error: 'Internal server error'}
+    } catch (error) {
+        return { data: null, error: 'Internal server error' }
+    };
+};
+
+const getAISearchResultByImage = async ({ base64Image }: {base64Image: string}) => {
+    try {
+        const response = await fetchGptByImage(base64Image);
         const prompt = response?.choices[0]?.message?.content;
         console.log('image food prompt - ', prompt);
         if(prompt) {
@@ -61,6 +73,7 @@ const getAISearchResultByImage = async () => {
             if(data) return { data, error: null }
             if(error) return { data: null, error }
         };
+        return { data: null, error: 'Could not generate prompt'}
     } catch (error) {
         return { data: null, error }
     }
@@ -95,5 +108,6 @@ export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[
 export default {
     getAISearchResultByText,
     getAISearchResultByImage,
+    getAISearchPromptByImage,
     useFoodSearch,
 }

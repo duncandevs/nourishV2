@@ -6,4 +6,5 @@ export { SignInScreen } from "./SignInScreen";
 export { SignUpScreen } from "./SignUpScreen";
 export { CalendarScreen } from "./CalendarScreen";
 export { ProfileScreen } from "./ProfileScreen";
+export { CameraScreen } from "./CameraScreen";
 export {RootStackParamList} from "./types"

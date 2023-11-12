@@ -70,7 +70,7 @@ export const fetchGptByText = async ({ searchTerm }: {searchTerm: string}) => {
     });
 };
 
-export const fetchGptByImage = async () => {
+export const fetchGptByImage = async (base64Image: string) => {
     const prompt = "whats the name of the meal or drink in this photo?"
     return openai.chat.completions.create({
         model: "gpt-4-vision-preview",
@@ -81,7 +81,7 @@ export const fetchGptByImage = async () => {
                 content: [
                     { type: "text", text: prompt },
                     // Accepts Either a URL of the image or the base64 encoded image data.
-                    { type: "image_url", image_url: {url: "https://www.themediterraneandish.com/wp-content/uploads/2019/07/Homemade-Chicken-Gyro-Recipe-8.jpg"}},
+                    { type: "image_url", image_url: {url: `data:image/jpeg;base64,${base64Image}`}},
                 ],
             },
         ]
