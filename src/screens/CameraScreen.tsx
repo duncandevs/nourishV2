@@ -6,7 +6,7 @@ import RightArrowSvg from '../../assets/right-arrow.svg';
 import XIconSvg from '../../assets/x-icon.svg';
 import PhotoRollSvg from '../../assets/photo-roll-icon.svg';
 import { Text } from '../theme';
-
+import * as ImagePicker from 'expo-image-picker';
 
 import SearchService from '../domains/search/services';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -23,7 +23,7 @@ const CameraButton = ({ onPress }) => {
 const PhotoRollButton = ({ onPress }) => {
     const photoRollPng = require('../../assets/photo-roll-icon.png')
     return (
-        <TouchableOpacity style={styles.photoRollButton}>
+        <TouchableOpacity style={styles.photoRollButton} onPress={onPress}>
             <PhotoRollSvg />
         </TouchableOpacity>
     )
@@ -86,7 +86,35 @@ export const CameraScreen = () => {
     };
 
     const isCameraRollShown = !isLoading && !isSearchSuccessful
-    console.log('isCameraRollShown - ', isCameraRollShown)
+    
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [3, 4],
+          quality: 1,
+        });
+        console.log('result - ', result)
+        if(result){
+            const photoUrl = result?.assets?.[0]?.uri
+            console.log('photoURL - ', photoUrl);
+            if(photoUrl) {
+                setPhoto(photoUrl);
+                getImageSearch(photoUrl);
+            };
+        }
+        // if (!result.canceled) {
+        //     console.log('canceled')
+        //     setPhoto('')
+        // }
+    };
+    
+    const handlePhotoRoll = async () => {
+       const {status} =  await ImagePicker.requestMediaLibraryPermissionsAsync();
+       if(status === 'granted') {
+        await pickImage()
+       }
+    }
     return (
     <SafeAreaView style={styles.container}>
         {!photo && <View>
@@ -101,7 +129,7 @@ export const CameraScreen = () => {
             <CameraButton onPress={takePicture}/>
         </View>}
         {isCameraRollShown && <View style={styles.photoRollContainer}>
-            <PhotoRollButton />
+            <PhotoRollButton onPress={handlePhotoRoll}/>
         </View>}
         {(isLoading || isSearchSuccessful) &&
             <View>
