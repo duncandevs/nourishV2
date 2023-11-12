@@ -1,8 +1,9 @@
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { useState, useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity, Image, Keyboard } from "react-native";
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Input } from 'react-native-elements';
-import { useState } from "react";
+
 import { Text } from "../theme";
 import ForkKnifeSvg from '../../assets/fork-knife.svg';
 import SearchService from '../domains/search/services';
@@ -23,6 +24,7 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
     const [ searchTerm, setSearchTerm ] = useState('');
     const [ searchError, setSearchError ] = useState('');
     const [ isLoading, setIsLoading ] = useState(false);
+    const [isCameraButtonShown, setIsCameraButtonShown] = useState(true);
     const recents = useRecentFoodLogs();
 
     const handleOnSearch = async () => {
@@ -42,6 +44,31 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
 
     const goToCameraScreen = () => navigation.navigate('CameraScreen');
 
+    const _keyboardDidShow = () => {
+      setIsCameraButtonShown(false)
+    };
+    
+    const _keyboardDidHide = () => {
+      setIsCameraButtonShown(true)
+    };
+    
+    useEffect(() => {
+      const keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        _keyboardDidShow,
+      );
+      const keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        _keyboardDidHide,
+      );
+    
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []);
+    
+
     return <View style={styles.container}>
         {isLoading && <Image source={rippleGif} style={styles.loading} />}
         {!isLoading && <>
@@ -51,6 +78,9 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
             value={searchTerm}
             placeholder="A bowl of strawberries"
             inputStyle={styles.inputStyle}
+            onPressIn={() => setIsCameraButtonShown(false)}
+
+            // onPressOut={()=>setIsCameraButtonShown(true)}
           />
           {searchError && <Text color="warn">{searchError}</Text>}
           <View style={styles.recents}>
@@ -63,7 +93,7 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
             </ScrollView>
           </View>
           <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
-          <RoundCameraButton title="Try food vision" onPress={goToCameraScreen}/>
+          {isCameraButtonShown && <RoundCameraButton title="Try food vision" onPress={goToCameraScreen}/>}
         </>}
     </View>
 };

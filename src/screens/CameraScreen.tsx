@@ -3,7 +3,8 @@ import { Camera, CameraType } from 'expo-camera';
 import { useState, useRef } from 'react';
 import { Button, StyleSheet, View, SafeAreaView, Image, Dimensions } from 'react-native';
 import RightArrowSvg from '../../assets/right-arrow.svg';
-import XIconSvg from '../../assets/x-icon.svg'
+import XIconSvg from '../../assets/x-icon.svg';
+import PhotoRollSvg from '../../assets/photo-roll-icon.svg';
 import { Text } from '../theme';
 
 
@@ -23,7 +24,7 @@ const PhotoRollButton = ({ onPress }) => {
     const photoRollPng = require('../../assets/photo-roll-icon.png')
     return (
         <TouchableOpacity style={styles.photoRollButton}>
-            <Image source={photoRollPng} />
+            <PhotoRollSvg />
         </TouchableOpacity>
     )
 }
@@ -66,7 +67,6 @@ export const CameraScreen = () => {
         if(photo) {
             setIsLoading(true);
             const base64 = await FileSystem.readAsStringAsync(photo, { encoding: FileSystem.EncodingType.Base64 });
-            console.log(base64); // or do something with the base64 string
             const { data, error } = await SearchService.getAISearchPromptByImage({ base64Image: base64});
             if(data) {
                 setFoodTitle(data);
