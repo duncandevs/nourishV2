@@ -15,7 +15,7 @@ export const RoundCameraButton = ({ title, onPress }: RoundCameraButtonProps) =>
             <TouchableOpacity style={styles.roundContainer}>
                 <CameraSvg />
             </TouchableOpacity>
-            <Text textAlign='center'>{title}</Text>
+            <Text textAlign='center' style={styles.title}>{title}</Text>
         </Pressable>
     );
 };
@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         bottom: '10%',
-        alignItems: 'center'
+        alignItems: 'center',
+        gap: 8
     },
     roundContainer: {
         width: 60,
@@ -33,5 +34,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#212121',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    title: {
+        fontWeight: '500',
     }
 })

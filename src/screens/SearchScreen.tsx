@@ -112,7 +112,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around', 
     padding: 10,
     width: 260,
-    margin: 16
+    margin: 16,
+    marginTop: 24
   },
   inputStyle: {
     fontSize: 24
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   recents: {
     alignSelf: "flex-start",
     margin: 16,
-    maxHeight: 180,
+    maxHeight: 200,
     width: '90%',
   },
   recentTitle:{

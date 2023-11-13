@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   loadTitle: {
     margin: 16,
-    fontWeight: 500,
+    fontWeight: '500',
   },
   ripple: {
     width:200, 
