@@ -52,7 +52,6 @@ const getAISearchResultByText = async (searchTerm: string, retryCount: number = 
 const getAISearchPromptByImage = async  ({ base64Image }: {base64Image: string}) => {
     try {
         const response = await fetchGptByImage(base64Image);
-        console.log('response - ', response)
         const prompt = response?.choices[0]?.message?.content;
         if(prompt) return { data: prompt, error: null}
         return { data: null, error: 'Internal server error'}
@@ -65,10 +64,9 @@ const getAISearchResultByImage = async ({ base64Image }: {base64Image: string}) 
     try {
         const response = await fetchGptByImage(base64Image);
         const prompt = response?.choices[0]?.message?.content;
-        console.log('image food prompt - ', prompt);
+
         if(prompt) {
             const {data, error} = await getAISearchResultByText(prompt, 2);
-            console.log({data, error})
             if(data) data.name = prompt; // set data name with search term
             if(data) return { data, error: null }
             if(error) return { data: null, error }

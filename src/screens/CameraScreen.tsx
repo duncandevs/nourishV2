@@ -1,6 +1,6 @@
 import * as FileSystem from 'expo-file-system';
 import { Camera, CameraType } from 'expo-camera';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button, StyleSheet, View, SafeAreaView, Image, Dimensions } from 'react-native';
 import RightArrowSvg from '../../assets/right-arrow.svg';
 import XIconSvg from '../../assets/x-icon.svg';
@@ -9,6 +9,7 @@ import { Text } from '../theme';
 import * as ImagePicker from 'expo-image-picker';
 
 import SearchService from '../domains/search/services';
+import { useRecentFoodLogs } from "../domains/foodLog/hooks";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -29,38 +30,41 @@ const PhotoRollButton = ({ onPress }) => {
     )
 }
 
-export const CameraScreen = () => {
+export const CameraScreen = ({ navigation }) => {
     const coloredDotsGif = require('../../assets/colored-dots.gif');
+    const rippleGif = require('../../assets/ripple.gif');
     const [type, setType] = useState(CameraType.back);
     const [isLoading, setIsLoading] = useState(false);
+    const [isFoodSearchLoading, setIsFoodSearchLoading] = useState(false);
     const [isSearchSuccessful, setIsSearchSuccessful] = useState(false);
     const [photo, setPhoto] = useState('');
     const [foodTitle, setFoodTitle] = useState('');
     const [searchError, setSearchError] = useState('');
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const cameraRef = useRef(null);
+    const recents = useRecentFoodLogs();
 
     if (!permission) {
-    // Camera permissions are still loading
-    return <Text>Loading...</Text>;
-    }
+        // Camera permissions are still loading
+        return <Text>Loading...</Text>;
+    };
 
     if (!permission.granted) {
-    // Camera permissions are not granted yet
-    return (
-        <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-        </View>
-    );
-    }
+        // Camera permissions are not granted yet
+        return (
+            <View style={styles.container}>
+            <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+            <Button onPress={requestPermission} title="grant permission" />
+            </View>
+        );
+    };
 
     const takePicture = async () => {
         if (cameraRef.current) {
             let photo = await cameraRef.current.takePictureAsync();
             setPhoto(photo.uri);
-            await getImageSearch(photo.uri)
-        }
+            await getImageSearch(photo.uri);
+        };
     };
 
     const getImageSearch = async (photo: string) => {
@@ -73,7 +77,7 @@ export const CameraScreen = () => {
                 setIsSearchSuccessful(true);
             }
             if(error) {
-                setSearchError(error)
+                setSearchError(error);
             }
             setIsLoading(false);
         };
@@ -85,7 +89,7 @@ export const CameraScreen = () => {
         setIsLoading(false);
     };
 
-    const isCameraRollShown = !isLoading && !isSearchSuccessful
+    const isCameraRollShown = !isLoading && !isSearchSuccessful;
     
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -94,27 +98,42 @@ export const CameraScreen = () => {
           aspect: [3, 4],
           quality: 1,
         });
-        console.log('result - ', result)
+
         if(result){
             const photoUrl = result?.assets?.[0]?.uri
-            console.log('photoURL - ', photoUrl);
             if(photoUrl) {
                 setPhoto(photoUrl);
                 getImageSearch(photoUrl);
             };
-        }
-        // if (!result.canceled) {
-        //     console.log('canceled')
-        //     setPhoto('')
-        // }
+        };
     };
     
     const handlePhotoRoll = async () => {
        const {status} =  await ImagePicker.requestMediaLibraryPermissionsAsync();
        if(status === 'granted') {
-        await pickImage()
-       }
-    }
+            await pickImage();
+       };
+    };
+
+    const handleSearch = async () => {
+        setIsFoodSearchLoading(true);
+        const {data: food, error } = await SearchService.useFoodSearch({ recents, searchTerm: foodTitle });
+        if(food) {
+            navigation.navigate('SearchResultScreen', { food });
+            setIsFoodSearchLoading(false);
+        };
+        if(error) {
+            setSearchError('Something went wrong please try again!');
+            setIsFoodSearchLoading(false);
+        };
+    };
+
+    if(isFoodSearchLoading) {
+        return <View style={styles.rippleWrapper}>
+                <Image source={rippleGif} style={styles.ripple} />
+            </View>
+    };
+
     return (
     <SafeAreaView style={styles.container}>
         {!photo && <View>
@@ -140,7 +159,7 @@ export const CameraScreen = () => {
                         <XIconSvg width={30} height={30} fill="white"/>
                     </TouchableOpacity>
                     {!isSearchSuccessful && <Image source={coloredDotsGif} style={styles.loading} />}
-                    <TouchableOpacity style={styles.rightArrowWrapper}>
+                    <TouchableOpacity style={styles.rightArrowWrapper} onPress={handleSearch}>
                         <RightArrowSvg width={30} height={30} fill="white"/>
                     </TouchableOpacity>
                 </View>
@@ -239,5 +258,16 @@ const styles = StyleSheet.create({
   loadTitle: {
     margin: 16,
     fontWeight: 500,
+  },
+  ripple: {
+    width:200, 
+    height:200, 
+    alignSelf: 'center'
+  },
+  rippleWrapper: {
+    flex: 1, 
+    height: '100%', 
+    backgroundColor: 'white', 
+    justifyContent: 'center'
   }
 });
