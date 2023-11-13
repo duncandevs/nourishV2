@@ -53,8 +53,8 @@ export const CameraScreen = ({ navigation }) => {
         // Camera permissions are not granted yet
         return (
             <View style={styles.container}>
-            <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-            <Button onPress={requestPermission} title="grant permission" />
+            <Text style={{ textAlign: 'center' }}>Click below to enable food vision</Text>
+            <Button onPress={requestPermission} title="grant camera permission" />
             </View>
         );
     };

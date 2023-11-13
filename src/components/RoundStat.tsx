@@ -1,37 +1,41 @@
 import { View, ImageBackground, StyleSheet } from "react-native";
-import { Text } from "../theme";
+import { Colors, Text } from "../theme";
 import { useEffect, useState } from "react";
 
 type StatProps = {
     title: string,
-    stat: number
+    stat: number,
+    color: string //COLOR AS HEX
 }
 
-export const RoundStat = ({ title, stat }: StatProps) => {
-    const [gradient, setGradient] = useState(null);
-
-    useEffect(()=>{
-        setGradient(stat === 0 ? require('../../assets/round-gradient-light.png') : require('../../assets/round-gradient-dark.png') )
-    }, [stat])
+export const RoundStat = ({ title, stat, color }: StatProps) => {
+    const colorStyle = { backgroundColor: color || Colors.gray04};
 
     return (
         <View style={styles.statContainer}>
-            {gradient && <>
-                <ImageBackground source={gradient} style={styles.outerCircle}>
-                    <View style={styles.innerCircle}>
-                        <Text variant="paragraph3">{stat}</Text>
-                    </View>
-                </ImageBackground> 
-                <Text variant="paragraph3" style={styles.statTitle}>{title}</Text>
-            </>}
+            <View style={[styles.outerCircle, colorStyle]}>
+                <View style={styles.innerCircle}>
+                    <Text variant="paragraph3">{stat}</Text>
+                </View>
+            </View> 
+            <Text variant="paragraph3" style={styles.statTitle}>{title}</Text>
         </View>
     )};
 
 export const RoundStats = ({ data }) => {
+    const COLORS = [
+        "#A1CDFF",
+        "#FFC876",
+        "#00A59B",
+        "#FF7676"
+    ]
     return (
         <View>
             <View style={styles.statsList}>
-                {data.map((item)=> <RoundStat key={item.title} title={item.title} stat={item.stat} />)}
+                {data.map((item, idx) => {
+                    const color = COLORS[idx]
+                    return <RoundStat color={color} key={item.title} title={item.title} stat={item.stat} />
+                })}
             </View>
         </View>
     )};
