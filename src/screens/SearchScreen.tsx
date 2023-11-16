@@ -25,6 +25,9 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
     const [ searchError, setSearchError ] = useState('');
     const [ isLoading, setIsLoading ] = useState(false);
     const recents = useRecentFoodLogs();
+    const [foodQuantity, setFoodQuantity] = useState<null | number>(null);
+    const [foodUnit, setFoodUnit] = useState('');
+    const [isFoodInputComplete, setIsFoodInputComplete] = useState(false);
 
     const handleOnSearch = async () => {
         setIsLoading(true);
@@ -41,6 +44,9 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
       setSearchTerm(recent.food.name)
     };
 
+    const handleFoodUnitChange = (unit:string) => setFoodUnit(unit);
+    const handleFoodQuantityChange = (quantity: number) => setFoodQuantity(quantity);
+
     return <View style={styles.container}>
         {isLoading && <Image source={ripple} style={styles.loading} />}
         {!isLoading && <>
@@ -52,17 +58,22 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
             inputStyle={styles.inputStyle}
           />
           {searchError && <Text color="warn">{searchError}</Text>}
-          <View style={styles.recents}>
-            <Text variant="paragraph2" color="gray03" style={styles.recentTitle}>Recent:</Text>
-            <ScrollView>
-              {recents?.map((item, index)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)} key={`${item.food.name}-${index}`}>
-                  <Text variant="paragraph2" style={styles.recentItem}>{item.food.name}</Text>
-                </TouchableOpacity>
-              )}
-            </ScrollView>
-          </View>
-          <ServingCounter />
-          <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
+          {!isFoodInputComplete &&<>
+            <View style={styles.recents}>
+              <Text variant="paragraph2" color="gray03" style={styles.recentTitle}>Recent:</Text>
+              <ScrollView>
+                {recents?.map((item, index)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)} key={`${item.food.name}-${index}`}>
+                    <Text variant="paragraph2" style={styles.recentItem}>{item.food.name}</Text>
+                  </TouchableOpacity>
+                )}
+              </ScrollView>
+            </View>
+          </>}
+          {isFoodInputComplete && <View style={styles.centerRow}>
+            <ServingCounter containerStyle={styles.counterStyle} onUnitChange={handleFoodUnitChange} onQuantityChange={handleFoodQuantityChange}/>
+          </View> }
+          {!isFoodInputComplete && <Button buttonStyle={styles.buttonStyle} title="amount" onPress={()=>setIsFoodInputComplete(true)} icon={<ForkKnifeSvg />} iconPosition="right" />}
+          {isFoodInputComplete && <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />}
         </>}
     </View>
 };
@@ -74,6 +85,7 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingTop: '50%',
     alignItems: 'center',
+    gap: 16
   },
   buttonStyle: {
     backgroundColor: 'black', 
@@ -86,10 +98,14 @@ const styles = StyleSheet.create({
   inputStyle: {
     fontSize: 24
   },
+  centerRow: {
+    height: 180,
+  },
   recents: {
     alignSelf: "flex-start",
-    margin: 16,
-    maxHeight: 180,
+    paddingLeft: 16,
+    paddingRight: 16,
+    height: 180,
     width: '90%',
   },
   recentTitle:{
@@ -102,5 +118,8 @@ const styles = StyleSheet.create({
     width: 200, 
     height: 200,
     alignSelf: 'center'
-},
+  },
+  counterStyle: {
+    marginTop: 24
+  }
 });

@@ -5,7 +5,7 @@ import SquarePlusIcon from "../../assets/square-plus-icon.svg";
 import { StyleSheet } from "react-native";
 import { Input } from "react-native-elements";
 import { Dropdown } from "react-native-element-dropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 type Unit =  "serving" | "cup" | "ounces" | "grams" | "pound" | "liter" | "gallon" | "teaspoon" | "tablespoon";
@@ -39,7 +39,13 @@ const convertUnitsToData = (unitsArray: Unit[]): ServingUnit[] => {
 // Using the function to create data array
 const data = convertUnitsToData(UNITS);
 
-export const ServingCounter = () => {
+type ServingCounterProps = {
+    onUnitChange: (unit: string) => void;
+    onQuantityChange: (quantity: number) => void;
+    containerStyle: {}
+}
+
+export const ServingCounter = ({ onUnitChange, onQuantityChange, containerStyle }: ServingCounterProps) => {
     const [ unit, setUnit ] = useState<Unit>("serving");
     const [quantity, setQuantity] = useState(1);
 
@@ -49,12 +55,20 @@ export const ServingCounter = () => {
     
     const addQuantity = () => {
         setQuantity(quantity + 1)
-    }
+    };
+
+    useEffect(()=>{
+        onUnitChange(unit);
+    }, [onUnitChange, unit]);
+
+    useEffect(()=>{ 
+        onQuantityChange(quantity);
+    }, [onQuantityChange, quantity]);
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <View style={styles.quantityWrapper}>
-                <TouchableOpacity onPress={()=>setQuantity(quantity - 1)}>
+                <TouchableOpacity onPress={minusQuantity}>
                     <SquareMinusIcon width={32} height={32}/>
                 </TouchableOpacity>
                 <Input 
@@ -62,7 +76,7 @@ export const ServingCounter = () => {
                     containerStyle={styles.inputContainerStyle} 
                     inputStyle={styles.inputStyle} 
                     onChangeText={(e)=>setQuantity(e)}/>
-                <TouchableOpacity onPress={()=>setQuantity(quantity + 1)}>
+                <TouchableOpacity onPress={addQuantity}>
                     <SquarePlusIcon width={32} height={32} />
                 </TouchableOpacity>
             </View>

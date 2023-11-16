@@ -51,6 +51,18 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
 
 type UseAISearchResult = Promise<{data: Food | null, error:string | null}> 
 
+/*
+    How to get around the quantity sizing issue
+    Add unit to food ie 16 oz -> steak
+    Make the unique key the <name, unit>
+        DB MODEL
+            1. Add Unit to Food
+            2. Add quantity to FoodLog
+        AI Search 
+            1. Add quantity to search params
+*/
+
+
 export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[] | null | undefined, searchTerm: string }): UseAISearchResult => {
     let food: Food | null = null;
     let error: string | null = null;
