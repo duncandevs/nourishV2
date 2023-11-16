@@ -10,6 +10,7 @@ import SearchService from '../domains/search/services';
 import { useRecentFoodLogs } from "../domains/foodLog/hooks";
 import { FoodLog } from "../domains/foodLog/types";
 import { ScrollView } from "react-native-gesture-handler";
+import { ServingCounter } from "../components/ServingCounter";
 
 type SearchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SearchScreen'>;
 
@@ -60,6 +61,7 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
               )}
             </ScrollView>
           </View>
+          <ServingCounter />
           <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
         </>}
     </View>
