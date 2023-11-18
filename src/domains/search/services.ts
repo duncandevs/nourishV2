@@ -1,4 +1,4 @@
-import { asyncFetchOpenAICompletion } from "../../clients/openAiClient";
+import { fetchGptByText, fetchGptByImage } from "../../clients/openAiClient";
 import { FetchMethod } from '../types';
 import SearchService from '../../domains/search/services';
 import FoodService from '../../domains/food/services';
@@ -29,26 +29,10 @@ const isValidData = (data) => {
     return data && typeof data === 'object' && data.name && data.calories;
 };
 
-// TODO: see https://platform.openai.com/docs/api-reference/chat/create for more on chat completions and JSON schema definition
-const constructSearchPrompt = (searchTerm: string, unit?:string) => {
-    // if(unit){
-    //     return `Estimate the number of macros for a ${unit} of ${searchTerm}.` 
-    // }
-    return `Estimate the number of macros for ${searchTerm}` 
-}
 
-type GetOpenAISearchPromptResultParams = {
-    searchTerm: string; 
-    retryCount?: number;
-    unit?: string;
-    quantity?: number;
-};
-
-const getOpenAISearchPromptResult = async ({ searchTerm, retryCount = 0, unit, quantity }: GetOpenAISearchPromptResultParams): Promise<FetchMethod> => {
+const getAISearchResultByText = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
     try {
-        const prompt = constructSearchPrompt(searchTerm, unit);
-        console.log('prompt - ', prompt)
-        const response = await asyncFetchOpenAICompletion({ prompt });
+        const response = await fetchGptByText({ searchTerm });
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
         const data: AIResults  = generatedText ? JSON.parse(generatedText) : null;
         
@@ -56,7 +40,7 @@ const getOpenAISearchPromptResult = async ({ searchTerm, retryCount = 0, unit, q
         if (!isValidData(data)) {
             // If not valid and we haven't reached our max retries, retry the function
             if (retryCount < MAX_RETRIES) {
-                return getOpenAISearchPromptResult({ searchTerm, retryCount: retryCount + 1, unit, quantity });
+                return getAISearchResultByText(searchTerm, retryCount + 1);
             } else {
                 // TODO: log the error
                 // Max retries reached, return an error
@@ -71,6 +55,34 @@ const getOpenAISearchPromptResult = async ({ searchTerm, retryCount = 0, unit, q
         return { data: null, error };
     }
 };
+
+const getAISearchPromptByImage = async  ({ base64Image }: {base64Image: string}) => {
+    try {
+        const response = await fetchGptByImage(base64Image);
+        const prompt = response?.choices[0]?.message?.content;
+        if(prompt) return { data: prompt, error: null}
+        return { data: null, error: 'Internal server error'}
+    } catch (error) {
+        return { data: null, error: 'Internal server error' }
+    };
+};
+
+const getAISearchResultByImage = async ({ base64Image }: {base64Image: string}) => {
+    try {
+        const response = await fetchGptByImage(base64Image);
+        const prompt = response?.choices[0]?.message?.content;
+
+        if(prompt) {
+            const {data, error} = await getAISearchResultByText(prompt, 2);
+            if(data) data.name = prompt; // set data name with search term
+            if(data) return { data, error: null }
+            if(error) return { data: null, error }
+        };
+        return { data: null, error: 'Could not generate prompt'}
+    } catch (error) {
+        return { data: null, error }
+    }
+}
 
 type UseAISearchResult = Promise<{data: Food | null, error:string | null}> 
 
@@ -99,9 +111,9 @@ export const useFoodSearch = async ({ recents, searchTerm, unit, quantity } : Us
 
     // get ai search result
     if(!foodParams) {
-        const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult({ searchTerm: foodName, unit, quantity });
-        foodParams = newFood;
-        if(searchError) error = searchError;
+      const {data: newFood, error: searchError} = await SearchService.getAISearchResultByText(foodName);
+      foodParams = newFood;
+      if(searchError) error = searchError;
     };
 
     // round off the macros
@@ -115,6 +127,8 @@ export const useFoodSearch = async ({ recents, searchTerm, unit, quantity } : Us
 }
 
 export default {
-    getOpenAISearchPromptResult,
+    getAISearchResultByText,
+    getAISearchResultByImage,
+    getAISearchPromptByImage,
     useFoodSearch,
 }

@@ -16,7 +16,6 @@ import {
 
 import { todaysDateRegular, formatDateHeader } from '../utility/dates';
 import { useFoodLogMacrosByDate, useFoodLogMealCaloriesByDate } from '../domains/foodLog/hooks';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HomeScreen'>;
 

@@ -10,3 +10,4 @@ export { DeleteAccountModal } from "./DeleteAccountModal";
 export { EditMacrosBottomSheet } from "./EditMacrosBottomSheet";
 export { ProfileIconHeader } from "./ProfileIconHeader";
 export { Toast } from "./Toast";
+export { RoundCameraButton } from "./RoundCameraButton";
