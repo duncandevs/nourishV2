@@ -9,6 +9,7 @@ import {
   CalendarScreen,
   ProfileScreen,
   SignUpScreen,
+  StopWatchScreen,
 } from './src/screens';
 import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
@@ -45,7 +46,8 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="AuthScreen">
+        <Stack.Navigator initialRouteName="StopWatchScreen">
+          <Stack.Screen name="StopWatchScreen" component={StopWatchScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={headerOptionsWithProfileNav}/>
           <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
