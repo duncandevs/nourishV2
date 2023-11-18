@@ -10,7 +10,6 @@ import { FoodMealType } from '../food/types';
 import { FetchMethod } from '../types';
 import { 
     FetchFoodLogArgs, 
-    CreateFoodLogArgs, 
     Macros, 
     FoodLog, 
     FetchFoodLogByDateRangeArgs, 
@@ -149,7 +148,7 @@ const getCalorieCount = ({ foodLogs, date }: {foodLogs: FoodLog[], date: string}
     const logsForTheDate = foodLogs?.filter(log => log.date.startsWith(date));
 
     // Sum up the calories for the filtered foodLogs
-    const totalCalories = logsForTheDate?.reduce((sum, log) => log.food?.calories ? sum + log.food.calories : sum, 0);
+    const totalCalories = logsForTheDate?.reduce((sum, log) => log.calories ? sum + log.calories : sum, 0);
     return totalCalories;
 };
 
@@ -173,13 +172,11 @@ const getMacrosByDate = ({
     // Use single reduce to compute all macros
     const macros = logsForTheDate?.reduce(
       (acc, log) => {
-        const food = log.food || {};
-  
         return {
-          calories: acc.calories + (food.calories || 0),
-          fat: acc.fat + (food.fat || 0),
-          protein: acc.protein + (food.protein || 0),
-          carbs: acc.carbs + (food.carbs || 0),
+          calories: acc.calories + (log.calories || 0),
+          fat: acc.fat + (log.fat || 0),
+          protein: acc.protein + (log.protein || 0),
+          carbs: acc.carbs + (log.carbs || 0),
         };
       },
       {
@@ -206,7 +203,7 @@ const getMacrosByDate = ({
     // Use single reduce to compute calorie stats for all meal types
     const mealStats = logsForTheDate?.reduce(
       (acc, log) => {
-        const calories = log.food?.calories || 0;
+        const calories = log.calories || 0;
   
         switch (log.meal_type) {
           case 'breakfast':
