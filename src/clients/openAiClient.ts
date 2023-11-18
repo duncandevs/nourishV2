@@ -52,12 +52,7 @@ export const schema = {
     },
 };
 
-
-// TODO: see https://platform.openai.com/docs/api-reference/chat/create for more on chat completions and JSON schema definition
-const constructSearchPrompt = (searchTerm: string) => `Estimate the number of macros for ${searchTerm}.`
-
-export const asyncFetchOpenAICompletion = async ({ searchTerm }: {searchTerm: string}) => {
-    const prompt = constructSearchPrompt(searchTerm)
+export const asyncFetchOpenAICompletion = async ({ prompt }: {prompt: string}) => {
     return openai.chat.completions.create({
         messages: [
             { role: "system", content: "helpful assistant" },

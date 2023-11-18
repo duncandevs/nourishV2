@@ -81,8 +81,10 @@ export const ServingCounter = ({ onUnitChange, onQuantityChange, containerStyle 
                 </TouchableOpacity>
             </View>
             <View style={styles.unitWrapper}>
-                <Text variant="paragraph2">{unit}</Text>
-                <Dropdown 
+                <Text variant="paragraph2">servings</Text>
+                {/* Handle this once accuracy of units is improved */}
+                {/* <Text variant="paragraph2">{unit}</Text> */}
+                {/* <Dropdown 
                     data={ data }  
                     labelField="labelField" 
                     valueField="valueField"
@@ -92,7 +94,7 @@ export const ServingCounter = ({ onUnitChange, onQuantityChange, containerStyle 
                     itemTextStyle={{fontSize: 24}}
                     iconColor="black"
                     iconStyle={styles.dropDownArrowIcon}
-                />
+                /> */}
             </View>
         </View>
     );

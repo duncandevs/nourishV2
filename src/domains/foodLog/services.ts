@@ -19,6 +19,7 @@ import {
     FoodLogsDateMap,
     CreateFoodLogFromSearchArgs,
     CreateFoodLogFromSearchResults,
+    CreateFoodLogParams,
 
 } from './types';
 import FoodService from "../food/services";
@@ -122,11 +123,18 @@ const fetchRecentFoodLogs = async ({ userId }:{userId: string}) => {
     }
 };
 
-const createFoodLog = async ({ foodLog }: CreateFoodLogArgs ): FetchMethod => {
+const createFoodLog = async (foodLogParams : CreateFoodLogParams ): FetchMethod => {
     try {
+        const params: CreateFoodLogParams = {
+            ...foodLogParams,
+            calories: foodLogParams.calories * foodLogParams.quantity,
+            fat: foodLogParams.fat * foodLogParams.quantity,
+            protein: foodLogParams.protein * foodLogParams.quantity,
+            carbs: foodLogParams.carbs * foodLogParams.quantity,
+        }
         const { data, error } = await supabase
             .from('foodLogs')
-            .insert({...foodLog})
+            .insert({...params})
             .select('*, food(*)')
             .single()
         if(error) return { data: null, error}
@@ -301,7 +309,7 @@ export const deleteFoodLog = async ({ foodLogId }:{foodLogId: string}) => {
 };
 
 export const createFoodLogFromSearch = async ({ foodData, mealType, date, quantity }: CreateFoodLogFromSearchArgs): CreateFoodLogFromSearchResults => {
-        let foodId = foodData?.id;
+        let food = foodData;
         let userId = null;
 
         // get the userId from the Auth
@@ -309,24 +317,28 @@ export const createFoodLogFromSearch = async ({ foodData, mealType, date, quanti
         userId = user?.id;
 
         // check if this is an entry for an existing food
-        if(!foodId){
+        if(!food?.id){
             // create a new food
             const {data: newFood, error: foodError} = await FoodService.createFood({ food: foodData});
-            foodId = newFood?.id;
+            if(newFood) food = newFood;
             if(foodError) return { error: foodError, data: null}
         };
         
         // create new foodLog with new or existing food
-        if(foodId){
-            const foodLogData = {
-                food_id: foodId,
+        if(food?.id && userId){
+            const foodLogParams = {
                 user_id: userId,
+                food_id: food.id,
                 meal_type: mealType,
                 date,
                 quantity,
+                calories: food.calories,
+                fat: food.fat,
+                protein: food.protein,
+                carbs: food.carbs,
             };
 
-            const { data: foodLog , error: foodLogError} = await createFoodLog({ foodLog: foodLogData });
+            const { data: foodLog , error: foodLogError} = await createFoodLog({ ...foodLogParams });
             return { error: foodLogError, data: foodLog}
         };
         return {error: null, data: null}

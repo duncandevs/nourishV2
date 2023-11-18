@@ -23,9 +23,26 @@ const isValidData = (data) => {
     return data && typeof data === 'object' && data.name && data.calories;
 };
 
-const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
+// TODO: see https://platform.openai.com/docs/api-reference/chat/create for more on chat completions and JSON schema definition
+const constructSearchPrompt = (searchTerm: string, unit?:string) => {
+    // if(unit){
+    //     return `Estimate the number of macros for a ${unit} of ${searchTerm}.` 
+    // }
+    return `Estimate the number of macros for ${searchTerm}.` 
+}
+
+type GetOpenAISearchPromptResultParams = {
+    searchTerm: string; 
+    retryCount?: number;
+    unit?: string;
+    quantity?: number;
+};
+
+const getOpenAISearchPromptResult = async ({ searchTerm, retryCount = 0, unit, quantity }: GetOpenAISearchPromptResultParams): Promise<FetchMethod> => {
     try {
-        const response = await asyncFetchOpenAICompletion({ searchTerm });
+        const prompt = constructSearchPrompt(searchTerm, unit);
+        console.log('prompt - ', prompt)
+        const response = await asyncFetchOpenAICompletion({ prompt });
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
         const data = generatedText ? JSON.parse(generatedText) : null;
         
@@ -33,7 +50,7 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
         if (!isValidData(data)) {
             // If not valid and we haven't reached our max retries, retry the function
             if (retryCount < MAX_RETRIES) {
-                return getOpenAISearchPromptResult(searchTerm, retryCount + 1);
+                return getOpenAISearchPromptResult({ searchTerm, retryCount: retryCount + 1, unit, quantity });
             } else {
                 // TODO: log the error
                 // Max retries reached, return an error
@@ -62,8 +79,14 @@ type UseAISearchResult = Promise<{data: Food | null, error:string | null}>
             1. Add quantity to search params
 */
 
+type UserFoodSearchParams = {
+    recents: FoodLog[] | null | undefined;
+    searchTerm: string;
+    unit?: string;
+    quantity?: number;
+}
 
-export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[] | null | undefined, searchTerm: string }): UseAISearchResult => {
+export const useFoodSearch = async ({ recents, searchTerm, unit, quantity } : UserFoodSearchParams): UseAISearchResult => {
     let food: Food | null = null;
     let error: string | null = null;
     const foodName = searchTerm.trim().toLocaleLowerCase();
@@ -72,14 +95,14 @@ export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[
     if(recentFoodLog) food = recentFoodLog?.food;
 
     // check if food is in the db
-    if(!recentFoodLog){
-      const { data, error: fetchFoodError }= await FoodService.fetchFoodByName({ foodName });
-      if(data) food = data
-    };
+    // if(!recentFoodLog){
+    //   const { data, error: fetchFoodError }= await FoodService.fetchFoodByName({ foodName });
+    //   if(data) food = data
+    // };
 
     // get ai search result
     if(!food) {
-      const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult(foodName);
+      const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult({ searchTerm: foodName, unit, quantity });
       food = newFood;
       if(searchError) error = searchError;
     };

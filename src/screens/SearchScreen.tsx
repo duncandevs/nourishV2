@@ -25,18 +25,18 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
     const [ searchError, setSearchError ] = useState('');
     const [ isLoading, setIsLoading ] = useState(false);
     const recents = useRecentFoodLogs();
-    const [foodQuantity, setFoodQuantity] = useState<null | number>(null);
+    const [foodQuantity, setFoodQuantity] = useState<number>(1);
     const [foodUnit, setFoodUnit] = useState('');
     const [isFoodInputComplete, setIsFoodInputComplete] = useState(false);
 
     const handleOnSearch = async () => {
         setIsLoading(true);
 
-        const {data: food, error } = await SearchService.useFoodSearch({ recents, searchTerm });
+        const {data: food, error } = await SearchService.useFoodSearch({ recents, searchTerm, unit:foodUnit, quantity: foodQuantity });
       
         setIsLoading(false);
 
-        if(food) navigation.navigate('SearchResultScreen', { food });
+        if(food) navigation.navigate('SearchResultScreen', { food, quantity: foodQuantity });
         if(error) setSearchError('Something went wrong please try again!');
     };
     

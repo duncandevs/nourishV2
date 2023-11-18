@@ -18,7 +18,8 @@ type SearchScreenProps = {
   navigation: SearchResultScreenNavigationProp;
   route: {
     params: {
-        food: Food | null
+        food: Food | null,
+        quantity: number
     }
   }
 };
@@ -34,7 +35,7 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
     const gradient = require('../../assets/round-gradient-blue-green.png');
     const [mealTypeError, showMealTypeError] = useState(false);
     const [foodLogError, setFoodLogError ] = useState('');
-    const {params: { food }} = route; // check if there's an existing food item
+    const {params: { food, quantity }} = route; // check if there's an existing food item
     const [ foodData, setFoodData ] = useState<Food>({
         id: '',
         name: '',
@@ -54,7 +55,7 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
             foodData,
             mealType,
             date: getDateNow(),
-            quantity: 1
+            quantity: quantity || 1,
         };
         const { data, error } = await FoodLogService.createFoodLogFromSearch({ ...newFoodLog });
         if(data) setNewFoodLog({ foodLog: data })

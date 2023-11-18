@@ -24,10 +24,26 @@ export type FoodLog = {
     date: string;
     quantity: number;
     meal_type: FoodMealType;
+    calories: number;
+    fat: number;
+    protein: number;
+    carbs: number;
 };
 
+export type CreateFoodLogParams = {
+    user_id: string;
+    food_id: string;
+    date: string;
+    quantity: number;
+    meal_type: FoodMealType;
+    calories: number;
+    fat: number;
+    protein: number;
+    carbs: number;
+}
+
 export type CreateFoodLogArgs = {
-    foodLog: FoodLog
+    foodLogData: CreateFoodLogParams
 };
 
 export type FoodLogsModel = {
