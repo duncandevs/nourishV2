@@ -4,6 +4,8 @@ import SearchService from '../../domains/search/services';
 import FoodService from '../../domains/food/services';
 import { Food } from "../../domains/food/types";
 import { FoodLog } from "../foodLog/types";
+import { getRoundedMacros } from "../../utility";
+import { Macros } from "../foodLog/types";
 
 // const completionResponse = async (prompt: string) => 
 //     await openAiClient.completions.create({ model: MODEL, prompt, max_tokens:512, temperature: 0 });
@@ -16,6 +18,10 @@ import { FoodLog } from "../foodLog/types";
         4. beware of time complexity in <Array> vs <Object> especially with lookUps
 */
 
+type AIResults = Macros & {
+    name: string;
+};
+
 const MAX_RETRIES = 3;
 
 const isValidData = (data) => {
@@ -27,7 +33,7 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
     try {
         const response = await asyncFetchOpenAICompletion({ searchTerm });
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
-        const data = generatedText ? JSON.parse(generatedText) : null;
+        const data: AIResults  = generatedText ? JSON.parse(generatedText) : null;
         
         // Check if the data is valid
         if (!isValidData(data)) {
@@ -40,7 +46,7 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
                 return { data: null, error: 'Maximum retries reached and data is still invalid.' };
             }
         }
-        // set data name with search term
+
         if(data) data.name = searchTerm;
         
         return { data, error: null };
@@ -52,27 +58,34 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
 type UseAISearchResult = Promise<{data: Food | null, error:string | null}> 
 
 export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[] | null | undefined, searchTerm: string }): UseAISearchResult => {
-    let food: Food | null = null;
+    let foodParams: AIResults | null = null
     let error: string | null = null;
     const foodName = searchTerm.trim().toLocaleLowerCase();
     // check if food exists in recent logs;
     const recentFoodLog = recents?.find((item)=>item.food.name === foodName);
-    if(recentFoodLog) food = recentFoodLog?.food;
+    if(recentFoodLog) foodParams = recentFoodLog?.food;
 
     // check if food is in the db
     if(!recentFoodLog){
       const { data, error: fetchFoodError }= await FoodService.fetchFoodByName({ foodName });
-      if(data) food = data
+      if(data) foodParams = data
     };
 
     // get ai search result
-    if(!food) {
-      const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult(foodName);
-      food = newFood;
-      if(searchError) error = searchError;
+    if(!foodParams) {
+        const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult(foodName);
+        foodParams = newFood;
+        if(searchError) error = searchError;
     };
 
-    return { data: food, error }
+    // round off the macros
+    if(foodParams) {
+        foodParams = {
+            ...foodParams,
+            ...getRoundedMacros(foodParams)
+        };
+    };
+    return { data: foodParams, error }
 }
 
 export default {

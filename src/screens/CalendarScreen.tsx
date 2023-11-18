@@ -14,6 +14,7 @@ import {
 } from "../domains/foodLog/types";
 import { MacrosDisplay } from "../components";
 import { ScrollView } from "react-native-gesture-handler";
+import { getRoundedMacros } from "../utility";
 
 
 export const CalendarScreen = () => {
@@ -66,12 +67,12 @@ export const CalendarScreen = () => {
 
     const selectedDateString = selectedDate?.dateString
     const title = selectedDateString ? `On ${selectedDate?.month}/${selectedDate?.day} you logged` : 'This month you averaged';
-    const displayMacros = {
+    const displayMacros = getRoundedMacros({
         calories: selectedDateString ?  dailyAvgMacros[selectedDateString]?.calories || 0 : monthlyAvgMacros?.calories || 0,
         fat: selectedDateString ?  dailyAvgMacros[selectedDateString]?.fat || 0 : monthlyAvgMacros?.fat || 0,
         protein: selectedDateString ?  dailyAvgMacros[selectedDateString]?.protein || 0 : monthlyAvgMacros?.protein || 0,
         carbs: selectedDateString ?  dailyAvgMacros[selectedDateString]?.carbs || 0 : monthlyAvgMacros?.carbs || 0,
-    }
+    })
 
     return <ScrollView style={{backgroundColor: 'white'}}>
         <View style={[styles.screen]}>
