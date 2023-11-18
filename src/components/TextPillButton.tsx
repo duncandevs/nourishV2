@@ -27,11 +27,11 @@ const styles = StyleSheet.create({
         borderColor: 'black'
     },
     container: {
-        width: 75,
-        height: 27,
+        width: 72,
+        height: 40,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 4
+        margin: 4,
     },
 })

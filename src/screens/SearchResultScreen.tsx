@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View , Image, StyleSheet, ImageBackground} from "react-native";
+import { View , Image, StyleSheet, StyleProp} from "react-native";
 import { Text } from "../theme";
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -33,7 +33,6 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
         user: {data: user},
         foodLogs: { setNewFoodLog }
     } = useAppState();
-    const gradient = require('../../assets/round-gradient-blue-green.png');
     const [mealTypeError, showMealTypeError] = useState(false);
     const [foodLogError, setFoodLogError ] = useState('');
     const {params: { food, quantity }} = route; // check if there's an existing food item
@@ -45,11 +44,12 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
         protein: 0,
         carbs: 0
     });
+
     const displayMacros: Macros = {
-        calories: foodData.calories * quantity,
-        fat: foodData.fat * quantity,
-        protein: foodData.protein * quantity,
-        carbs: foodData.carbs * quantity,
+        calories: foodData?.calories * quantity || 0,
+        fat: foodData?.fat * quantity || 0,
+        protein: foodData?.protein * quantity || 0,
+        carbs: foodData?.carbs * quantity || 0,
     };
 
     const handleSaveFoodLog = async () => {
@@ -81,26 +81,38 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
     }, [food])
 
     return <View style={styles.container}>
-        <ImageBackground source={gradient} style={styles.outerCircle}>
-            <View style={styles.innerCircle}>
-                <Text variant="header1">{displayMacros.calories}</Text>
+        <View style={styles.macrosContainer}>
+            <View style={styles.titleWrapper}>
+                <Text variant="paragraph1" style={styles.resultText} fontWeight="500">{foodData.name}</Text>
+                <View style={{height:1, backgroundColor: '#D9D9D9', margin: 0}}></View>
             </View>
-        </ImageBackground> 
-        <View>
-            <Text marginTop="m" variant="paragraph2" style={styles.resultText}>Estimated calorie count for</Text>
-            <Text variant="paragraph2" style={styles.resultText}>{foodData.name}</Text>
+            <View style={styles.caloriesSection}>
+                <View style={styles.largeRoundedWrapper}>
+                    <Text variant="header1" color="white">{displayMacros.calories}</Text>
+                    <Text color="white">Calories</Text>
+                </View>
+            </View>
             <View style={[styles.row, styles.macros]}>
-                <View style={styles.macroWrapper}>
-                    <Text variant="paragraph1">Fat</Text>
-                    <Text variant="header2">{displayMacros.fat}G</Text>
+                <View style={styles.smallRoundedWrapper}>
+                    <View style={[styles.macroWrapper, styles.fat]}>
+                        <Text variant="header2">{displayMacros.fat}</Text>
+                        <Text variant="paragraph2" fontWeight="500">G</Text>
+                    </View>
+                    <Text variant="paragraph2">Fat</Text>
                 </View>
-                <View style={styles.macroWrapper}>
-                    <Text variant="paragraph1">Protein</Text>
-                    <Text variant="header2">{displayMacros.protein}G</Text>
+                <View style={styles.smallRoundedWrapper}>
+                    <View style={[styles.macroWrapper, styles.protein]}>
+                        <Text variant="header2">{displayMacros.protein}</Text>
+                        <Text variant="paragraph2" fontWeight="500">G</Text>
+                    </View>
+                    <Text variant="paragraph2">Protein</Text>
                 </View>
-                <View style={styles.macroWrapper}>
-                    <Text variant="paragraph1">Carbs</Text>
-                    <Text variant="header2">{displayMacros.carbs}G</Text>
+                <View style={styles.smallRoundedWrapper}>
+                    <View style={[styles.macroWrapper, styles.carbs]}>
+                        <Text variant="header2">{displayMacros.carbs}</Text>
+                        <Text variant="paragraph2" fontWeight="500">G</Text>
+                    </View>
+                    <Text variant="paragraph2">Carbs</Text>
                 </View>
             </View>
         </View>
@@ -125,9 +137,10 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         height: '100%',
-        paddingTop: '28%',
         backgroundColor: 'white',
-        padding: 16
+        paddingTop: 48,
+        padding: 16,
+        gap: 32
     },
     loading: { 
         width: 200, 
@@ -138,39 +151,63 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     addToLogButton: {
-        width: 180,
-        borderRadius: 20,
-        justifyContent: 'space-around',
+        width: 269,
+        height: 48,
+        borderRadius: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        justifyContent: 'space-between',
         backgroundColor: 'black'
     },
-    outerCircle: {
-        width: 124,
-        height: 124,
-        borderRadius: 124,
-        justifyContent: 'center',
-        alignItems: 'center',
-    }, 
-    innerCircle: {
-        backgroundColor: 'white',
-        width: 108,
-        height: 108,
-        borderRadius: 108,
-        justifyContent: 'center',
-        alignItems: 'center'
+    macrosContainer: {
+        gap: 32
     },
     macros:{
         justifyContent: 'center',
-        margin: 16
+        gap:20
     },
     macroWrapper: {
-        margin: 8,
-        alignItems: 'center'
+        width: 72,
+        height: 88,
+        backgroundColor: 'gray',
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
     },
     mealTypes: {
         marginBottom: 32 ,
         alignItems: 'center'
     },
     resultText: {
-        textAlign: 'center'
+        textAlign: 'center',
+    },
+    titleWrapper:{
+        maxWidth: 300,
+        gap: 10
+    },
+    caloriesSection: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    largeRoundedWrapper: {
+        width: 114,
+        height: 122,
+        backgroundColor: 'black',
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    smallRoundedWrapper: {
+        alignItems: 'center'
+    },
+    fat: {
+        backgroundColor: '#FFC876'
+    },
+    protein: {
+        backgroundColor: '#A1CDFF'
+    },
+    carbs: {
+        backgroundColor: '#FF7676'
     }
 })
