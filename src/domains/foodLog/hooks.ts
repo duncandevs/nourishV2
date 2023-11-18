@@ -3,6 +3,7 @@ import { useAppState } from "../../state";
 import FoodLogsService from "../foodLog/services";
 import { FoodMealType } from "../food/types";
 import { FoodLog } from "./types";
+import { getRoundedMacros } from "../../utility";
 
 export const useFoodLogsByUser = () => {
     const { 
@@ -36,8 +37,9 @@ export const useFoodLogMacrosByDate = ({ date }: {date: string}) => {
             FoodLogsService.getMacrosByDate({ foodLogs, date })
         );
     }, [foodLogs, date])
-
-    return { macros }
+    // round macros for display
+    const data = macros ? getRoundedMacros(macros) : null
+    return { macros: data }
 };
 
 export const useFoodLogMealCaloriesByDate = ({ date }: {date: string}) => {

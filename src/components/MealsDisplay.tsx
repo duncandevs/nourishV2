@@ -7,6 +7,7 @@ import { useFoodLogsByDateAndMealType } from "../domains/foodLog/hooks";
 import { FoodLog } from "../domains/foodLog/types";
 import { Button } from "react-native-elements";
 import { useAppState } from "../state";
+import { getRoundedMacros } from "../utility";
 
 type MealsDisplayProps = {
     date: string
@@ -38,7 +39,13 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
         return (
             <View style={styles.mealsContainer}>
                 {foodLogs?.map((log, index)=> {
-                    const isItemClicked = itemClicked === index
+                    const isItemClicked = itemClicked === index;
+                    const macros = getRoundedMacros({
+                        calories: log.food.calories,
+                        fat: log.food.fat,
+                        protein: log.food.protein,
+                        carbs: log.food.carbs,
+                    });
                     return (
                         <TouchableOpacity key={`${log?.food?.name}-${index}`} onPress={()=>handleItemClicked(index)}>
                             <View style={[styles.row, styles.foodItemRow]}>
@@ -47,10 +54,10 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
                                 </View>}
                                 <Text color="white" margin="m" style={styles.foodName}>{log?.food?.name}</Text>
                                 <View style={[styles.row, styles.foodItemMacros]}>
-                                    <Text variant="paragraph3" color="white">{log.calories}</Text>
-                                    <Text variant="paragraph3" color="white">{log.fat}g</Text>
-                                    <Text variant="paragraph3" color="white">{log.protein}g</Text>
-                                    <Text variant="paragraph3" color="white">{log.carbs}g</Text>
+                                    <Text variant="paragraph3" color="white">{macros.calories}</Text>
+                                    <Text variant="paragraph3" color="white">{macros.fat}g</Text>
+                                    <Text variant="paragraph3" color="white">{macros.protein}g</Text>
+                                    <Text variant="paragraph3" color="white">{macros.carbs}g</Text>
                                 </View>
                             </View>
                             {(index !== foodLogs.length - 1) && <View style={{height: 1, backgroundColor: '#383838'}}></View>}

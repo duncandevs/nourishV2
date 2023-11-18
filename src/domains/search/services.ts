@@ -4,6 +4,8 @@ import SearchService from '../../domains/search/services';
 import FoodService from '../../domains/food/services';
 import { Food } from "../../domains/food/types";
 import { FoodLog } from "../foodLog/types";
+import { getRoundedMacros } from "../../utility";
+import { Macros } from "../foodLog/types";
 
 // const completionResponse = async (prompt: string) => 
 //     await openAiClient.completions.create({ model: MODEL, prompt, max_tokens:512, temperature: 0 });
@@ -15,6 +17,10 @@ import { FoodLog } from "../foodLog/types";
         3. use auto completion feature on the items before performing any supabase look-ups
         4. beware of time complexity in <Array> vs <Object> especially with lookUps
 */
+
+type AIResults = Macros & {
+    name: string;
+};
 
 const MAX_RETRIES = 3;
 
@@ -44,7 +50,7 @@ const getOpenAISearchPromptResult = async ({ searchTerm, retryCount = 0, unit, q
         console.log('prompt - ', prompt)
         const response = await asyncFetchOpenAICompletion({ prompt });
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
-        const data = generatedText ? JSON.parse(generatedText) : null;
+        const data: AIResults  = generatedText ? JSON.parse(generatedText) : null;
         
         // Check if the data is valid
         if (!isValidData(data)) {
@@ -57,7 +63,7 @@ const getOpenAISearchPromptResult = async ({ searchTerm, retryCount = 0, unit, q
                 return { data: null, error: 'Maximum retries reached and data is still invalid.' };
             }
         }
-        // set data name with search term
+
         if(data) data.name = searchTerm;
         
         return { data, error: null };
@@ -68,16 +74,6 @@ const getOpenAISearchPromptResult = async ({ searchTerm, retryCount = 0, unit, q
 
 type UseAISearchResult = Promise<{data: Food | null, error:string | null}> 
 
-/*
-    How to get around the quantity sizing issue
-    Add unit to food ie 16 oz -> steak
-    Make the unique key the <name, unit>
-        DB MODEL
-            1. Add Unit to Food
-            2. Add quantity to FoodLog
-        AI Search 
-            1. Add quantity to search params
-*/
 
 type UserFoodSearchParams = {
     recents: FoodLog[] | null | undefined;
@@ -87,27 +83,35 @@ type UserFoodSearchParams = {
 }
 
 export const useFoodSearch = async ({ recents, searchTerm, unit, quantity } : UserFoodSearchParams): UseAISearchResult => {
-    let food: Food | null = null;
+    let foodParams: AIResults | null = null
+
     let error: string | null = null;
     const foodName = searchTerm.trim().toLocaleLowerCase();
     // check if food exists in recent logs;
     const recentFoodLog = recents?.find((item)=>item.food.name === foodName);
-    if(recentFoodLog) food = recentFoodLog?.food;
+    if(recentFoodLog) foodParams = recentFoodLog?.food;
 
     // check if food is in the db
-    // if(!recentFoodLog){
-    //   const { data, error: fetchFoodError }= await FoodService.fetchFoodByName({ foodName });
-    //   if(data) food = data
-    // };
-
-    // get ai search result
-    if(!food) {
-      const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult({ searchTerm: foodName, unit, quantity });
-      food = newFood;
-      if(searchError) error = searchError;
+    if(!recentFoodLog){
+      const { data, error: fetchFoodError }= await FoodService.fetchFoodByName({ foodName });
+      if(data) foodParams = data
     };
 
-    return { data: food, error }
+    // get ai search result
+    if(!foodParams) {
+        const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult({ searchTerm: foodName, unit, quantity });
+        foodParams = newFood;
+        if(searchError) error = searchError;
+    };
+
+    // round off the macros
+    if(foodParams) {
+        foodParams = {
+            ...foodParams,
+            ...getRoundedMacros(foodParams)
+        };
+    };
+    return { data: foodParams, error }
 }
 
 export default {
