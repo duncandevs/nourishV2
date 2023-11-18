@@ -44,12 +44,12 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
         protein: 0,
         carbs: 0
     });
-
+    const macroMultiplier = quantity || 1
     const displayMacros: Macros = {
-        calories: foodData?.calories * quantity || 0,
-        fat: foodData?.fat * quantity || 0,
-        protein: foodData?.protein * quantity || 0,
-        carbs: foodData?.carbs * quantity || 0,
+        calories: foodData?.calories * macroMultiplier || 0,
+        fat: foodData?.fat * macroMultiplier || 0,
+        protein: foodData?.protein * macroMultiplier || 0,
+        carbs: foodData?.carbs * macroMultiplier || 0,
     };
 
     const handleSaveFoodLog = async () => {

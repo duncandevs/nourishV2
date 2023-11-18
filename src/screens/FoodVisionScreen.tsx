@@ -30,7 +30,7 @@ const PhotoRollButton = ({ onPress }) => {
     )
 }
 
-export const CameraScreen = ({ navigation }) => {
+export const FoodVisionScreen = ({ navigation }) => {
     const coloredDotsGif = require('../../assets/colored-dots.gif');
     const rippleGif = require('../../assets/ripple.gif');
     const [type, setType] = useState(CameraType.back);

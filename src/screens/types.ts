@@ -9,5 +9,5 @@ export type RootStackParamList = {
     SignUpScreen: undefined;
     Calendar: undefined;
     Profile: undefined;
-    CameraScreen: undefined;
+    FoodVisionScreen: undefined;
 };

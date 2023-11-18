@@ -41,10 +41,10 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
                 {foodLogs?.map((log, index)=> {
                     const isItemClicked = itemClicked === index;
                     const macros = getRoundedMacros({
-                        calories: log.food.calories,
-                        fat: log.food.fat,
-                        protein: log.food.protein,
-                        carbs: log.food.carbs,
+                        calories: log.calories,
+                        fat: log.fat,
+                        protein: log.protein,
+                        carbs: log.carbs,
                     });
                     return (
                         <TouchableOpacity key={`${log?.food?.name}-${index}`} onPress={()=>handleItemClicked(index)}>

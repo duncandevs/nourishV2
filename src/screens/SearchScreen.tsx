@@ -51,7 +51,7 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
     
     const handleFoodQuantityChange = (quantity: number) => setFoodQuantity(quantity);
 
-    const goToCameraScreen = () => navigation.navigate('CameraScreen');
+    const goToFoodVisionScreen = () => navigation.navigate('FoodVisionScreen');
 
     const _keyboardDidShow = () => {
       setIsCameraButtonShown(false)
@@ -108,21 +108,10 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
           {!isFoodInputComplete && <Button disabled={!searchTerm} buttonStyle={styles.buttonStyle} title="servings" onPress={()=>setIsFoodInputComplete(true)} icon={<RightArrorSvg width={24} height={24} fill='white'/>} iconPosition="right" />}
           {isFoodInputComplete && <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />}
 
+          {isCameraButtonShown && <RoundCameraButton title="Try food vision" onPress={goToFoodVisionScreen}/>}
         </>}
     </View>
 };
-
-{/* <View style={styles.recents}>
-<Text variant="paragraph2" color="gray03" style={styles.recentTitle}>Recent:</Text>
-<ScrollView>
-  {recents?.map((item, index)=><TouchableOpacity onPress={()=>handleRecentOnPress(item)} key={`${item.food.name}-${index}`}>
-      <Text variant="paragraph2" style={styles.recentItem}>{item.food.name}</Text>
-    </TouchableOpacity>
-  )}
-</ScrollView>
-</View>
-<Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />
-{isCameraButtonShown && <RoundCameraButton title="Try food vision" onPress={goToCameraScreen}/>} */}
 
 const styles = StyleSheet.create({
   container: {
