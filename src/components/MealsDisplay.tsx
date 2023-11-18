@@ -47,10 +47,10 @@ export const MealsDisplay = ({ date }: MealsDisplayProps) => {
                                 </View>}
                                 <Text color="white" margin="m" style={styles.foodName}>{log?.food?.name}</Text>
                                 <View style={[styles.row, styles.foodItemMacros]}>
-                                    <Text variant="paragraph3" color="white">{log.food.calories}</Text>
-                                    <Text variant="paragraph3" color="white">{log.food.fat}g</Text>
-                                    <Text variant="paragraph3" color="white">{log.food.protein}g</Text>
-                                    <Text variant="paragraph3" color="white">{log.food.carbs}g</Text>
+                                    <Text variant="paragraph3" color="white">{log.calories}</Text>
+                                    <Text variant="paragraph3" color="white">{log.fat}g</Text>
+                                    <Text variant="paragraph3" color="white">{log.protein}g</Text>
+                                    <Text variant="paragraph3" color="white">{log.carbs}g</Text>
                                 </View>
                             </View>
                             {(index !== foodLogs.length - 1) && <View style={{height: 1, backgroundColor: '#383838'}}></View>}
