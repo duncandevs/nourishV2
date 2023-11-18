@@ -11,6 +11,7 @@ import { TextPillButton } from "../components";
 import { FoodMealType } from "../domains/food/types";
 import { Food } from "../domains/food/types";
 import FoodLogService from "../domains/foodLog/services";
+import { Macros } from "../domains/foodLog/types";
 
 type SearchResultScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SearchResultScreen'>;
 
@@ -44,6 +45,12 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
         protein: 0,
         carbs: 0
     });
+    const displayMacros: Macros = {
+        calories: foodData.calories * quantity,
+        fat: foodData.fat * quantity,
+        protein: foodData.protein * quantity,
+        carbs: foodData.carbs * quantity,
+    };
 
     const handleSaveFoodLog = async () => {
         if(!mealType) {
@@ -76,7 +83,7 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
     return <View style={styles.container}>
         <ImageBackground source={gradient} style={styles.outerCircle}>
             <View style={styles.innerCircle}>
-                <Text variant="header1">{foodData.calories}</Text>
+                <Text variant="header1">{displayMacros.calories}</Text>
             </View>
         </ImageBackground> 
         <View>
@@ -85,15 +92,15 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
             <View style={[styles.row, styles.macros]}>
                 <View style={styles.macroWrapper}>
                     <Text variant="paragraph1">Fat</Text>
-                    <Text variant="header2">{foodData.fat}G</Text>
+                    <Text variant="header2">{displayMacros.fat}G</Text>
                 </View>
                 <View style={styles.macroWrapper}>
                     <Text variant="paragraph1">Protein</Text>
-                    <Text variant="header2">{foodData.protein}G</Text>
+                    <Text variant="header2">{displayMacros.protein}G</Text>
                 </View>
                 <View style={styles.macroWrapper}>
                     <Text variant="paragraph1">Carbs</Text>
-                    <Text variant="header2">{foodData.carbs}G</Text>
+                    <Text variant="header2">{displayMacros.carbs}G</Text>
                 </View>
             </View>
         </View>

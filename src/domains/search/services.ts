@@ -28,7 +28,7 @@ const constructSearchPrompt = (searchTerm: string, unit?:string) => {
     // if(unit){
     //     return `Estimate the number of macros for a ${unit} of ${searchTerm}.` 
     // }
-    return `Estimate the number of macros for ${searchTerm}.` 
+    return `Estimate the number of macros for ${searchTerm}` 
 }
 
 type GetOpenAISearchPromptResultParams = {

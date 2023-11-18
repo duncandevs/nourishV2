@@ -6,6 +6,7 @@ import { Button, Input } from 'react-native-elements';
 import { useState } from "react";
 import { Text } from "../theme";
 import ForkKnifeSvg from '../../assets/fork-knife.svg';
+import RightArrorSvg from '../../assets/right-arrow.svg';
 import SearchService from '../domains/search/services';
 import { useRecentFoodLogs } from "../domains/foodLog/hooks";
 import { FoodLog } from "../domains/foodLog/types";
@@ -72,7 +73,7 @@ export const SearchScreen = ({ navigation }: SearchScreenProps) => {
           {isFoodInputComplete && <View style={styles.centerRow}>
             <ServingCounter containerStyle={styles.counterStyle} onUnitChange={handleFoodUnitChange} onQuantityChange={handleFoodQuantityChange}/>
           </View> }
-          {!isFoodInputComplete && <Button buttonStyle={styles.buttonStyle} title="amount" onPress={()=>setIsFoodInputComplete(true)} icon={<ForkKnifeSvg />} iconPosition="right" />}
+          {!isFoodInputComplete && <Button disabled={!searchTerm} buttonStyle={styles.buttonStyle} title="servings" onPress={()=>setIsFoodInputComplete(true)} icon={<RightArrorSvg width={24} height={24} fill='white'/>} iconPosition="right" />}
           {isFoodInputComplete && <Button buttonStyle={styles.buttonStyle} title="calculate" onPress={handleOnSearch} icon={<ForkKnifeSvg />} iconPosition="right" />}
         </>}
     </View>

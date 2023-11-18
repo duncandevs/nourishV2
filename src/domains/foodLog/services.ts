@@ -257,10 +257,10 @@ export const getAverageMacrosPerDay = ({ foodLogsDateMap }: { foodLogsDateMap: F
         for (let date of Object.keys(foodLogsDateMap)) {
             const dailyFoodLogs = foodLogsDateMap[date];
             const dailyTotal = dailyFoodLogs.reduce((acc, log) => ({
-                calories: (acc.calories || 0) + (log.food?.calories || 0),
-                fat: (acc.fat || 0) + (log.food?.fat || 0),
-                protein: (acc.protein || 0) + (log.food?.protein || 0),
-                carbs: (acc.carbs || 0) + (log.food?.carbs || 0)
+                calories: (acc.calories || 0) + (log.calories || 0),
+                fat: (acc.fat || 0) + (log.fat || 0),
+                protein: (acc.protein || 0) + (log.protein || 0),
+                carbs: (acc.carbs || 0) + (log.carbs || 0)
             }), {
                 calories: 0, fat: 0, protein: 0, carbs: 0
             });
