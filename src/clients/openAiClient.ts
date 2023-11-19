@@ -1,7 +1,13 @@
 import OpenAI from "openai";
 
-export const MODEL = 'gpt-3.5-turbo';
-export const IMAGE_MODEL = 'gpt-4-vision-preview';
+const GPT_MODELS = {
+    'gpt-3.5-turbo':  'gpt-3.5-turbo',
+    'gpt-4-1106-preview': 'gpt-4-1106-preview',
+    'gpt-4-vision-preview': 'gpt-4-vision-preview'
+}
+
+export const MODEL = GPT_MODELS['gpt-3.5-turbo'];
+export const IMAGE_MODEL = GPT_MODELS['gpt-4-vision-preview'];
 
 const openai = new OpenAI({ 
     apiKey: process.env.EXPO_PUBLIC_OPEN_AI_API_KEY, 
@@ -69,7 +75,10 @@ export const fetchGptByText = async ({ searchTerm }: {searchTerm: string}) => {
         ],
         model: MODEL,
         functions: [{ name: "set_food_json", parameters: schema }],
-        function_call: {name: 'set_food_json'}
+        function_call: {name: 'set_food_json'},
+        // response_format: {
+        //     type: 'json_object',
+        // }
     });
 };
 

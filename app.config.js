@@ -5,7 +5,7 @@ export default {
     "runtimeVersion": "exposdk:49.0.13",
     "name": "nourish",
     "slug": "nourish-fit",
-    "version": "1.0.13",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/nourish-app-icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
-      "buildNumber": "3",
+      "buildNumber": "1",
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,7 @@ export default {
         "backgroundColor": "#ffffff",
       },
       "package": "com.nourish.fit",
-      "versionCode": 3,
+      "versionCode": 1,
       "icon": "./assets/nourish-app-icon.png",
     },
     "web": {
