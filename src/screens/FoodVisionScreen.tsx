@@ -11,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import SearchService from '../domains/search/services';
 import { useRecentFoodLogs } from "../domains/foodLog/hooks";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ServingCounter } from "../components/ServingCounter";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const CAMERA_CANVAS_HEIGHT = SCREEN_HEIGHT * 0.6;
@@ -43,6 +44,7 @@ export const FoodVisionScreen = ({ navigation }) => {
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const cameraRef = useRef(null);
     const recents = useRecentFoodLogs();
+    const [foodQuantity, setFoodQuantity] = useState<number>(1);
 
     if (!permission) {
         // Camera permissions are still loading
@@ -119,7 +121,7 @@ export const FoodVisionScreen = ({ navigation }) => {
         setIsFoodSearchLoading(true);
         const {data: food, error } = await SearchService.useFoodSearch({ recents, searchTerm: foodTitle });
         if(food) {
-            navigation.navigate('SearchResultScreen', { food });
+            navigation.navigate('SearchResultScreen', { food, quantity: foodQuantity });
             setIsFoodSearchLoading(false);
         };
         if(error) {
@@ -127,6 +129,8 @@ export const FoodVisionScreen = ({ navigation }) => {
             setIsFoodSearchLoading(false);
         };
     };
+
+    const handleFoodQuantityChange = (quantity: number) => setFoodQuantity(quantity);
 
     if(isFoodSearchLoading) {
         return <View style={styles.rippleWrapper}>
@@ -142,29 +146,29 @@ export const FoodVisionScreen = ({ navigation }) => {
                 </View>
             </Camera>
         </View>}
-        {photo && <Image source={{uri: photo}} style={styles.cameraCanvas} />}
-        <View style={styles.spacer} />
-        {!isLoading && <View style={styles.rowCenter}>
+        {photo && <Image source={{uri: photo}} style={styles.imageCanvas} />}
+        {!isLoading && !isSearchSuccessful && <View style={styles.rowCenter}>
             <CameraButton onPress={takePicture}/>
         </View>}
         {isCameraRollShown && <View style={styles.photoRollContainer}>
             <PhotoRollButton onPress={handlePhotoRoll}/>
         </View>}
-        {(isLoading || isSearchSuccessful) &&
-            <View>
+        {(isLoading || isSearchSuccessful) && <>
+            <View style={styles.titleAndServings}>
                 {isLoading && <Text textAlign='center' style={styles.loadTitle}>Identifying Meal</Text>}
-                {!isLoading && isSearchSuccessful && <Text textAlign='center' style={styles.loadTitle}>{foodTitle}</Text>}
-                <View style={styles.bottomNav}>
-                    <TouchableOpacity style={styles.xIconWrapper} onPress={resetImageCapture}>
-                        <XIconSvg width={30} height={30} fill="white"/>
-                    </TouchableOpacity>
-                    {!isSearchSuccessful && <Image source={coloredDotsGif} style={styles.loading} />}
-                    <TouchableOpacity style={styles.rightArrowWrapper} onPress={handleSearch}>
-                        <RightArrowSvg width={30} height={30} fill="white"/>
-                    </TouchableOpacity>
-                </View>
+                {!isLoading && isSearchSuccessful && <Text textAlign='center' variant='paragraph1' style={styles.loadTitle}>{foodTitle}</Text>}
+                {!isLoading && isSearchSuccessful && <ServingCounter containerStyle={styles.servingsCounter} onQuantityChange={handleFoodQuantityChange} />}
             </View>
-        }
+            <View style={styles.bottomNav}>
+              <TouchableOpacity style={styles.xIconWrapper} onPress={resetImageCapture}>
+                  <XIconSvg width={30} height={30} fill="white"/>
+              </TouchableOpacity>
+              {!isSearchSuccessful && <Image source={coloredDotsGif} style={styles.loading} />}
+              <TouchableOpacity style={styles.rightArrowWrapper} onPress={handleSearch}>
+                  <RightArrowSvg width={30} height={30} fill="white"/>
+              </TouchableOpacity>
+            </View>
+        </>}
     </SafeAreaView>
     );
 }
@@ -172,12 +176,16 @@ export const FoodVisionScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding:20,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   cameraCanvas: {
     height: CAMERA_CANVAS_HEIGHT,
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+  imageCanvas: {
+    height: SCREEN_HEIGHT * 0.5,
     borderRadius: 20
   },
   buttonContainer: {
@@ -235,9 +243,10 @@ const styles = StyleSheet.create({
     margin: 20
   },
   bottomNav: {
+    marginTop: 48,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   xIconWrapper: {
     width: 50,
@@ -245,7 +254,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: 'black',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   rightArrowWrapper: {
     width: 60,
@@ -253,7 +262,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     backgroundColor: 'black',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   loadTitle: {
     margin: 16,
@@ -269,5 +278,12 @@ const styles = StyleSheet.create({
     height: '100%', 
     backgroundColor: 'white', 
     justifyContent: 'center'
+  },
+  servingsCounter: {
+    alignSelf: 'center',
+    marginBottom: 24
+  },
+  titleAndServings: {
+    height: 160
   }
 });

@@ -40,7 +40,7 @@ const convertUnitsToData = (unitsArray: Unit[]): ServingUnit[] => {
 const data = convertUnitsToData(UNITS);
 
 type ServingCounterProps = {
-    onUnitChange: (unit: string) => void;
+    onUnitChange?: (unit: string) => void;
     onQuantityChange: (quantity: number) => void;
     containerStyle: {}
 }
@@ -58,7 +58,7 @@ export const ServingCounter = ({ onUnitChange, onQuantityChange, containerStyle 
     };
 
     useEffect(()=>{
-        onUnitChange(unit);
+        if(onUnitChange) onUnitChange(unit);
     }, [onUnitChange, unit]);
 
     useEffect(()=>{ 
