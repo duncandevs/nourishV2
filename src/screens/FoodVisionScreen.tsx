@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadTitle: {
-    margin: 16,
+    margin: 20,
     fontWeight: '500',
   },
   ripple: {
