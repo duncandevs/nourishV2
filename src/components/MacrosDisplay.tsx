@@ -12,16 +12,16 @@ export const MacrosDisplay = ({ macros, containerStyle }: MacrosProps) => {
     return (
         <View style={[styles.container, containerStyle]}>
             <View style={styles.row}>
-                <Text variant="paragraph2">FAT</Text>
-                <Text variant="paragraph2">{macros?.fat} G</Text>
+                <Text variant="paragraph2" fontWeight="500">FAT</Text>
+                <Text variant="paragraph2" fontWeight="500">{macros?.fat} G</Text>
             </View>
             <View style={styles.row}>
-                <Text variant="paragraph2">PROTEIN</Text>
-                <Text variant="paragraph2">{macros?.protein} G</Text>
+                <Text variant="paragraph2" fontWeight="500">PROTEIN</Text>
+                <Text variant="paragraph2" fontWeight="500">{macros?.protein} G</Text>
             </View>
             <View style={styles.row}>
-                <Text variant="paragraph2">CARBS</Text>
-                <Text variant="paragraph2">{macros?.carbs} G</Text>
+                <Text variant="paragraph2" fontWeight="500">CARBS</Text>
+                <Text variant="paragraph2" fontWeight="500">{macros?.carbs} G</Text>
             </View>
         </View>
     );

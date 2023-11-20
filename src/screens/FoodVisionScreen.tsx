@@ -139,43 +139,46 @@ export const FoodVisionScreen = ({ navigation }) => {
     };
 
     return (
-    <SafeAreaView style={styles.container}>
-        {!photo && <View>
-            <Camera style={styles.cameraCanvas} type={type} ref={cameraRef} autoFocus>
-                <View style={styles.buttonContainer}>
-                </View>
-            </Camera>
-        </View>}
-        {photo && <Image source={{uri: photo}} style={styles.imageCanvas} />}
-        {!isLoading && !isSearchSuccessful && <View style={styles.rowCenter}>
-            <CameraButton onPress={takePicture}/>
-        </View>}
-        {isCameraRollShown && <View style={styles.photoRollContainer}>
-            <PhotoRollButton onPress={handlePhotoRoll}/>
-        </View>}
-        {(isLoading || isSearchSuccessful) && <>
-            <View style={styles.titleAndServings}>
-                {isLoading && <Text textAlign='center' style={styles.loadTitle}>Identifying Meal</Text>}
-                {!isLoading && isSearchSuccessful && <Text textAlign='center' variant='paragraph1' style={styles.loadTitle}>{foodTitle}</Text>}
-                {!isLoading && isSearchSuccessful && <ServingCounter containerStyle={styles.servingsCounter} onQuantityChange={handleFoodQuantityChange} />}
-            </View>
-            <View style={styles.bottomNav}>
-              <TouchableOpacity style={styles.xIconWrapper} onPress={resetImageCapture}>
-                  <XIconSvg width={30} height={30} fill="white"/>
-              </TouchableOpacity>
-              {!isSearchSuccessful && <Image source={coloredDotsGif} style={styles.loading} />}
-              <TouchableOpacity style={styles.rightArrowWrapper} onPress={handleSearch}>
-                  <RightArrowSvg width={30} height={30} fill="white"/>
-              </TouchableOpacity>
-            </View>
-        </>}
+    <SafeAreaView style={{backgroundColor: 'white'}}>
+      <View style={styles.container}>
+          {!photo && <View>
+              <Camera style={styles.cameraCanvas} type={type} ref={cameraRef} autoFocus>
+                  <View style={styles.buttonContainer}>
+                  </View>
+              </Camera>
+          </View>}
+          {photo && <Image source={{uri: photo}} style={styles.imageCanvas} />}
+          {!isLoading && !isSearchSuccessful && <View style={styles.rowCenter}>
+              <CameraButton onPress={takePicture}/>
+          </View>}
+          {isCameraRollShown && <View style={styles.photoRollContainer}>
+              <PhotoRollButton onPress={handlePhotoRoll}/>
+          </View>}
+          {(isLoading || isSearchSuccessful) && <>
+              <View style={styles.titleAndServings}>
+                  {isLoading && <Text textAlign='center' style={styles.loadTitle}>Identifying Meal</Text>}
+                  {!isLoading && isSearchSuccessful && <Text textAlign='center' variant='paragraph1' style={styles.loadTitle}>{foodTitle}</Text>}
+                  {!isLoading && isSearchSuccessful && <ServingCounter containerStyle={styles.servingsCounter} onQuantityChange={handleFoodQuantityChange} />}
+              </View>
+              <View style={styles.bottomNav}>
+                <TouchableOpacity style={styles.xIconWrapper} onPress={resetImageCapture}>
+                    <XIconSvg width={30} height={30} fill="white"/>
+                </TouchableOpacity>
+                {!isSearchSuccessful && <Image source={coloredDotsGif} style={styles.loading} />}
+                <TouchableOpacity style={styles.rightArrowWrapper} onPress={handleSearch}>
+                    <RightArrowSvg width={30} height={30} fill="white"/>
+                </TouchableOpacity>
+              </View>
+          </>}
+        </View>
     </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+    height: '100%',
     padding:20,
     backgroundColor: 'white',
   },
