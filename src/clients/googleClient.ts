@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const MODEL_NAME = "models/text-bison-001";
-const API_KEY = "AIzaSyDYBUKFmoalVn1rzJbP27mZwdke57B-24o";
 const BASE_URL = "https://generativelanguage.googleapis.com"
 const VERSION = "v1beta2"
-const URL = `${BASE_URL}/${VERSION}/${MODEL_NAME}:generateText?key=${API_KEY}`;
+const URL = `${BASE_URL}/${VERSION}/${MODEL_NAME}:generateText?key=${process.env.EXPO_PUBLIC_GOOGLE_AI_KEY}`;
 
 const promptString = (searchTerm: string) => `What are the macros in a typical meal or drink of "${searchTerm}". return the response in json: {name: string, calories:number, fat:number, protein:number, carbs:number} dont include any units or ranges. if a range exists ie: 10-20 then return the avergae`;
 const stopSequences = [];
