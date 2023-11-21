@@ -20,7 +20,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
-      "buildNumber": "1",
+      "buildNumber": "2",
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,7 @@ export default {
         "backgroundColor": "#ffffff",
       },
       "package": "com.nourish.fit",
-      "versionCode": 1,
+      "versionCode": 2,
       "icon": "./assets/nourish-app-icon.png",
     },
     "web": {
