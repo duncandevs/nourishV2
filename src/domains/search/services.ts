@@ -1,5 +1,6 @@
 import { fetchGptByText, fetchGptByImage } from "../../clients/openAiClient";
 import { FetchMethod } from '../types';
+import SearchService from '../../domains/search/services';
 import FoodService from '../../domains/food/services';
 import { Food } from "../../domains/food/types";
 import { FoodLog } from "../foodLog/types";
@@ -55,21 +56,15 @@ const getOpenAISearchResult = async (searchTerm: string, retryCount: number = 0)
     }
 };
 
-const getAISearchResultByImage = async ({ base64Image }: {base64Image: string}) => {
+const getAISearchPromptByImage = async  ({ base64Image }: {base64Image: string}) => {
     try {
         const response = await fetchGptByImage(base64Image);
         const prompt = response?.choices[0]?.message?.content;
-
-        if(prompt) {
-            const {data, error} = await getGoogleAISearchResult(prompt);
-            if(data) data.name = prompt; // set data name with search term
-            if(data) return { data, error: null }
-            if(error) return { data: null, error }
-        };
-        return { data: null, error: 'Could not generate prompt'}
+        if(prompt) return { data: prompt, error: null}
+        return { data: null, error: 'Internal server error'}
     } catch (error) {
-        return { data: null, error }
-    }
+        return { data: null, error: 'Internal server error' }
+    };
 };
 
 const getGoogleAISearchResult = async (searchTerm: string) => {
@@ -118,7 +113,7 @@ export const useFoodSearch = async ({ recents, searchTerm, unit, quantity } : Us
 
     // get ai search result
     if(!foodParams) {
-      const {data: newFood, error: searchError} = await getGoogleAISearchResult(foodName);
+      const {data: newFood, error: searchError} = await SearchService.getGoogleAISearchResult(foodName);
       foodParams = newFood;
       if(searchError) error = searchError;
     };
@@ -134,7 +129,7 @@ export const useFoodSearch = async ({ recents, searchTerm, unit, quantity } : Us
 }
 
 export default {
-    getAISearchResultByImage,
+    getAISearchPromptByImage,
     getGoogleAISearchResult,
     useFoodSearch,
 }
