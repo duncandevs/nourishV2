@@ -1,11 +1,11 @@
 import { fetchGptByText, fetchGptByImage } from "../../clients/openAiClient";
 import { FetchMethod } from '../types';
-import SearchService from '../../domains/search/services';
 import FoodService from '../../domains/food/services';
 import { Food } from "../../domains/food/types";
 import { FoodLog } from "../foodLog/types";
 import { getRoundedMacros } from "../../utility";
 import { Macros } from "../foodLog/types";
+import { fetchGoogleAIResult } from "../../clients/googleClient";
 
 // const completionResponse = async (prompt: string) => 
 //     await openAiClient.completions.create({ model: MODEL, prompt, max_tokens:512, temperature: 0 });
@@ -24,13 +24,12 @@ type AIResults = Macros & {
 
 const MAX_RETRIES = 3;
 
-const isValidData = (data) => {
+const isValidData = (data: any) => {
     // Add validation logic for your data here, for example:
-    return data && typeof data === 'object' && data.name && data.calories;
+    return data && typeof data === 'object' &&  data.calories && data.fat && data.protein && data.carbs;
 };
 
-
-const getAISearchResultByText = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
+const getOpenAISearchResult = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
     try {
         const response = await fetchGptByText({ searchTerm });
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
@@ -40,7 +39,7 @@ const getAISearchResultByText = async (searchTerm: string, retryCount: number = 
         if (!isValidData(data)) {
             // If not valid and we haven't reached our max retries, retry the function
             if (retryCount < MAX_RETRIES) {
-                return getAISearchResultByText(searchTerm, retryCount + 1);
+                return getOpenAISearchResult(searchTerm, retryCount + 1);
             } else {
                 // TODO: log the error
                 // Max retries reached, return an error
@@ -56,24 +55,13 @@ const getAISearchResultByText = async (searchTerm: string, retryCount: number = 
     }
 };
 
-const getAISearchPromptByImage = async  ({ base64Image }: {base64Image: string}) => {
-    try {
-        const response = await fetchGptByImage(base64Image);
-        const prompt = response?.choices[0]?.message?.content;
-        if(prompt) return { data: prompt, error: null}
-        return { data: null, error: 'Internal server error'}
-    } catch (error) {
-        return { data: null, error: 'Internal server error' }
-    };
-};
-
 const getAISearchResultByImage = async ({ base64Image }: {base64Image: string}) => {
     try {
         const response = await fetchGptByImage(base64Image);
         const prompt = response?.choices[0]?.message?.content;
 
         if(prompt) {
-            const {data, error} = await getAISearchResultByText(prompt, 2);
+            const {data, error} = await getGoogleAISearchResult(prompt);
             if(data) data.name = prompt; // set data name with search term
             if(data) return { data, error: null }
             if(error) return { data: null, error }
@@ -81,6 +69,25 @@ const getAISearchResultByImage = async ({ base64Image }: {base64Image: string}) 
         return { data: null, error: 'Could not generate prompt'}
     } catch (error) {
         return { data: null, error }
+    }
+};
+
+const getGoogleAISearchResult = async (searchTerm: string) => {
+    try {
+        let retryCount = 0
+        const data = await fetchGoogleAIResult(searchTerm);
+        if(!isValidData(data)){
+            if (retryCount < MAX_RETRIES) {
+                return getOpenAISearchResult(searchTerm, retryCount + 1);
+            } else {
+                // TODO: log the error
+                // Max retries reached, return an error
+                return { data: null, error: 'Maximum retries reached and data is still invalid.' };
+            }
+        }
+        return { data, error: null };
+    } catch (error) {
+        return { error, data: null };
     }
 }
 
@@ -111,7 +118,7 @@ export const useFoodSearch = async ({ recents, searchTerm, unit, quantity } : Us
 
     // get ai search result
     if(!foodParams) {
-      const {data: newFood, error: searchError} = await SearchService.getAISearchResultByText(foodName);
+      const {data: newFood, error: searchError} = await getGoogleAISearchResult(foodName);
       foodParams = newFood;
       if(searchError) error = searchError;
     };
@@ -127,8 +134,7 @@ export const useFoodSearch = async ({ recents, searchTerm, unit, quantity } : Us
 }
 
 export default {
-    getAISearchResultByText,
     getAISearchResultByImage,
-    getAISearchPromptByImage,
+    getGoogleAISearchResult,
     useFoodSearch,
 }
