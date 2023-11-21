@@ -76,8 +76,6 @@ export const fetchGoogleAIResult = async (searchTerm: string) => {
     try {
         const {data } = await axios.post(URL, params);
         const unParsedString = data?.candidates?.[0]?.output;
-        console.log('unParsedString - ', unParsedString)
-        // console.log('unParsedString - ', unParsedString, typeof(unParsedString));
         const result = _parseGoogleResult(unParsedString);
         return result
     } catch (error) {

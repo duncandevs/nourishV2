@@ -55,7 +55,6 @@ const getGoogleAISearchResult = async (searchTerm: string) => {
         let retryCount = 0
         const data = await fetchGoogleAIResult(searchTerm);
         if(!isValidData(data)){
-            console.log('data is not valid -- ', retryCount, data)
             if (retryCount < MAX_RETRIES) {
                 return getOpenAISearchResult(searchTerm, retryCount + 1);
             } else {
@@ -89,8 +88,6 @@ export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[
     // get ai search result
     if(!food) {
       const {data: newFood, error: searchError} = await SearchService.getGoogleAISearchResult(foodName);
-      console.log('newFood - ', newFood)
-      console.log('searchError - ', searchError)
       food = newFood;
       if(searchError) error = searchError;
     };
