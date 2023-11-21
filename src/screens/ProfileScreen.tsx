@@ -82,6 +82,7 @@ export const ProfileScreen = ({ navigation }) => {
     const logOut = () => {
         UserService.logOutUser().then(async ()=>{
             await handleLogOut();
+            await UserService.deleteUserFromStorage();
             navigation.navigate('AuthScreen');
         })
     };

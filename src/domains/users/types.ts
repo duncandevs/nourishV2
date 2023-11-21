@@ -3,7 +3,8 @@ export type UserModel = {
     created_at: string,
     id: string,
     updated_at?: string,
-    calorie_target?: number
+    calorie_target?: number,
+    email?: string
 }
 
 export type User = {

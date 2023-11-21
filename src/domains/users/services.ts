@@ -1,7 +1,8 @@
 import { SupabaseAuthArgs } from "../../clients/supabaseClient";
 import { supabase, supabaseAdminClient } from '../../clients/supabase';
 import { FetchMethod } from '../types';
-import { SignUpArgs, UpdateUserProfileArgs, UpdateUserCalorieTargetArgs } from './types';
+import { SignUpArgs, UpdateUserProfileArgs, UpdateUserCalorieTargetArgs, UserModel } from './types';
+import { setItemToAsyncStorage, getItemFromStorage, deleteItemFromStorage } from "../../utility";
 
 const handleAuth = async ({ email, password }: SupabaseAuthArgs): FetchMethod => {
     try {
@@ -112,7 +113,18 @@ const getUserFromAuth = async () => {
     } catch (error) {
         return { error, data: null }; 
     }
-}
+};
+
+const setUserToStorage = async (user: UserModel) => {
+    setItemToAsyncStorage("user", user);
+};
+
+const getUserFromStorage = async () => {
+    return getItemFromStorage("user")
+};
+
+const deleteUserFromStorage =async () => deleteItemFromStorage("user");
+
 
 export default {
     handleAuth,
@@ -124,4 +136,7 @@ export default {
     logOutUser,
     deleteAccount,
     getUserFromAuth,
+    getUserFromStorage,
+    setUserToStorage,
+    deleteUserFromStorage
 }

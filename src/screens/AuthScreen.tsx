@@ -1,8 +1,10 @@
-import { ImageBackground, StyleSheet, View } from 'react-native'
+import { useEffect } from 'react';
+import { ImageBackground, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import {RootStackParamList} from "./types";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAppState  } from '../state';
+import { useUserAuth } from "../domains/users/hooks";
 
 type AuthScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AuthScreen'>;
 
@@ -11,18 +13,21 @@ type AuthScreenProps = {
 };
 
 export const AuthScreen = ({ navigation }: AuthScreenProps ) => {
-  const { user: { isLoading, data: userData} } = useAppState();
+  const { user: { isLoading, data: userData, handleLoginSuccess} } = useAppState();
   async function signInWithEmail() {
-    navigation.navigate('SignInScreen')
+    navigation.navigate('SignInScreen');
   };
-
+  const userAuth = useUserAuth();
   async function signUpWithEmail() {
     navigation.navigate('SignUpScreen')
   };
 
-  // useEffect(()=>{
-  //   if(userData) navigation.replace('HomeScreen')
-  // }, [userData])
+  useEffect(()=>{
+    if(userAuth) {
+      handleLoginSuccess({ data: userAuth});
+      navigation.replace('HomeScreen');
+    }
+  }, [userAuth])
 
   return (
     <ImageBackground source={require('.././../assets/nourish-cover-w-logo.jpeg')} style={styles.container}>

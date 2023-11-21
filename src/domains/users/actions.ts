@@ -4,18 +4,13 @@ import { UserModel } from './types';
 import UserService from "./services";
 
 type handleLoginArgs = {
-   data: { 
-        "created_at": string,
-        "email": string,
-        "id": string,
-        "name": string,
-        "updated_at": string | null,
-    }
+   data: UserModel
 };
 
 
 const handleLoginSuccessAction = ({ set }: ActionParams): Function => 
      async ({ data }: handleLoginArgs) => {
+        UserService.setUserToStorage(data)
         set(produce((state: any) => { 
             state.user.data = data 
         }));

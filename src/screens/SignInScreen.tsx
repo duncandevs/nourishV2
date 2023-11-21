@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { Button, Input } from 'react-native-elements';
 import { Text } from "../theme";
