@@ -4,6 +4,7 @@ import SearchService from '../../domains/search/services';
 import FoodService from '../../domains/food/services';
 import { Food } from "../../domains/food/types";
 import { FoodLog } from "../foodLog/types";
+import { fetchGoogleAIResult } from "../../clients/googleClient"
 
 // const completionResponse = async (prompt: string) => 
 //     await openAiClient.completions.create({ model: MODEL, prompt, max_tokens:512, temperature: 0 });
@@ -18,12 +19,12 @@ import { FoodLog } from "../foodLog/types";
 
 const MAX_RETRIES = 3;
 
-const isValidData = (data) => {
+const isValidData = (data: any) => {
     // Add validation logic for your data here, for example:
-    return data && typeof data === 'object' && data.name && data.calories;
+    return data && typeof data === 'object' &&  data.calories && data.fat && data.protein && data.carbs;
 };
 
-const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
+const getOpenAISearchResult = async (searchTerm: string, retryCount: number = 0): Promise<FetchMethod> => {
     try {
         const response = await asyncFetchOpenAICompletion({ searchTerm });
         const generatedText = response?.choices?.[0]?.message?.function_call?.arguments;
@@ -33,7 +34,7 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
         if (!isValidData(data)) {
             // If not valid and we haven't reached our max retries, retry the function
             if (retryCount < MAX_RETRIES) {
-                return getOpenAISearchPromptResult(searchTerm, retryCount + 1);
+                return getOpenAISearchResult(searchTerm, retryCount + 1);
             } else {
                 // TODO: log the error
                 // Max retries reached, return an error
@@ -48,6 +49,26 @@ const getOpenAISearchPromptResult = async (searchTerm: string, retryCount: numbe
         return { data: null, error };
     }
 };
+
+const getGoogleAISearchResult = async (searchTerm: string) => {
+    try {
+        let retryCount = 0
+        const data = await fetchGoogleAIResult(searchTerm);
+        if(!isValidData(data)){
+            console.log('data is not valid -- ', retryCount, data)
+            if (retryCount < MAX_RETRIES) {
+                return getOpenAISearchResult(searchTerm, retryCount + 1);
+            } else {
+                // TODO: log the error
+                // Max retries reached, return an error
+                return { data: null, error: 'Maximum retries reached and data is still invalid.' };
+            }
+        }
+        return { data, error: null };
+    } catch (error) {
+        return { error, data: null };
+    }
+}
 
 type UseAISearchResult = Promise<{data: Food | null, error:string | null}> 
 
@@ -67,7 +88,9 @@ export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[
 
     // get ai search result
     if(!food) {
-      const {data: newFood, error: searchError} = await SearchService.getOpenAISearchPromptResult(foodName);
+      const {data: newFood, error: searchError} = await SearchService.getGoogleAISearchResult(foodName);
+      console.log('newFood - ', newFood)
+      console.log('searchError - ', searchError)
       food = newFood;
       if(searchError) error = searchError;
     };
@@ -76,6 +99,6 @@ export const useFoodSearch = async ({ recents, searchTerm } : {recents: FoodLog[
 }
 
 export default {
-    getOpenAISearchPromptResult,
+    getGoogleAISearchResult,
     useFoodSearch,
 }

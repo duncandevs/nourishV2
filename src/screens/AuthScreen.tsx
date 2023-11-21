@@ -1,4 +1,3 @@
-import React from 'react'
 import { ImageBackground, StyleSheet, View } from 'react-native'
 import { Button } from 'react-native-elements';
 import {RootStackParamList} from "./types";
@@ -13,7 +12,6 @@ type AuthScreenProps = {
 
 export const AuthScreen = ({ navigation }: AuthScreenProps ) => {
   const { user: { isLoading, data: userData} } = useAppState();
-
   async function signInWithEmail() {
     navigation.navigate('SignInScreen')
   };
