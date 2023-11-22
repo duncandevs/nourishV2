@@ -17,7 +17,8 @@ type CalendarIconPillProps = {
 
 type CalendarWeekPillsProps = {
     handleCalendarIconPress: () => void;
-    handleCalendarDayPress: (date:string) => void
+    handleCalendarDayPress: (date:string) => void;
+    disableFutureDates?: boolean
 }
 
 const CalendarDayPill = ({ dayString, date, handleOnPress, disabled, highlighted }: CalendarPillProps) => {
@@ -51,7 +52,7 @@ const CalendarIconPill = ({ handleOnPress }: CalendarIconPillProps) => {
 }
 
 
-export const CalendarWeekPills = ({ handleCalendarIconPress, handleCalendarDayPress }: CalendarWeekPillsProps) => {
+export const CalendarWeekPills = ({ handleCalendarIconPress, handleCalendarDayPress, disableFutureDates=false}: CalendarWeekPillsProps) => {
     const daysOfTheWeekMap = getDaysOfCurrentWeek();
     const daysOfTheWeekArray = Object.keys(daysOfTheWeekMap);
     const dayOfTheWeek = getDayOfTheWeek().toLowerCase();
@@ -62,7 +63,7 @@ export const CalendarWeekPills = ({ handleCalendarIconPress, handleCalendarDayPr
             {daysOfTheWeekArray.map((fullDay) => {
                 const highlighted = fullDay === dayOfTheWeek;
                 const dayString = fullDay.substring(0, 3);
-                const isDisabled = new Date(daysOfTheWeekMap[dayOfTheWeek]) < new Date(daysOfTheWeekMap[fullDay]);
+                const isDisabled = disableFutureDates && new Date(daysOfTheWeekMap[dayOfTheWeek]) < new Date(daysOfTheWeekMap[fullDay]);
                 const date = daysOfTheWeekMap[fullDay];
                 return <View key={fullDay}>
                     <CalendarDayPill 

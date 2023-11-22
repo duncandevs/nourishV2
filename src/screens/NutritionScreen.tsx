@@ -75,6 +75,7 @@ export const NutritionScreen = ({ navigation }: HomeScreenProps) => {
                         <CalendarWeekPills 
                             handleCalendarIconPress={goToCalendarScreen} 
                             handleCalendarDayPress={handleDaySelect}
+                            disableFutureDates
                         />
                     </View>
                 </View>
