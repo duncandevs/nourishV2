@@ -11,6 +11,7 @@ import {
   ProfileScreen,
   SignUpScreen,
   FoodVisionScreen,
+  FitnessScreen,
 } from './src/screens';
 import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
@@ -50,6 +51,7 @@ const App = () => {
         <Stack.Navigator initialRouteName="AuthScreen">
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={headerOptionsWithProfileNav}/>
+          <Stack.Screen name="FitnessScreen" component={FitnessScreen} options={{headerTitle: 'Fitness', headerBackTitle:"back"}}/>
           <Stack.Screen name="NutritionScreen" component={NutritionScreen} options={{headerTitle: 'Nutrition', headerBackTitle:"back"}}/>
           <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
           <Stack.Screen name="SearchResultScreen" component={SearchResultScreen} options={{headerTitle: '', headerBackTitle:"back"}} />
