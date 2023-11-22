@@ -66,7 +66,7 @@ export const SearchResultScreen = ({ navigation, route }: SearchScreenProps ) =>
         };
         const { data, error } = await FoodLogService.createFoodLogFromSearch({ ...newFoodLog });
         if(data) setNewFoodLog({ foodLog: data })
-        if(!error) navigation.navigate('HomeScreen');
+        if(!error) navigation.navigate('NutritionScreen');
         if(error) setFoodLogError(error);
     };
 
