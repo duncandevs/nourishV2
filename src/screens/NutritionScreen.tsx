@@ -27,7 +27,7 @@ type MealStat = { title: string; stat: any; }
 
 type MealStats = MealStat[];
 
-export const HomeScreen = ({ navigation }: HomeScreenProps) => {
+export const NutritionScreen = ({ navigation }: HomeScreenProps) => {
     const { 
         user: { data: user },
     } = useAppState();
