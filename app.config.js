@@ -21,6 +21,9 @@ export default {
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
       "buildNumber": "3",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to capture images of food and beverages."
+      }
     },
     "android": {
       "adaptiveIcon": {

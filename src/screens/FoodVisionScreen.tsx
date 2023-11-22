@@ -56,7 +56,7 @@ export const FoodVisionScreen = ({ navigation }) => {
         return (
             <View style={styles.container}>
             <Text style={{ textAlign: 'center' }}>Click below to enable food vision</Text>
-            <Button onPress={requestPermission} title="grant camera permission" />
+            <Button onPress={requestPermission} title="Continue" />
             </View>
         );
     };
