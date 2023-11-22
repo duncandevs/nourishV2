@@ -22,7 +22,7 @@ export default {
       "bundleIdentifier": "com.nourish.fit",
       "buildNumber": "3",
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to capture images of food and beverages."
+        "NSCameraUsageDescription": "This app uses the camera to recognize food and beverages."
       }
     },
     "android": {
