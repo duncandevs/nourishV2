@@ -1,7 +1,6 @@
 import {produce} from 'immer';
 import FoodLogService from "./services";
-import FoodService from "../food/services";
-import { CreateFoodLogActionArgs, FoodLog } from "./types";
+import { FoodLog } from "./types";
 import { ActionParams } from '../types';
 
 const fetchFoodLogsAction = ({ set }: ActionParams) => 

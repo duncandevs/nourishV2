@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { 
   AuthScreen, 
   HomeScreen,
@@ -17,6 +18,9 @@ import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
 import * as Updates from 'expo-updates';
 import { ProfileIconHeader } from "./src/components";
+
+// Create a client
+const queryClient = new QueryClient();
 
 // Create the Stack Navigator
 const Stack = createStackNavigator();
@@ -46,23 +50,25 @@ const App = () => {
   onFetchUpdateAsync();
 
   return (
-    <ThemeProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="AuthScreen">
-          <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} options={headerOptionsWithProfileNav}/>
-          <Stack.Screen name="FitnessScreen" component={FitnessScreen} options={{headerTitle: 'Fitness', headerBackTitle:"back"}}/>
-          <Stack.Screen name="NutritionScreen" component={NutritionScreen} options={{headerTitle: 'Nutrition', headerBackTitle:"back"}}/>
-          <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
-          <Stack.Screen name="SearchResultScreen" component={SearchResultScreen} options={{headerTitle: '', headerBackTitle:"back"}} />
-          <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Calendar" component={CalendarScreen}  options={{headerBackTitle:"back"}}/>
-          <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: 'profile', headerBackTitle:"back"}} />
-          <Stack.Screen name="FoodVisionScreen" component={FoodVisionScreen} options={{headerBackTitle:"", headerTitle: 'food vision'}} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="AuthScreen">
+            <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="HomeScreen" component={HomeScreen} options={headerOptionsWithProfileNav}/>
+            <Stack.Screen name="FitnessScreen" component={FitnessScreen} options={{headerTitle: 'Fitness', headerBackTitle:"back"}}/>
+            <Stack.Screen name="NutritionScreen" component={NutritionScreen} options={{headerTitle: 'Nutrition', headerBackTitle:"back"}}/>
+            <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
+            <Stack.Screen name="SearchResultScreen" component={SearchResultScreen} options={{headerTitle: '', headerBackTitle:"back"}} />
+            <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }}/>
+            <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Calendar" component={CalendarScreen}  options={{headerBackTitle:"back"}}/>
+            <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: 'profile', headerBackTitle:"back"}} />
+            <Stack.Screen name="FoodVisionScreen" component={FoodVisionScreen} options={{headerBackTitle:"", headerTitle: 'food vision'}} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 

@@ -2,8 +2,11 @@ import { TouchableOpacity, View } from "react-native"
 import { Text } from "../theme"
 import { CalendarWeekPills } from "../components";
 import { StyleSheet } from "react-native";
+import { useWeeklyExerciseLogs } from '../domains/exerciseLog/hooks';
+import { useEffect } from "react";
 
 export const FitnessScreen = () => {
+    const { data } = useWeeklyExerciseLogs();
     const handleDaySelect = (day:string) => {
         console.log(day);
     };
@@ -15,6 +18,7 @@ export const FitnessScreen = () => {
     const addNewExercise = async () => {
         console.log('adding new exercise')
     };
+
     return <View style={styles.container}>
         <View style={[styles.row]}>
             <CalendarWeekPills 
