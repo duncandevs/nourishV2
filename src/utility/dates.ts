@@ -8,6 +8,8 @@ import {
     startOfWeek, 
     endOfWeek, 
     eachDayOfInterval,
+    getDay,
+    addMinutes,
 } from 'date-fns';
 
 const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -78,9 +80,20 @@ export const getDaysOfCurrentWeek = () => {
     return dayDateMap;
 };
 
-export const getDayOfTheWeek = () => {
+export const getTodaysDayOfTheWeek = () => {
     const today = new Date();
-    return format(today, 'EEEE');
+    return format(today, 'EEEE')?.toLowerCase();
+};
+
+export const getDayOfTheWeek = (date:string) => {
+   // Create a Date object from the input
+   const dateObj = new Date(date);
+
+   // Adjust for the time zone offset to get the correct local day
+   const adjustedDate = addMinutes(dateObj, dateObj.getTimezoneOffset());
+
+   // Format the date to get the day of the week
+   return format(adjustedDate, 'EEEE').toLocaleLowerCase();
 };
 
 export const formatDateHeader = (inputDate: string) => {
@@ -94,4 +107,11 @@ export const formatDateHeader = (inputDate: string) => {
     const dayOfWeek = dayNames[date.getDay()];
   
     return `${month} ${day}, ${dayOfWeek}`;
-  }
+};
+
+export const getAppStartAndEndOfWeek = () => {
+    const today = new Date();
+    const startOfWeekDate = startOfWeek(today, {weekStartsOn: 1}); // force week to start on monday
+    const endOfWeekDate =  endOfWeek(today, {weekStartsOn: 0}); // force week to end on sunday
+    return { startOfWeekDate, endOfWeekDate };
+};

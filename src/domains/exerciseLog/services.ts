@@ -5,7 +5,7 @@ import {
 
 
 const getExerciseLogsByDate = ({ logs, date }: {logs: [], date: string}) => 
-    logs?.filter(log => log?.date?.startsWith(date))
+    logs?.filter(log => log?.date?.startsWith(date)) || []
 
 const fetchAllExerciseLogs = async ({ userId }:{userId: string}) => {
     return supabase

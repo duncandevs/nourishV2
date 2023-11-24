@@ -1,7 +1,7 @@
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Text } from "../theme";
 import CalendarSvg from "../../assets/calendar-svg.svg";
-import { getDaysOfCurrentWeek, getDayOfTheWeek } from "../utility/dates";
+import { getDaysOfCurrentWeek, getTodaysDayOfTheWeek } from "../utility/dates";
 
 type CalendarPillProps = {
     date: string;
@@ -55,7 +55,7 @@ const CalendarIconPill = ({ handleOnPress }: CalendarIconPillProps) => {
 export const CalendarWeekPills = ({ handleCalendarIconPress, handleCalendarDayPress, disableFutureDates=false}: CalendarWeekPillsProps) => {
     const daysOfTheWeekMap = getDaysOfCurrentWeek();
     const daysOfTheWeekArray = Object.keys(daysOfTheWeekMap);
-    const dayOfTheWeek = getDayOfTheWeek().toLowerCase();
+    const dayOfTheWeek = getTodaysDayOfTheWeek();
 
     return (
         <View style={styles.calendarContainer}>

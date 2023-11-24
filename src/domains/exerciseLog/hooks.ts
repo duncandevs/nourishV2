@@ -1,5 +1,4 @@
 import { useQuery } from 'react-query';
-import { useAppState } from "../../state";
 import { useUser } from '../users/hooks';
 import ExerciseLogService from './services';
 
@@ -41,10 +40,13 @@ export const useWeeklyExerciseLogs = () => {
         {enabled: !!user?.id}
     );
 
+    const getWeeklyLogsByDate = (date: string ) => ExerciseLogService.getExerciseLogsByDate({ logs: data, date})
+
     return { 
         data,
         error: isError ? error : null,
-        isLoading
+        isLoading,
+        getWeeklyLogsByDate,
     };
 }
 
