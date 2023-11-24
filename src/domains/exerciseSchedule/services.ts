@@ -1,23 +1,12 @@
 import { supabase } from "../../clients/supabase";
+import { ExerciseSchedule } from './types';
 
 type FetchUserExerciseSchedulesParams = {
     userId: string, 
 };
 
-export type CreateExerciseScheduleParams = {
-    user_id: string,
-    exercise_id: string,
-    time_in_seconds?: number,
-    sets?: number,
-    reps?: number,
-    monday?: boolean | null,
-    tuesday?: boolean | null,
-    wednesday?: boolean | null,
-    thursday?: boolean | null,
-    friday?: boolean | null,
-    saturday?: boolean | null,
-    sunday?: boolean | null,
-}
+export type CreateExerciseScheduleParams = Omit<ExerciseSchedule, 'user_id'>;
+export type UpdateExerciseScheduleParams = Omit<ExerciseSchedule, 'user_id'>;
 
 const fetchUserExerciseSchedules = async ({ userId }: FetchUserExerciseSchedulesParams) => {
         return supabase
@@ -28,15 +17,29 @@ const fetchUserExerciseSchedules = async ({ userId }: FetchUserExerciseSchedules
 
 const createExerciseSchedule = async ({ 
     exerciseScheduleParams
-}: {exerciseScheduleParams: CreateExerciseScheduleParams }) => {
+}: {exerciseScheduleParams: ExerciseSchedule }) => {
     return supabase
         .from('exerciseSchedule')
         .insert({
             ...exerciseScheduleParams
         })
-}
+};
+
+const updateExerciseSchedule = async ({ 
+    updateExerciseScheduleParams,
+}:  {updateExerciseScheduleParams:  ExerciseSchedule }) => {
+    return supabase
+        .from('exerciseSchedule')
+        .update({
+            ...updateExerciseScheduleParams
+        })
+        .eq('user_id', updateExerciseScheduleParams?.user_id)
+        .eq('exercise_id', updateExerciseScheduleParams?.exercise_id)
+
+};
 
 export default {
     fetchUserExerciseSchedules,
     createExerciseSchedule,
+    updateExerciseSchedule,
 };

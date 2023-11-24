@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { useUser } from '../users/hooks';
-import ExerciseScheduleService, { CreateExerciseScheduleParams } from './services';
-import { useEffect, useState } from 'react';
-
+import { ExerciseSchedule } from './types';
+import ExerciseScheduleService, { CreateExerciseScheduleParams, UpdateExerciseScheduleParams } from './services';
 
 export const ExerciseLogKeys = {
     schedules: 'exerciseSchedules',
@@ -13,7 +13,7 @@ function _organizeByDaysOfWeek(items) {
     const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
     return items?.reduce((acc, item) => {
-        daysOfWeek.forEach(day => {
+        daysOfWeek.forEach((day: string) => {
             if (item[day]) {
                 if (!acc[day]) {
                     acc[day] = [];
@@ -33,7 +33,6 @@ export const useExerciseSchedules = () => {
         const response = await ExerciseScheduleService.fetchUserExerciseSchedules({userId: user.id });
         return response.data;
     };
-    const [selectedExerciseSchedule, setSelectedExerciseSchedule] = useState([]);
 
     // Set all scheduled data
     const { data, error, isLoading, isError } = useQuery(
@@ -57,14 +56,18 @@ export const useExerciseSchedules = () => {
     // set create new exercise schedule mutation
     const { createExerciseSchedule, error: createExerciseScheduleError } = useCreateExerciseSchedule();
 
+    // set update exercise schedule mutation
+    const { updateExerciseSchedule, error: updateExerciseScheduleError } = useUpdateExerciseSchedule();
+
     return { 
         data,
         getSchedulesByDay,
-        selectedExerciseSchedule,
         error: isError ? error : null,
         isLoading,
         createExerciseSchedule,
-        createExerciseScheduleError
+        createExerciseScheduleError,
+        updateExerciseSchedule,
+        updateExerciseScheduleError,
     };
 };
 
@@ -83,26 +86,13 @@ export const useSelectedExerciseSchedule = (selectedDay?: string) => {
     }
 };
 
-// const newExerciseSchedule = {
-//     execise_id: 'c18e16ea-d5e8-46a7-9c3f-a6c8e671b655',
-//     time_in_seconds: 2700,
-//     monday: null,
-//     tuesday: true,
-//     wednesday: null,
-//     thursday: true,
-//     friday: null,
-//     saturday: null,
-//     sunday: true,
-// };
-
-type useCreateExerciseScheduleMutationParams = Omit<CreateExerciseScheduleParams, 'user_id'>;
 export const useCreateExerciseSchedule = () => {
     const user = useUser();
     const queryClient = useQueryClient();
 
     // Define the mutation for creating a new exercise schedule
     const  { mutateAsync: mutation, status, error } = useMutation(
-        (exerciseScheduleParams: CreateExerciseScheduleParams) => ExerciseScheduleService.createExerciseSchedule({ exerciseScheduleParams }),
+        (exerciseScheduleParams: ExerciseSchedule) => ExerciseScheduleService.createExerciseSchedule({ exerciseScheduleParams }),
         {
             onSuccess: () => {
                 // Invalidate and refetch exercise schedules after a successful creation
@@ -111,9 +101,9 @@ export const useCreateExerciseSchedule = () => {
         }
     );
 
-    const createExerciseSchedule = async (newExerciseScheduleData: useCreateExerciseScheduleMutationParams) => {
+    const createExerciseSchedule = async (newExerciseScheduleData: CreateExerciseScheduleParams) => {
         // Here you can add logic before creating the schedule, if needed
-        const exerciseScheduleParams: CreateExerciseScheduleParams  = {
+        const exerciseScheduleParams: ExerciseSchedule  = {
             ...newExerciseScheduleData,
             user_id: user?.id,
         }
@@ -122,5 +112,36 @@ export const useCreateExerciseSchedule = () => {
 
     return { createExerciseSchedule, status, error };
 };
+
+export const useUpdateExerciseSchedule = () => {
+    const user = useUser();
+    const queryClient = useQueryClient();
+
+    // Define the mutation for creating a new exercise schedule
+    const  { mutateAsync: mutation, status, error } = useMutation(
+        (updateExerciseScheduleParams: ExerciseSchedule) => {
+            console.log(updateExerciseScheduleParams)
+            return ExerciseScheduleService.updateExerciseSchedule({ updateExerciseScheduleParams })
+        },
+        {
+            onSuccess: () => {
+                // Invalidate and refetch exercise schedules after a successful creation
+                queryClient.invalidateQueries(ExerciseLogKeys.schedules);
+            }
+        }
+    );
+
+    const updateExerciseSchedule = async (newExerciseScheduleData: UpdateExerciseScheduleParams) => {
+        // Here you can add logic before creating the schedule, if needed
+        const updateExerciseScheduleParams: ExerciseSchedule  = {
+            ...newExerciseScheduleData,
+            user_id: user?.id,
+        };
+        await mutation(updateExerciseScheduleParams);
+    };
+
+    return { updateExerciseSchedule, status, error };
+};
+
 
 

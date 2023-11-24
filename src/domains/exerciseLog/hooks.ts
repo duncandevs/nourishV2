@@ -1,13 +1,14 @@
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { useUser } from '../users/hooks';
-import ExerciseLogService from './services';
+import ExerciseLogService, { CreateExerciseLogParams } from './services';
+import { ExerciseLog } from './type'
 
 export const ExerciseLogKeys = {
     all: 'exerciseLogs',
     weekly: 'weeklyExerciseLogs'
 };
 
-export const useAllExerciseLogs = () => {
+export const useExerciseLogs = () => {
     const user = useUser();
     const fetchLogs = async () => {
         const response = await ExerciseLogService.fetchAllExerciseLogs({userId: user.id });
@@ -20,10 +21,15 @@ export const useAllExerciseLogs = () => {
         { enabled: !!user?.id }
     );
 
+    // set create mutation
+    const { createExerciseLog, error: createExerciseLogError } = useCreateExerciseLog()
+
     return {
         data,
         error: isError ? error : null,
-        isLoading
+        isLoading,
+        createExerciseLog,
+        createExerciseLogError,
     };
 };
 
@@ -48,6 +54,37 @@ export const useWeeklyExerciseLogs = () => {
         isLoading,
         getWeeklyLogsByDate,
     };
-}
+};
+
+
+export const useCreateExerciseLog = () => {
+    const user = useUser();
+    const queryClient = useQueryClient();
+
+    // Define the mutation for creating a new exercise schedule
+    const  { mutateAsync: mutation, status, error } = useMutation(
+        (exerciseLogParams: ExerciseLog) => ExerciseLogService.createExerciseLog({ exerciseLogParams }),
+        {
+            onSuccess: () => {
+                // Invalidate and refetch exercise logs after a successful creation
+                queryClient.invalidateQueries(ExerciseLogKeys.all);
+                queryClient.invalidateQueries(ExerciseLogKeys.weekly);
+            }
+        }
+    );
+
+    const createExerciseLog = async (newExerciseLogData: CreateExerciseLogParams) => {
+        // Here you can add logic before creating the schedule, if needed
+        const exerciseLogParams: ExerciseLog  = {
+            ...newExerciseLogData,
+            user_id: user?.id,
+        }
+        await mutation(exerciseLogParams);
+    };
+
+    return { createExerciseLog, status, error };
+};
+
+
 
 
