@@ -4,18 +4,22 @@ import { Text } from "../theme"
 import { CalendarWeekPills } from "../components";
 import { StyleSheet } from "react-native";
 import { useExerciseSchedules, useSelectedExerciseSchedule } from '../domains/exerciseSchedule/hooks';
-import { getTodaysDayOfTheWeek, getDayOfTheWeek } from "../utility";
+import { getTodaysDayOfTheWeek, getDayOfTheWeek, todaysDateRegular, formatDateHeader } from "../utility";
 import { useExerciseLogs } from "../domains/exerciseLog/hooks";
+import { AddWorkoutButton } from "../components/AddWorkoutButton";
+import { StopWatchButton } from "../components/StopWatchButton";
 
 const TODAY = getTodaysDayOfTheWeek();
 
-export const FitnessScreen = () => {
+export const FitnessScreen = ({ navigation }) => {
+    const [ date, setDate ] = useState(todaysDateRegular);
     const [ selectedDay, setSelectedDayDay ] = useState(TODAY);
     const { selectedExerciseSchedule  } = useSelectedExerciseSchedule(selectedDay);
     const { createExerciseSchedule, createExerciseScheduleError, updateExerciseSchedule, updateExerciseScheduleError } = useExerciseSchedules();
     const { createExerciseLog } = useExerciseLogs();
 
     const handleDaySelect = (date: string) => {
+        setDate(date);
         const dayString = getDayOfTheWeek(date) || '';
         setSelectedDayDay(dayString);
     };
@@ -60,12 +64,28 @@ export const FitnessScreen = () => {
         })
     };
 
-    return <View style={styles.container}>
-        <View style={[styles.row]}>
+    const dateHeader = formatDateHeader(date);
+
+    const goToWorkoutSearchScreen = () => {
+        navigation.navigate('WorkoutSearchScreen')
+    };
+
+    return <View style={[styles.container, styles.gutter]}>
+        <View style={[styles.row, styles.header]}>
+            <View>
+                <Text variant="paragraph1" fontWeight="600">Fitness</Text>
+                <Text variant='paragraph3' fontWeight="600" color="gray03" marginTop="s">{dateHeader}</Text>  
+            </View>
+            <AddWorkoutButton handleOnPress={()=>goToWorkoutSearchScreen()} />
+        </View>
+        <View>
             <CalendarWeekPills 
                 handleCalendarIconPress={goToCalendarScreen} 
                 handleCalendarDayPress={handleDaySelect}
             />
+        </View>
+        <View>
+            <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
         </View>
         <View>
             <TouchableOpacity onPress={addNewExercise}>
@@ -96,7 +116,20 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: 'white',
     },
+    gutter: {
+        paddingLeft: 16,
+        paddingRight: 16
+    },
     row: {
-        padding: 16
+        flexDirection: 'row'
+    },
+    header: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 24
+    },
+    stopWatch: {
+        marginTop: 32,
+        marginBottom: 32
     }
 })

@@ -9,4 +9,7 @@ export { SignUpScreen } from "./SignUpScreen";
 export { CalendarScreen } from "./CalendarScreen";
 export { ProfileScreen } from "./ProfileScreen";
 export { FoodVisionScreen } from "./FoodVisionScreen";
+export { StopWatchScreen } from "./StopWatchScreen";
+export { WorkoutSearchScreen } from "./WorkoutSearchScreen";
+export { WorkoutSessionScreen } from "./WorkoutSessionScreen";
 export {RootStackParamList} from "./types"

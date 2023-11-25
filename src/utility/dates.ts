@@ -106,7 +106,7 @@ export const formatDateHeader = (inputDate: string) => {
     const month = monthNames[date.getMonth()];
     const dayOfWeek = dayNames[date.getDay()];
   
-    return `${month} ${day}, ${dayOfWeek}`;
+    return `${month} ${day}, ${dayOfWeek}`?.toLocaleUpperCase();
 };
 
 export const getAppStartAndEndOfWeek = () => {

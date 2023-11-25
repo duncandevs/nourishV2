@@ -45,7 +45,7 @@ export const NutritionScreen = ({ navigation }: HomeScreenProps) => {
     const handleDaySelect = (date: string) => {
         setDate(date);
     };
-    const dateHeader = formatDateHeader(date)?.toUpperCase();
+    const dateHeader = formatDateHeader(date);
 
     const onEditMacrosVisibility = () => {
         setIsMacrosVisible(!isEditMacrosVisible)

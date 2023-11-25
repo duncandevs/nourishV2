@@ -71,15 +71,17 @@ export const useExerciseSchedules = () => {
     };
 };
 
-export const useSelectedExerciseSchedule = (selectedDay?: string) => {
+export const useSelectedExerciseSchedule = (selectedDayString?: string) => {
     const { getSchedulesByDay } = useExerciseSchedules();
     const [selectedExerciseSchedule, setSelectedExerciseSchedule] = useState([]);
     
     useEffect(()=>{
-        if(selectedDay) setSelectedExerciseSchedule(
-            getSchedulesByDay(selectedDay)
-        )
-    }, [selectedDay]);
+        if(selectedDayString)  {
+            setSelectedExerciseSchedule(
+                getSchedulesByDay(selectedDayString)
+            );
+        }
+    }, [selectedDayString]);
 
     return {
         selectedExerciseSchedule

@@ -13,6 +13,9 @@ import {
   SignUpScreen,
   FoodVisionScreen,
   FitnessScreen,
+  StopWatchScreen,
+  WorkoutSearchScreen,
+  WorkoutSessionScreen,
 } from './src/screens';
 import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
@@ -65,6 +68,9 @@ const App = () => {
             <Stack.Screen name="Calendar" component={CalendarScreen}  options={{headerBackTitle:"back"}}/>
             <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: 'profile', headerBackTitle:"back"}} />
             <Stack.Screen name="FoodVisionScreen" component={FoodVisionScreen} options={{headerBackTitle:"", headerTitle: 'food vision'}} />
+            <Stack.Screen name="StopWatchScreen" component={StopWatchScreen} />
+            <Stack.Screen name="WorkoutSearchScreen" component={WorkoutSearchScreen} />
+            <Stack.Screen name="WorkoutSessionScreen" component={WorkoutSessionScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </ThemeProvider>

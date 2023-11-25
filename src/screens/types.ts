@@ -11,4 +11,5 @@ export type RootStackParamList = {
     Calendar: undefined;
     Profile: undefined;
     FoodVisionScreen: undefined;
+    StopWatchScreen: undefined;
 };
