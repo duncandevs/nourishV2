@@ -115,3 +115,14 @@ export const getAppStartAndEndOfWeek = () => {
     const endOfWeekDate =  endOfWeek(today, {weekStartsOn: 0}); // force week to end on sunday
     return { startOfWeekDate, endOfWeekDate };
 };
+
+export const ABBREV_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+export const ABBREV_DAYS_FULL_STRING_MAP = {
+    'mon': 'monday',
+    'tue': 'tuesday',
+    'wed': 'wednesday',
+    'thu': 'thursday',
+    'fri': 'friday',
+    'sat': 'saturday',
+    'sun': 'sunday'
+};
