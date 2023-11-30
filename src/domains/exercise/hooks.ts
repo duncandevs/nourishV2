@@ -16,9 +16,6 @@ export const useExercises = () => {
         fetchExercises,
     );
 
-    console.log('exercises - ', exercises);
-    console.log('error - ', error);
-
     return {
         exercises,
         error,

@@ -11,3 +11,5 @@ export { EditMacrosBottomSheet } from "./EditMacrosBottomSheet";
 export { ProfileIconHeader } from "./ProfileIconHeader";
 export { Toast } from "./Toast";
 export { RoundCameraButton } from "./RoundCameraButton";
+export { NumberSelector } from "./NumberSelector";
+export { ExerciseRepsSelector } from "./ExerciseRepsSelector";
