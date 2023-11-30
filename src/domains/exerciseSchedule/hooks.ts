@@ -3,6 +3,7 @@ import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { useUser } from '../users/hooks';
 import { ExerciseSchedule } from './types';
 import ExerciseScheduleService, {  ExerciseScheduleParams } from './services';
+import { DAYS_OF_THE_WEEK } from '../../utility';
 
 export const ExerciseLogKeys = {
     schedules: 'exerciseSchedules',
@@ -10,10 +11,8 @@ export const ExerciseLogKeys = {
 };
 
 function _organizeByDaysOfWeek(items) {
-    const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-
     return items?.reduce((acc, item) => {
-        daysOfWeek.forEach((day: string) => {
+        DAYS_OF_THE_WEEK.forEach((day: string) => {
             if (item[day]) {
                 if (!acc[day]) {
                     acc[day] = [];

@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 import { Text } from "../theme";
 import { Exercise } from "../domains/exercise/types";
-import { ABBREV_DAYS, ABBREV_DAYS_FULL_STRING_MAP, FULL_DAYS } from '../utility';
+import { ABBREV_DAYS, DAYS_OF_THE_WEEK } from '../utility';
 import { CheckBox } from 'react-native-elements';
 import { ExerciseRepsSelector } from "../components";
 import { useExerciseSchedules } from "../domains/exerciseSchedule/hooks";
 import BlueCheck from "../../assets/blue-check.svg"
-import { ExerciseSchedule } from '../domains/exerciseSchedule/types';
 import { ExerciseScheduleParams } from '../domains/exerciseSchedule/services';
 
 type ExerciseProps = {
@@ -45,7 +44,7 @@ const TimeDisplay = ({ time }:TimeDisplayProps) => {
 
 const CalendarSelector = ({ handleDaySelect, scheduledDays }: CalendarSelectorProps) => {
     return <View style={styles.calendarWrapper}>
-        {FULL_DAYS?.map((day:string, idx: number)=>{
+        {DAYS_OF_THE_WEEK?.map((day:string, idx: number)=>{
             return <Pressable style={styles.calendarDayWrapper} onPress={(e)=>handleDaySelect(day)} key={day}>
                 <Text textAlign='center' variant='body' fontWeight='500'>{ABBREV_DAYS[idx]}</Text>
                 <CheckBox containerStyle={styles.calendarDayCheckbox} checked={scheduledDays[day]} onPress={(e)=>handleDaySelect(day)}/>
@@ -77,7 +76,7 @@ export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
         sets: exerciseScheduleData.sets || 0
     });
     const isTimerShown = !isExpanded;
-    const initialScheduledDays = FULL_DAYS?.reduce((acc:Record<string, boolean>, day:string) => {
+    const initialScheduledDays = DAYS_OF_THE_WEEK?.reduce((acc:Record<string, boolean>, day:string) => {
         acc[day] = false // set this from the exercise schedule values
         return acc
     } , {});

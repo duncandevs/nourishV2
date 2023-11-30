@@ -117,7 +117,7 @@ export const getAppStartAndEndOfWeek = () => {
 };
 
 export const ABBREV_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-export const FULL_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+export const DAYS_OF_THE_WEEK = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 export const ABBREV_DAYS_FULL_STRING_MAP = {
     'mon': 'monday',
     'tue': 'tuesday',
