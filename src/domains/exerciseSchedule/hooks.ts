@@ -48,11 +48,6 @@ export const useExerciseSchedules = () => {
         queryClient.setQueryData(ExerciseLogKeys.dailySchedule(day), schedulesByDay?.[day] || []);
     });;
 
-    // returns schedule by day
-    const getSchedulesByDay = (day: string) => {
-        return queryClient.getQueryData(ExerciseLogKeys.dailySchedule(day));
-    };
-
     // set create new exercise schedule mutation
     const { createExerciseSchedule, error: createExerciseScheduleError } = useCreateExerciseSchedule();
 
@@ -68,7 +63,6 @@ export const useExerciseSchedules = () => {
 
     return { 
         data,
-        getSchedulesByDay,
         error: isError ? error : null,
         isLoading,
         createExerciseSchedule,
@@ -81,21 +75,19 @@ export const useExerciseSchedules = () => {
     };
 };
 
-export const useSelectedExerciseSchedule = (selectedDayString?: string) => {
-    const { getSchedulesByDay } = useExerciseSchedules();
-    const [selectedExerciseSchedule, setSelectedExerciseSchedule] = useState([]);
+export const useSelectedExerciseSchedule = (day: string) => {
+    const { data } = useExerciseSchedules();
+    const [selectedExerciseSchedule, setDailySchedule] = useState([]);
     
     useEffect(()=>{
-        if(selectedDayString)  {
-            setSelectedExerciseSchedule(
-                getSchedulesByDay(selectedDayString)
-            );
-        }
-    }, [selectedDayString]);
+        setDailySchedule(
+            data?.filter((schedule)=> !!schedule[day])
+        )
+    }, [data, day]);
 
-    return {
-        selectedExerciseSchedule
-    }
+    return { 
+        selectedExerciseSchedule 
+    };
 };
 
 export const useCreateExerciseSchedule = () => {

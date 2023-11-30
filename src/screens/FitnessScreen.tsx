@@ -15,7 +15,7 @@ export const FitnessScreen = ({ navigation }) => {
     const [ date, setDate ] = useState(todaysDateRegular);
     const [ selectedDay, setSelectedDayDay ] = useState(TODAY);
     const { selectedExerciseSchedule  } = useSelectedExerciseSchedule(selectedDay);
-    const { createExerciseSchedule, createExerciseScheduleError, updateExerciseSchedule, updateExerciseScheduleError } = useExerciseSchedules();
+    const { createExerciseSchedule, updateExerciseSchedule } = useExerciseSchedules();
     const { createExerciseLog } = useExerciseLogs();
 
     const handleDaySelect = (date: string) => {
