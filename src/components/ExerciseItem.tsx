@@ -55,8 +55,10 @@ const CalendarSelector = ({ handleDaySelect, scheduledDays }: CalendarSelectorPr
 
 
 export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
-    const { createOrUpdateExerciseSchedule, getExerciseScheduleByExerciseId, createOrUpdateExerciseScheduleError } = useExerciseSchedules();
+    const { createOrUpdateExerciseSchedule, getExerciseScheduleByExerciseId } = useExerciseSchedules();
     const exerciseSchedule = getExerciseScheduleByExerciseId(exercise.id);
+    console.log('exerciseSchedule from exercise item - ', exerciseSchedule);
+
     const [ exerciseScheduleData, setExerciseScheduleData ] = useState<ExerciseScheduleParams>({
         exercise_id: exercise.id,
         time_in_seconds: exerciseSchedule?.time_in_seconds || 0,
@@ -71,23 +73,15 @@ export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
         sunday: exerciseSchedule?.sunday || false,
     });
     const [ isExpanded, setIsExpanded ] = useState(false);
-    const [ exerciseRepsData, setExerciseRepsData] = useState<ExerciseReps | null>({
-        reps: exerciseScheduleData.reps || 0,
-        sets: exerciseScheduleData.sets || 0
-    });
     const isTimerShown = !isExpanded;
-    const initialScheduledDays = DAYS_OF_THE_WEEK?.reduce((acc:Record<string, boolean>, day:string) => {
-        acc[day] = false // set this from the exercise schedule values
-        return acc
-    } , {});
     const [scheduledDays, setScheduledDays ] = useState({
-        monday: exerciseSchedule?.monday || false,
-        tuesday: exerciseSchedule?.tuesday || false,
-        wednesday: exerciseSchedule?.wednesday || false,
-        thursday: exerciseSchedule?.thursday || false,
-        friday: exerciseSchedule?.friday || false,
-        saturday: exerciseSchedule?.saturday || false,
-        sunday: exerciseSchedule?.sunday || false,
+        monday: exerciseScheduleData.monday || false,
+        tuesday: exerciseScheduleData.tuesday || false,
+        wednesday: exerciseScheduleData.wednesday || false,
+        thursday: exerciseScheduleData.thursday || false,
+        friday: exerciseScheduleData.friday || false,
+        saturday: exerciseScheduleData.saturday || false,
+        sunday: exerciseScheduleData.sunday || false,
     });
     const handleDaySelect = (day: string) => {
         setScheduledDays({...scheduledDays, ...{[day]: !scheduledDays[day]}})
@@ -98,22 +92,29 @@ export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
     };
 
     const handleSaveExercise = () => {
+        console.log('save exercise - ', exerciseScheduleData);
         createOrUpdateExerciseSchedule(exerciseScheduleData);
         setIsExpanded(false)
     };
 
-   const updateExerciseRepsData = (exerciseRepsData: ExerciseReps) => {
-    setExerciseRepsData(exerciseRepsData)
-   };
-
-   useEffect(()=>{
+    const updateExerciseRepsData = (exerciseRepsData: ExerciseReps) => {
         setExerciseScheduleData({...exerciseScheduleData, ...exerciseRepsData});
-   }, [exerciseRepsData]);
+    };
 
-   useEffect(()=>{
-    setExerciseScheduleData({...exerciseScheduleData, ...scheduledDays})
-   }, [scheduledDays])
-   console.log('createOrUpdateExerciseScheduleError - ', createOrUpdateExerciseScheduleError)
+    const exerciseRepsData = {
+        sets: exerciseScheduleData.sets || 0,
+        reps: exerciseScheduleData.reps || 0,
+    };
+
+    useEffect(()=>{
+        setExerciseScheduleData({...exerciseScheduleData, ...scheduledDays})
+    }, [scheduledDays]);
+
+    useEffect(()=>{
+        console.log('updated exerciseScheduleData - ', exerciseScheduleData)
+    }, [exerciseScheduleData])
+
+
     return <View style={[styles.container, containerStyle]}>
         <Pressable style={[ styles.miniContainer, styles.row ]} onPress={handleExpandSection}>
             <View style={[styles.titleContent]}>

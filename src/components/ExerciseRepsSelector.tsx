@@ -8,29 +8,22 @@ type ExerciseRepsOptions = {
 };
 
 type ExerciseRepsSelectorProps = {
-    values?: ExerciseRepsOptions | null;
+    values: ExerciseRepsOptions;
     onChange: (values: ExerciseRepsOptions) => void
 }
 
 export const ExerciseRepsSelector = ({ values, onChange }: ExerciseRepsSelectorProps) => {
-    console.log('exercise values - ', values)
-    const [ data, setData ] = useState<ExerciseRepsOptions>(values || {
-        reps: 0,
-        sets: 0
-    })
+    const [ data, setData ] = useState<ExerciseRepsOptions>(values)
     
     const updateReps = (value: number) => {
-        setData({...data, reps: value})
+        setData({...data, ...{reps: value}});
+        onChange({...data, ...{reps: value}});
     };
 
     const updateSets = (value: number) => {
-        setData({...data, sets: value})
-    }
-
-    useEffect(()=>{
-        console.log('data changes to - ', data)
-        onChange(data)
-    }, [data])
+        setData({...data, ...{sets: value}})
+        onChange({...data, ...{sets: value}});
+    };
 
     return <View style={styles.container}>
         <NumberSelector title={"sets"} onChange={(value)=>updateSets(value)} value={data.sets} />

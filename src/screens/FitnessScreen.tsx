@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { TouchableOpacity, View } from "react-native"
+import { View } from "react-native"
 import { Text } from "../theme"
 import { CalendarWeekPills } from "../components";
 import { StyleSheet } from "react-native";
-import { useExerciseSchedules, useSelectedExerciseSchedule } from '../domains/exerciseSchedule/hooks';
+import { useSelectedExerciseSchedule } from '../domains/exerciseSchedule/hooks';
 import { getTodaysDayOfTheWeek, getDayOfTheWeek, todaysDateRegular, formatDateHeader } from "../utility";
-import { useExerciseLogs } from "../domains/exerciseLog/hooks";
 import { AddWorkoutButton } from "../components/AddWorkoutButton";
 import { StopWatchButton } from "../components/StopWatchButton";
 
@@ -15,8 +14,6 @@ export const FitnessScreen = ({ navigation }) => {
     const [ date, setDate ] = useState(todaysDateRegular);
     const [ selectedDay, setSelectedDayDay ] = useState(TODAY);
     const { selectedExerciseSchedule  } = useSelectedExerciseSchedule(selectedDay);
-    const { createExerciseSchedule, updateExerciseSchedule } = useExerciseSchedules();
-    const { createExerciseLog } = useExerciseLogs();
 
     const handleDaySelect = (date: string) => {
         setDate(date);
@@ -26,42 +23,6 @@ export const FitnessScreen = ({ navigation }) => {
 
     const goToCalendarScreen = () => {
         console.log('go to calendar screen');
-    };
-
-    const addNewExercise = async () => {
-        await createExerciseSchedule({
-            exercise_id: 'c18e16ea-d5e8-46a7-9c3f-a6c8e671b655',
-            time_in_seconds: 2700,
-            monday: null,
-            tuesday: true,
-            wednesday: null,
-            thursday: true,
-            friday: null,
-            saturday: null,
-            sunday: true,
-        });
-    };
-
-    const updateExercise = async () => {
-        await updateExerciseSchedule({
-            exercise_id: 'c18e16ea-d5e8-46a7-9c3f-a6c8e671b655',
-            time_in_seconds: 7000,
-            monday: null,
-            tuesday: true,
-            wednesday: null,
-            thursday: true,
-            friday: null,
-            saturday: null,
-            sunday: true,
-        });
-    };
-
-    const createNewExerciseLog = async () => {
-        await createExerciseLog({
-            exercise_id: 'c18e16ea-d5e8-46a7-9c3f-a6c8e671b655',
-            date: new Date(),
-            time_in_seconds: 7000
-        })
     };
 
     const dateHeader = formatDateHeader(date);
@@ -86,21 +47,6 @@ export const FitnessScreen = ({ navigation }) => {
         </View>
         <View>
             <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
-        </View>
-        <View>
-            <TouchableOpacity onPress={addNewExercise}>
-                <Text>Add Exercise</Text>
-            </TouchableOpacity>
-        </View>
-        <View>
-            <TouchableOpacity onPress={updateExercise}>
-                <Text>Update Exercise</Text>
-            </TouchableOpacity>
-        </View>
-        <View>
-            <TouchableOpacity onPress={createNewExerciseLog}>
-                <Text>Create Exercise Log</Text>
-            </TouchableOpacity>
         </View>
         <View>
             {selectedExerciseSchedule?.map((schedule, idx)=> {

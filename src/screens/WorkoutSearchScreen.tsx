@@ -7,7 +7,6 @@ import { ExerciseItem } from '../components/ExerciseItem';
 
 export const WorkoutSearchScreen = () => {
     const { exercises } = useExercises();
-
     return <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
                 <Text variant="paragraph1" marginTop="l">Search Workouts</Text>

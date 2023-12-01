@@ -13,7 +13,7 @@ type NumberSelector = {
 
 
 export const NumberSelector = ({ value, title, onChange }: NumberSelector) => {
-    const [val, setVal] = useState(0);
+    const [val, setVal] = useState(value);
     const handleOnChange = (input:string) => {
         const n  = Number(input)
         setVal(n)
