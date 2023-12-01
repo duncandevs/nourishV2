@@ -9,17 +9,17 @@ type NumberSelector = {
     value?: number;
     title?: string;
     onChange: (value: number) => void;
+    isArrowControlHidden?: boolean
 };
 
 
-export const NumberSelector = ({ value, title, onChange }: NumberSelector) => {
+export const NumberSelector = ({ value, title, onChange, isArrowControlHidden }: NumberSelector) => {
     const [val, setVal] = useState(value);
     const handleOnChange = (input:string) => {
         const n  = Number(input)
         setVal(n)
     };
     const increaseValue = () => {
-        console.log(val)
         setVal(val + 1)
     };
     const decreaseValue = () => {
@@ -44,14 +44,14 @@ export const NumberSelector = ({ value, title, onChange }: NumberSelector) => {
                 </View>
                 {title && <Text textAlign="center" variant="paragraph2" fontWeight="500" color="gray04">{title}</Text>}
             </View>
-            <View>
+            {!isArrowControlHidden && <View>
                 <TouchableOpacity onPress={increaseValue}>
                     <UpArrow width={48} height={48} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={decreaseValue}>
                     <DownArrow width={48} height={48}/>
                 </TouchableOpacity>
-            </View>
+            </View>}
         </View>
     </>
 };

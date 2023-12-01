@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 import { Text } from "../theme";
 import { Exercise } from "../domains/exercise/types";
-import { ABBREV_DAYS, DAYS_OF_THE_WEEK } from '../utility';
+import { ABBREV_DAYS, DAYS_OF_THE_WEEK, formatDisplayTime } from '../utility';
 import { CheckBox } from 'react-native-elements';
-import { ExerciseRepsSelector } from "../components";
+import { ExerciseRepsSelector, ExerciseTimeSelector } from "../components";
 import { useExerciseSchedules } from "../domains/exerciseSchedule/hooks";
 import BlueCheck from "../../assets/blue-check.svg"
 import { ExerciseScheduleParams } from '../domains/exerciseSchedule/services';
@@ -15,7 +15,7 @@ type ExerciseProps = {
 };
 
 type TimeDisplayProps = {
-    time?: number
+    seconds: number
 };
 
 type CalendarSelectorProps = {
@@ -38,8 +38,9 @@ type ExerciseScheduleDays = {
     sunday: string | null, 
 }
 
-const TimeDisplay = ({ time }:TimeDisplayProps) => {
-    return <Text variant="paragraph2" color="gray03" fontWeight="500">00:00:00</Text>
+const TimeDisplay = ({ seconds }:TimeDisplayProps) => {
+    const displayTime = formatDisplayTime(seconds)
+    return <Text variant="paragraph2" color="gray03" fontWeight="500">{displayTime}</Text>
 };
 
 const CalendarSelector = ({ handleDaySelect, scheduledDays }: CalendarSelectorProps) => {
@@ -57,7 +58,8 @@ const CalendarSelector = ({ handleDaySelect, scheduledDays }: CalendarSelectorPr
 export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
     const { createOrUpdateExerciseSchedule, getExerciseScheduleByExerciseId } = useExerciseSchedules();
     const exerciseSchedule = getExerciseScheduleByExerciseId(exercise.id);
-    console.log('exerciseSchedule from exercise item - ', exerciseSchedule);
+    const isExerciseTimerShown = exercise.measurement === 'time';
+    const isExerciseRepsShown = exercise.measurement === 'reps';
 
     const [ exerciseScheduleData, setExerciseScheduleData ] = useState<ExerciseScheduleParams>({
         exercise_id: exercise.id,
@@ -92,7 +94,6 @@ export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
     };
 
     const handleSaveExercise = () => {
-        console.log('save exercise - ', exerciseScheduleData);
         createOrUpdateExerciseSchedule(exerciseScheduleData);
         setIsExpanded(false)
     };
@@ -100,6 +101,10 @@ export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
     const updateExerciseRepsData = (exerciseRepsData: ExerciseReps) => {
         setExerciseScheduleData({...exerciseScheduleData, ...exerciseRepsData});
     };
+
+    const updateExerciseTimeData = (timeInSeconds: number) => {
+        setExerciseScheduleData({...exerciseScheduleData, ...{time_in_seconds: timeInSeconds}});
+    }
 
     const exerciseRepsData = {
         sets: exerciseScheduleData.sets || 0,
@@ -110,16 +115,12 @@ export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
         setExerciseScheduleData({...exerciseScheduleData, ...scheduledDays})
     }, [scheduledDays]);
 
-    useEffect(()=>{
-        console.log('updated exerciseScheduleData - ', exerciseScheduleData)
-    }, [exerciseScheduleData])
-
 
     return <View style={[styles.container, containerStyle]}>
         <Pressable style={[ styles.miniContainer, styles.row ]} onPress={handleExpandSection}>
             <View style={[styles.titleContent]}>
                 <Text variant="paragraph2" fontWeight="500">{exercise.name.toUpperCase()}</Text>
-                {isTimerShown && <TimeDisplay />}
+                {isTimerShown && <TimeDisplay seconds={exerciseScheduleData.time_in_seconds || 0}/>}
             </View>
         </Pressable>
         {isExpanded && <View style={styles.expandedView}> 
@@ -127,7 +128,14 @@ export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
                 <CalendarSelector scheduledDays={scheduledDays} handleDaySelect={handleDaySelect}/>
             </View>
             <View style={styles.exerciseSelector}>
-                <ExerciseRepsSelector onChange={updateExerciseRepsData} values={exerciseRepsData}/>
+                {isExerciseRepsShown && <ExerciseRepsSelector 
+                    onChange={updateExerciseRepsData} 
+                    values={exerciseRepsData}
+                />}
+                {isExerciseTimerShown && <ExerciseTimeSelector 
+                    onChange={updateExerciseTimeData} 
+                    timeInSeconds={Number(exerciseScheduleData.time_in_seconds)}
+                />}
             </View>
             <TouchableOpacity onPress={handleSaveExercise} style={styles.save}>
                 <BlueCheck />

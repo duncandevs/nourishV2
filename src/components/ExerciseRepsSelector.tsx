@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { NumberSelector } from "./NumberSelector";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type ExerciseRepsOptions = {
     reps: number;

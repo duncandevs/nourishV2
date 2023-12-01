@@ -13,3 +13,4 @@ export { Toast } from "./Toast";
 export { RoundCameraButton } from "./RoundCameraButton";
 export { NumberSelector } from "./NumberSelector";
 export { ExerciseRepsSelector } from "./ExerciseRepsSelector";
+export { ExerciseTimeSelector } from "./ExerciseTimeSelector";

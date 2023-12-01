@@ -127,3 +127,18 @@ export const ABBREV_DAYS_FULL_STRING_MAP = {
     'sat': 'saturday',
     'sun': 'sunday'
 };
+
+export const formatDisplayTime = (seconds: number) => {
+    // Calculate hours, minutes, and seconds
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    // Format each component to ensure it has two digits
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
+
+    // Combine and return the formatted time
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+};
