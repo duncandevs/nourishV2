@@ -6,3 +6,8 @@ export type Exercise = {
     measurement: ExerciseMeasurement,
     name: string,
 };
+
+export const ExerciseMeasurements = {
+    TIME: 'time',
+    REPS: 'reps'
+};

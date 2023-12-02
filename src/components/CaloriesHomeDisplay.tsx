@@ -20,8 +20,8 @@ export const CaloriesHomeDisplay = ({ calories, target, handleEdit }: CaloriesHo
                 <View style={styles.row}>
                     <View style={styles.column}>
                         <Text variant="display1" color="highlight">{calories || 0}</Text>
-                        {target && <Text variant="display2" style={styles.target} color="white">{target}</Text>}
-                        {!target && <Text variant="display2" style={styles.target} color="white">-</Text>}
+                        {target && <Text variant="display3" style={styles.target} color="white">{target}</Text>}
+                        {!target && <Text variant="display3" style={styles.target} color="white">-</Text>}
                     </View>
                     <Text variant="header3" style={styles.targetText} color="white">TARGET</Text>
                 </View>

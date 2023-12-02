@@ -128,11 +128,15 @@ export const ABBREV_DAYS_FULL_STRING_MAP = {
     'sun': 'sunday'
 };
 
+export const getHoursFromSeconds = (seconds: number) => Math.floor(seconds / 3600);
+export const getMinutesFromSeconds = (seconds: number) => Math.floor((seconds % 3600) / 60);
+export const getSeconds = (seconds: number) => seconds % 60;
+
 export const formatDisplayTime = (seconds: number) => {
     // Calculate hours, minutes, and seconds
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
+    const hours = getHoursFromSeconds(seconds);
+    const minutes = getMinutesFromSeconds(seconds);
+    const remainingSeconds = getSeconds(seconds);
 
     // Format each component to ensure it has two digits
     const formattedHours = hours.toString().padStart(2, '0');
@@ -142,3 +146,10 @@ export const formatDisplayTime = (seconds: number) => {
     // Combine and return the formatted time
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
+
+export const getFormateStopWatchTime = (totalSeconds: number) => {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}

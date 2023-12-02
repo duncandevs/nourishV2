@@ -1,6 +1,11 @@
 import { StyleSheet, View } from "react-native";
 import { NumberSelector } from "./NumberSelector";
 import { useEffect, useState } from "react";
+import { 
+    getHoursFromSeconds,
+    getMinutesFromSeconds,
+    getSeconds,
+} from "../utility";
 
 type ExerciseTimeSelectorProps = {
     onChange: (totalTimeInSeconds: number) => void;
@@ -10,9 +15,9 @@ type ExerciseTimeSelectorProps = {
 export const ExerciseTimeSelector = ({ onChange, timeInSeconds }: ExerciseTimeSelectorProps) => {
     const [ timeData, setTimeData ] = useState(timeInSeconds)
     // Convert initial time in seconds to hours, minutes, and seconds
-    const initialHours = Math.floor(timeData / 3600);
-    const initialMinutes = Math.floor((timeData % 3600) / 60);
-    const initialSeconds = timeData % 60;
+    const initialHours = getHoursFromSeconds(timeInSeconds);
+    const initialMinutes = getMinutesFromSeconds(timeInSeconds);
+    const initialSeconds = getSeconds(timeInSeconds);
 
     const [hours, setHours] = useState(initialHours);
     const [minutes, setMinutes] = useState(initialMinutes);

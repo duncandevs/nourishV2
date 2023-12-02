@@ -11,7 +11,7 @@ type StopWatchButtonProps = {
 
 export const StopWatchButton = ({ onPress, containerStyle }: StopWatchButtonProps) => {
     return <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPress}>
-        <StopWatchIcon width={26} height={30} fill="white"/>
+        <StopWatchIcon width={36} height={36} fill="white"/>
         <Text variant="paragraph2" color="white">STOP-WATCH</Text>
         <RightArrowIcon width={26} height={21} fill="white"/>
     </TouchableOpacity>

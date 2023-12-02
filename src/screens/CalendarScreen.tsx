@@ -90,7 +90,7 @@ export const CalendarScreen = () => {
                 <Text marginLeft="m">{title}</Text>
             </View>
             <View style={[styles.row, styles.calorieWrapper, styles.container]}>
-                <Text variant="display2" color="white">{displayMacros.calories}</Text>
+                <Text variant="display3" color="white">{displayMacros.calories}</Text>
                 <Text variant="header3" style={styles.caloriesHeader} color="white">CALORIES</Text>
             </View>
             <View style={[styles.container]}>

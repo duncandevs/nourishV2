@@ -7,7 +7,7 @@ import { DAYS_OF_THE_WEEK } from '../../utility';
 
 export const ExerciseLogKeys = {
     schedules: 'exerciseSchedules',
-    dailySchedule: (day: string) => ['dailySchedule', day]
+    scheduleById: (id: string) => ['exerciseSchedule', id],
 };
 
 function _organizeByDaysOfWeek(items) {
@@ -40,13 +40,13 @@ export const useExerciseSchedules = () => {
         fetchExerciseSchedules,
         {enabled: !!user?.id}
     );
-
-    // Cache individual day schedules
-    const schedulesByDay = _organizeByDaysOfWeek(data);
-    const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    daysOfWeek.forEach((day: string) => {
-        queryClient.setQueryData(ExerciseLogKeys.dailySchedule(day), schedulesByDay?.[day] || []);
-    });;
+    
+    useEffect(()=>{
+        // Cache individual day schedules
+        data?.forEach((schedule: ExerciseSchedule) => {
+            if(schedule.id) queryClient.setQueryData(ExerciseLogKeys.scheduleById(schedule.id), schedule);
+        });
+    }, [data]);
 
     // set create new exercise schedule mutation
     const { createExerciseSchedule, error: createExerciseScheduleError } = useCreateExerciseSchedule();
@@ -89,6 +89,22 @@ export const useSelectedExerciseSchedule = (day: string) => {
         selectedExerciseSchedule 
     };
 };
+
+export const useExerciseScheduleById = (id: string) => {
+    const queryClient = useQueryClient();
+  
+    // Fetch function to get data from the cache
+    const fetchScheduleById = () => {
+      return queryClient.getQueryData(ExerciseLogKeys.scheduleById(id));
+    };
+  
+    // Use the useQuery hook to fetch the schedule
+    const { data, isLoading, error } = useQuery(['schedule', id], fetchScheduleById, {
+      // Add any options here, like staleTime, cacheTime, etc.
+    });
+  
+    return { data, isLoading, error };
+  };
 
 export const useCreateExerciseSchedule = () => {
     const user = useUser();

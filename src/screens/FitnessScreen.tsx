@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native"
+import { TouchableOpacity, View } from "react-native"
 import { Text } from "../theme"
 import { CalendarWeekPills } from "../components";
 import { StyleSheet } from "react-native";
@@ -7,6 +7,7 @@ import { useSelectedExerciseSchedule } from '../domains/exerciseSchedule/hooks';
 import { getTodaysDayOfTheWeek, getDayOfTheWeek, todaysDateRegular, formatDateHeader } from "../utility";
 import { AddWorkoutButton } from "../components/AddWorkoutButton";
 import { StopWatchButton } from "../components/StopWatchButton";
+import { ExerciseSchedule } from "../domains/exerciseSchedule/types";
 
 const TODAY = getTodaysDayOfTheWeek();
 
@@ -27,17 +28,17 @@ export const FitnessScreen = ({ navigation }) => {
 
     const dateHeader = formatDateHeader(date);
 
-    const goToWorkoutSearchScreen = () => {
-        navigation.navigate('WorkoutSearchScreen')
+    const goToExerciseSearchScreen = () => {
+        navigation.navigate('ExerciseSearchScreen')
     };
 
     return <View style={[styles.container, styles.gutter]}>
         <View style={[styles.row, styles.header]}>
             <View>
-                <Text variant="paragraph1" fontWeight="600">Fitness</Text>
+                <Text variant="paragraph1" fontWeight="600" style={{maxWidth: 175}}>Your Fitness Schedule</Text>
                 <Text variant='paragraph3' fontWeight="600" color="gray03" marginTop="s">{dateHeader}</Text>  
             </View>
-            <AddWorkoutButton handleOnPress={()=>goToWorkoutSearchScreen()} />
+            <AddWorkoutButton handleOnPress={()=>goToExerciseSearchScreen()} />
         </View>
         <View>
             <CalendarWeekPills 
@@ -49,8 +50,13 @@ export const FitnessScreen = ({ navigation }) => {
             <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
         </View>
         <View>
-            {selectedExerciseSchedule?.map((schedule, idx)=> {
-                return <Text key={idx}>{schedule?.exercise?.name}</Text>
+            {selectedExerciseSchedule?.map((schedule: ExerciseSchedule, idx)=> {
+                return <View style={{flexDirection: 'row', justifyContent: 'space-between'}} key={schedule.id}>
+                    <Text key={idx}>{schedule?.exercise?.name}</Text>
+                    <TouchableOpacity onPress={()=>navigation.navigate('ExerciseSessionScreen', {id: schedule.id})}>
+                        <Text>start exercie</Text>
+                    </TouchableOpacity>
+                </View>
             })}
         </View>
     </View>

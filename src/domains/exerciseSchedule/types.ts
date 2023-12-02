@@ -1,8 +1,10 @@
 import { Exercise } from "../exercise/types";
 
 export type ExerciseSchedule = {
+    id?:string,
     user_id: string,
     exercise_id: string,
+    exercise?: Exercise,
     time_in_seconds?: number,
     sets?: number,
     reps?: number,

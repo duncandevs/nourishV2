@@ -28,12 +28,22 @@ export const theme = createTheme({
     xl: 40,
   },
   textVariants: {
+    displayXl: {
+      fontSize: 148,
+      fontWeight: 'bold',
+      color: 'text',
+    },
     display1: {
       fontSize: 64,
       fontWeight: 'bold',
       color: 'text',
     },
     display2: {
+      fontSize: 48,
+      fontWeight: 'bold',
+      color: 'text',
+    },
+    display3: {
       fontSize: 36,
       fontWeight: 'bold',
       color: 'text',

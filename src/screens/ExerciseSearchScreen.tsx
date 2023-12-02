@@ -5,7 +5,7 @@ import { ExerciseItem } from '../components/ExerciseItem';
 
 
 
-export const WorkoutSearchScreen = () => {
+export const ExerciseSearchScreen = () => {
     const { exercises } = useExercises();
     return <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>

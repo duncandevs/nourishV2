@@ -83,7 +83,7 @@ export const EditMacrosBottomSheet = ({ isVisible=false, onClose }: EditMacrosBo
           <Text variant="link1" onPress={closeSheet}>close</Text>
         </View>
         {/* <Button title="Close" onPress={closeSheet} /> */}
-        <Text variant='display2'>CALORIES - {displayTarget}</Text>
+        <Text variant='display3'>CALORIES - {displayTarget}</Text>
         <Slider 
           value={target}
           minimumValue={0}
