@@ -34,7 +34,7 @@ type ExerciseRepsSessionProps = {
 export const ExerciseTimedSession = ({ duration }: ExerciseTimedSessionProps) => {
     const { handleStartStop, handleReset, remainingTime, isRunning } = useTimer(duration || 0);
 
-    return <>
+    return <View style={styles.counterContainer}>
             <ExerciseSessionTimer timeInSeconds={remainingTime|| 0}/>
             <View style={[styles.row, styles.activityButtons]}>
                 <TouchableOpacity onPress={handleReset}>
@@ -47,7 +47,7 @@ export const ExerciseTimedSession = ({ duration }: ExerciseTimedSessionProps) =>
                     <StopButton />
                 </TouchableOpacity>}
             </View>
-        </>
+        </View>
 };
 
 export const ExerciseRepsSession = ({ sets, reps }: ExerciseRepsSessionProps) => {
@@ -103,14 +103,11 @@ export const ExerciseRepsSession = ({ sets, reps }: ExerciseRepsSessionProps) =>
         setIsActive(false);
         setIsResting(true);
         setIsFinished(false);
-        // if(isFinished) {
-        //     handleActivityReset();
-        // }
     };
 
     // const activityString = isFinished ? 'RESTART' : isActive ? 'START RESTING' : 'START ACTIVITY'
 
-    return <View style={styles.repsContainer}>
+    return <View style={styles.counterContainer}>
         <ExerciseSessionReps 
             sets={setsData} 
             reps={reps} 
@@ -170,11 +167,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    repsContainer: {
-        marginTop: 64
+    counterContainer: {
+        marginTop: 64,
+        height: '88%',
     },
     activityButtons: {
+        position: 'absolute', // Use absolute positioning
+        bottom: 32, // 32 pixels from the bottom of the screen
+        left: 0, // Align to the left
+        right: 0, // Align to the right
+        justifyContent: 'space-between', // Center the buttons horizontally
         padding: 20,
-        marginTop: 48,
     }
 });
