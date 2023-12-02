@@ -74,6 +74,7 @@ export const useStopWatch = () => {
         handleStop,
         handleEnd,
         elapsedTime,
+        isRunning,
     }
 };
 

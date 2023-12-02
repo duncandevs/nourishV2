@@ -53,12 +53,13 @@ export const ExerciseTimedSession = ({ duration }: ExerciseTimedSessionProps) =>
 export const ExerciseRepsSession = ({ sets, reps }: ExerciseRepsSessionProps) => {
     const [ isResting, setIsResting ] = useState(false);
     const [ isActive, setIsActive ] = useState(false);
-    const { handleResetStart, handleEnd, elapsedTime } = useStopWatch();
+    const { handleResetStart, handleEnd, elapsedTime, isRunning } = useStopWatch();
     const [ setsData, setSetsData ] = useState(sets);
     const [ isFinished, setIsFinished ] = useState(false);
 
     const subtractReps = () => {
-        if(setsData > 0) {
+        const isReady = !isActive && !isResting
+        if(setsData > 0 && !isFinished && !isReady) {
             setSetsData(setsData - 1)
             return setsData - 1;
         };
@@ -66,29 +67,21 @@ export const ExerciseRepsSession = ({ sets, reps }: ExerciseRepsSessionProps) =>
     };
 
     const onActivityPress = () => {
-        if(isFinished) return;
+        if(isFinished) {
+            handleActivityReset();
+            return;
+        };
 
-        const newActivityState = !isActive;
         let newSets = setsData;
+        newSets = subtractReps();
 
-        // going from active to resting
-        if(newActivityState === false){
-            newSets = subtractReps();
-            if(newSets === 0) {
-                onEndExercise();
-                return;
-            };
-            setIsResting(true);
+        if(newSets === 0) {
+            onEndExercise();
+            return;
         };
-
-        // going from resting to active
-        if(newActivityState === true){
-            setIsResting(false);
-        };
-        
-
-        setIsActive(newActivityState);
-        handleResetStart();
+        setIsResting(false);
+        setIsActive(true);
+        if(!isRunning) handleResetStart();
     };
 
     const onEndExercise = () => {
@@ -105,6 +98,16 @@ export const ExerciseRepsSession = ({ sets, reps }: ExerciseRepsSessionProps) =>
         setIsResting(false);
     };
 
+    const handleResting = () => {
+        handleResetStart();
+        setIsActive(false);
+        setIsResting(true);
+        setIsFinished(false);
+        // if(isFinished) {
+        //     handleActivityReset();
+        // }
+    };
+
     // const activityString = isFinished ? 'RESTART' : isActive ? 'START RESTING' : 'START ACTIVITY'
 
     return <View style={styles.repsContainer}>
@@ -117,12 +120,14 @@ export const ExerciseRepsSession = ({ sets, reps }: ExerciseRepsSessionProps) =>
             isActive={isActive}
         />
         <View style={[styles.activityButtons, styles.row]}>
-            <TouchableOpacity onPress={handleActivityReset} style={{flexDirection: 'row', gap: 18}}>
-                    <View style={{alignSelf: 'flex-end'}}>
-                        <BlueCooldownIcon width={64} height={64}/>
-                    </View>
+            <View style={{flexDirection: 'row', gap: 18}}>
+                <TouchableOpacity onPress={handleActivityReset}>
                     <ResetButton width={64} height={64} /> 
-            </TouchableOpacity>
+                </TouchableOpacity>
+                <TouchableOpacity style={{alignSelf: 'flex-end'}} onPress={handleResting}>
+                    <BlueCooldownIcon width={64} height={64}/>
+                </TouchableOpacity>
+            </View>
             <TouchableOpacity onPress={onActivityPress}>
                 {isActive && <GreenCheckIcon />}
                 {!isActive && <GreenPlayIcon />}
