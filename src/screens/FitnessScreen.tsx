@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { TouchableOpacity, View } from "react-native"
-import { Text } from "../theme"
+import { ScrollView, TouchableOpacity, View } from "react-native"
+import { Colors, Text } from "../theme"
 import { CalendarWeekPills } from "../components";
 import { StyleSheet } from "react-native";
 import { useSelectedExerciseSchedule } from '../domains/exerciseSchedule/hooks';
@@ -49,16 +49,18 @@ export const FitnessScreen = ({ navigation }) => {
         <View>
             <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
         </View>
-        <View>
-            {selectedExerciseSchedule?.map((schedule: ExerciseSchedule, idx)=> {
-                return <View style={{flexDirection: 'row', justifyContent: 'space-between'}} key={schedule.id}>
-                    <Text key={idx}>{schedule?.exercise?.name}</Text>
-                    <TouchableOpacity onPress={()=>navigation.navigate('ExerciseSessionScreen', {id: schedule.id})}>
-                        <Text>start exercie</Text>
-                    </TouchableOpacity>
-                </View>
-            })}
-        </View>
+        <ScrollView>
+            <View style={{gap: 20, paddingBottom: 84}}>
+                {selectedExerciseSchedule?.map((schedule: ExerciseSchedule, idx)=> {
+                    return <View style={{flexDirection: 'row', justifyContent: 'space-between', backgroundColor: Colors.gray01, height: 96, alignItems:'center', padding: 10, borderRadius: 10}} key={schedule.id}>
+                        <Text key={idx} variant="paragraph1">{schedule?.exercise?.name}</Text>
+                        <TouchableOpacity onPress={()=>navigation.navigate('ExerciseSessionScreen', {id: schedule.id})}>
+                            <Text variant="header3">start exercie</Text>
+                        </TouchableOpacity>
+                    </View>
+                })}
+            </View>
+        </ScrollView>
     </View>
 };
 
