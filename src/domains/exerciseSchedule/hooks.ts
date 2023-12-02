@@ -92,18 +92,22 @@ export const useSelectedExerciseSchedule = (day: string) => {
 
 export const useExerciseScheduleById = (id: string) => {
     const queryClient = useQueryClient();
-  
+
     // Fetch function to get data from the cache
     const fetchScheduleById = () => {
       return queryClient.getQueryData(ExerciseLogKeys.scheduleById(id));
     };
   
-    // Use the useQuery hook to fetch the schedule
-    const { data, isLoading, error } = useQuery(['schedule', id], fetchScheduleById, {
-      // Add any options here, like staleTime, cacheTime, etc.
-    });
+    const { data, isLoading } = useQuery(['schedule', id], fetchScheduleById);
   
-    return { data, isLoading, error };
+    useEffect(() => {
+      if (data === undefined) {
+        // Refetch all schedules if the specific schedule is not found
+        queryClient.refetchQueries(ExerciseLogKeys.schedules);
+      }
+    }, [data, queryClient]);
+  
+    return { data, isLoading };
   };
 
 export const useCreateExerciseSchedule = () => {

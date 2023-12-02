@@ -106,6 +106,13 @@ export const ExerciseRepsSession = ({ sets, reps }: ExerciseRepsSessionProps) =>
     };
 
     // const activityString = isFinished ? 'RESTART' : isActive ? 'START RESTING' : 'START ACTIVITY'
+    /*
+
+        NOTES:
+        1. FIX EMPTY SCREEN ISSUE -> WHY IS THE SCREEN TIMING OUT ?
+
+        2. FIX THE CONTROL LOGIC -> GOING FROM RESTING TO ACTIVE
+    */
 
     return <View style={styles.counterContainer}>
         <ExerciseSessionReps 
@@ -137,6 +144,7 @@ export const ExerciseRepsSession = ({ sets, reps }: ExerciseRepsSessionProps) =>
 export const ExerciseSessionScreen = ({ navigation, route }: ExerciseSessionScreenProps) => {
     const { params: { id } } = route;
     const data: ExerciseSchedule  = useExerciseScheduleById(id)?.data;
+
     const duration = data?.time_in_seconds || 0;
     const exerciseName = data?.exercise?.name;
     const isTimedExerciseShown = data?.exercise?.measurement === ExerciseMeasurements.TIME;
