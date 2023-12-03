@@ -29,8 +29,19 @@ export const useExerciseSchedules = () => {
     const queryClient = useQueryClient();
     const user = useUser();
     const fetchExerciseSchedules = async (): Promise<ExerciseSchedule[]> => {
-        const response = await ExerciseScheduleService.fetchUserExerciseSchedules({userId: user.id });
-        if(response.data) return response.data
+        const { data } = await ExerciseScheduleService.fetchUserExerciseSchedules({userId: user.id });
+
+        if(data) {
+            // Cache individual day schedules
+            data.forEach((schedule: ExerciseSchedule) => {
+                if(schedule.id) queryClient.setQueryData(
+                    ExerciseLogKeys.scheduleById(schedule.id), 
+                    schedule,
+                );
+            });
+            return data
+        };
+
         return [];
     };
 
@@ -38,16 +49,11 @@ export const useExerciseSchedules = () => {
     const { data, error, isLoading, isError } = useQuery(
         [ExerciseLogKeys.schedules],
         fetchExerciseSchedules,
-        {enabled: !!user?.id}
+        {
+            enabled: !!user?.id,
+            staleTime: 60 * 60 * 1000
+        },
     );
-    console.log('useExerciseSchedules error - ', error);
-    console.log('useExerciseSchedules data - ', data);
-    useEffect(()=>{
-        // Cache individual day schedules
-        data?.forEach((schedule: ExerciseSchedule) => {
-            if(schedule.id) queryClient.setQueryData(ExerciseLogKeys.scheduleById(schedule.id), schedule);
-        });
-    }, [data]);
 
     // set create new exercise schedule mutation
     const { createExerciseSchedule, error: createExerciseScheduleError } = useCreateExerciseSchedule();
@@ -99,18 +105,12 @@ export const useExerciseScheduleById = (id: string) => {
       return queryClient.getQueryData(ExerciseLogKeys.scheduleById(id));
     };
   
-    const { data, isLoading, error } = useQuery(['schedule', id], fetchScheduleById);
+    const { data, isLoading, error } = useQuery(
+        ExerciseLogKeys.scheduleById(id), 
+        fetchScheduleById,
+    );
   
-    useEffect(() => {
-      if (data === undefined) {
-        console.log('data is undefined need to refetch')
-        console.log('fetchByIdError - ', error)
-        // Refetch all schedules if the specific schedule is not found
-        queryClient.refetchQueries(ExerciseLogKeys.schedules);
-      }
-    }, [data, queryClient]);
-  
-    return { data, isLoading };
+    return { data, isLoading, error };
   };
 
 export const useCreateExerciseSchedule = () => {

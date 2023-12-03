@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     timerLabel: {
-        marginTop: 64,
+        marginTop: 48,
     },
     timerDisplayWrapper: {
         width: 250,

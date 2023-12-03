@@ -22,8 +22,17 @@ import { theme } from './src/theme';
 import * as Updates from 'expo-updates';
 import { ProfileIconHeader } from "./src/components";
 
+const STALETIME = 60 * 60 * 1000; // set to 5 minutes
+
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: STALETIME,
+      retry: 0,
+    },
+  }
+});
 
 // Create the Stack Navigator
 const Stack = createStackNavigator();

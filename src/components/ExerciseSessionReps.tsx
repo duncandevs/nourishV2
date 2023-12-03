@@ -44,7 +44,7 @@ export const ExerciseSessionReps = ({ sets=3, reps=0, elapsedTime=0, isResting=f
 const styles= StyleSheet.create({
     container: {
         alignItems: 'center',
-        gap: 48
+        gap: 48,
     },
     row: {
         flexDirection: 'row',

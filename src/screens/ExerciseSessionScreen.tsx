@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Text } from "../theme";
+import { Colors, Text } from "../theme";
 import { useExerciseScheduleById } from "../domains/exerciseSchedule/hooks";
 import { ExerciseSchedule } from "../domains/exerciseSchedule/types";
 import { ExerciseMeasurements } from "../domains/exercise/types";
@@ -15,6 +15,7 @@ import GreenPlayIcon from "../../assets/green-play-button.svg";
 import GreenCheckIcon from "../../assets/green-check-button.svg";
 import BlueCooldownIcon from "../../assets/blue-cooldown-button.svg"
 import BlueCheckIcon from "../../assets/blue-check-button.svg";
+import SquareCheckIcon from "../../assets/square-check-icon.svg";
 
 type ExerciseSessionScreenProps = {
     navigation: any;
@@ -41,9 +42,11 @@ type ExerciseRepsSessionProps = {
 export const ExerciseTimedSession = ({ duration, onFinish }: ExerciseTimedSessionProps) => {
     const { handleStartStop, handleReset, remainingTime, isRunning } = useTimer(duration || 0, onFinish);
 
-    return <View style={styles.counterContainer}>
-            <ExerciseSessionTimer timeInSeconds={remainingTime|| 0}/>
-            <View style={[styles.row, styles.activityButtons]}>
+    return <View style={styles.timerContainer}>
+            <View>
+                <ExerciseSessionTimer timeInSeconds={remainingTime|| 0}/>
+            </View>
+            <View style={[styles.row, styles.timerActivityButtons]}>
                 <TouchableOpacity onPress={handleReset}>
                     <ResetButton /> 
                 </TouchableOpacity>
@@ -138,7 +141,7 @@ export const ExerciseRepsSession = ({ sets, reps, onFinish }: ExerciseRepsSessio
         console.log('isActive - ', isActive)
     }, [isActive])
 
-    return <View style={styles.counterContainer}>
+    return <View style={styles.repsContainer}>
         <ExerciseSessionReps 
             sets={setsData} 
             reps={reps} 
@@ -147,7 +150,7 @@ export const ExerciseRepsSession = ({ sets, reps, onFinish }: ExerciseRepsSessio
             isFinished={isFinished}
             isActive={isActive}
         />
-        <View style={[styles.activityButtons, styles.row]}>
+        <View style={[styles.row, styles.repsActivityButtons]}>
             <View style={{flexDirection: 'row', gap: 18}}>
                 <TouchableOpacity onPress={handleActivityReset}>
                     <ResetButton width={64} height={64} /> 
@@ -167,11 +170,13 @@ export const ExerciseRepsSession = ({ sets, reps, onFinish }: ExerciseRepsSessio
 
 export const ExerciseSessionScreen = ({ navigation, route }: ExerciseSessionScreenProps) => {
     const { params: { id } } = route;
-    const data: ExerciseSchedule  = useExerciseScheduleById(id)?.data;
+    console.log('ExerciseSessionScreen exercise id - ', id);
+    const { data }  = useExerciseScheduleById(id) as {
+        data: ExerciseSchedule
+    };
     const { createExerciseLog } = useCreateExerciseLog();
 
-
-    if(data === undefined) console.log('exercise schedule data went cold - ', data)
+    if(data === undefined) console.log('exercise schedule data went cold - ', data);
 
     const duration = data?.time_in_seconds || 0;
     const exerciseName = data?.exercise?.name;
@@ -195,6 +200,8 @@ export const ExerciseSessionScreen = ({ navigation, route }: ExerciseSessionScre
         });
     };
 
+    const exerciseNameArray = exerciseName?.split(' ');
+
     return <SafeAreaView style={styles.area}>
         <Toast 
             visible={isSuccessToastShow} 
@@ -203,7 +210,20 @@ export const ExerciseSessionScreen = ({ navigation, route }: ExerciseSessionScre
             duration={2500}
         />
         <View style={styles.container}>
-            <Text color="white" variant="display3">{exerciseName?.toLocaleUpperCase()}</Text>
+            <View style={styles.row}>
+                <View>
+                    {exerciseNameArray?.map((name)=>{
+                        return <>
+                                <Text color="white" variant="display3" style={styles.exerciseTitle}>{name?.toLocaleUpperCase()}</Text>
+                                {/* <Text color="white" variant="display3" style={styles.exerciseTitle}>{name?.toLocaleUpperCase()}</Text> */}
+                            </>
+                    })}
+                </View>
+                <TouchableOpacity onPress={handleExerciseIsFinished} style={styles.finishButton}>
+                    <Text>SET DONE</Text>
+                    <SquareCheckIcon />
+                </TouchableOpacity>
+            </View>
             { isTimedExerciseShown && 
                 <ExerciseTimedSession 
                     duration={duration} 
@@ -228,23 +248,44 @@ const styles = StyleSheet.create({
     },
     container: {
         padding: 20,
-        paddingTop: 44
+        paddingTop: 44,
     },
     row: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    counterContainer: {
-        marginTop: 64,
-        height: '88%',
+    repsContainer: {
+        paddingTop: 32,
     },
-    activityButtons: {
-        position: 'absolute', // Use absolute positioning
-        bottom: 32, // 32 pixels from the bottom of the screen
-        left: 0, // Align to the left
-        right: 0, // Align to the right
+    timerContainer: {
+        paddingTop: 32,
+    },
+    timerActivityButtons: {
         justifyContent: 'space-between', // Center the buttons horizontally
-        padding: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        alignItems: 'flex-end',
+        marginTop: 24
+    },
+    repsActivityButtons: {
+        justifyContent: 'space-between', // Center the buttons horizontally
+        paddingLeft: 20,
+        paddingRight: 20,
+        alignItems: 'flex-end',
+        marginTop: '20%'
+    },
+    exerciseTitle: {
+        maxWidth: 250,
+    },
+    finishButton: {
+        flexDirection: 'row',
+        width: 150,
+        backgroundColor: Colors.blue,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        alignSelf: 'flex-start',
+        padding: 10,
+        borderRadius: 10
     }
 });
