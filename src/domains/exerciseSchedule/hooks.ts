@@ -40,7 +40,8 @@ export const useExerciseSchedules = () => {
         fetchExerciseSchedules,
         {enabled: !!user?.id}
     );
-    
+    console.log('useExerciseSchedules error - ', error);
+    console.log('useExerciseSchedules data - ', data);
     useEffect(()=>{
         // Cache individual day schedules
         data?.forEach((schedule: ExerciseSchedule) => {
@@ -98,10 +99,12 @@ export const useExerciseScheduleById = (id: string) => {
       return queryClient.getQueryData(ExerciseLogKeys.scheduleById(id));
     };
   
-    const { data, isLoading } = useQuery(['schedule', id], fetchScheduleById);
+    const { data, isLoading, error } = useQuery(['schedule', id], fetchScheduleById);
   
     useEffect(() => {
       if (data === undefined) {
+        console.log('data is undefined need to refetch')
+        console.log('fetchByIdError - ', error)
         // Refetch all schedules if the specific schedule is not found
         queryClient.refetchQueries(ExerciseLogKeys.schedules);
       }

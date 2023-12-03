@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Animated, Text, StyleSheet, View } from 'react-native';
 import { Colors } from '../theme';
 
-export const Toast = ({ visible, message, duration = 1500, onDismiss }) => {
+
+type ToastProps = {
+  visible: boolean;
+  message: string;
+  duration?: number;
+  onDismiss?: () => void;
+}
+
+export const Toast = ({ visible, message, duration = 1500, onDismiss }: ToastProps) => {
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
 
   useEffect(() => {
@@ -48,7 +56,7 @@ export const Toast = ({ visible, message, duration = 1500, onDismiss }) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute', 
-    bottom: 0,
+    bottom: 50,
     left: 0,
     right: 0,
     alignItems: 'center',

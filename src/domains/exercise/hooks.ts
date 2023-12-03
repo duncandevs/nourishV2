@@ -78,10 +78,24 @@ export const useStopWatch = () => {
     }
 };
 
-export const useTimer = (duration: number) => {
+export const useTimer = (duration: number, onFinish?: ()=>void) => {
     const [isRunning, setIsRunning] = useState(false);
     const [remainingTime, setRemainingTime] = useState(duration);
     const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
+    
+    const handleOnFinish = () =>{
+        if(onFinish) onFinish();
+        setIsRunning(false);
+    };
+
+    const handleStartStop = () => {
+        setIsRunning(!isRunning);
+    };
+    
+    const handleReset = () => {
+        setIsRunning(false);
+        setRemainingTime(duration);
+    };
   
     useEffect(() => {
         if (isRunning) {
@@ -103,16 +117,17 @@ export const useTimer = (duration: number) => {
 
     useEffect(()=>{
         handleReset()
-    }, [duration])
-  
-    const handleStartStop = () => {
-      setIsRunning(!isRunning);
-    };
-  
-    const handleReset = () => {
-      setIsRunning(false);
-      setRemainingTime(duration);
-    };
+    }, [duration]);
+
+    useEffect(()=>{
+        console.log('remainingTime - ', remainingTime)
+        // handle Done
+        if(remainingTime === 0){
+            handleOnFinish();
+        };
+    }, [remainingTime])
+
+    
 
     return {
         timerId,
