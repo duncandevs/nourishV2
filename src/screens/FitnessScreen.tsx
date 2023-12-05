@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native"
 import { Colors, Text } from "../theme"
-import { CalendarWeekPills } from "../components";
+import { CalendarWeekPills, ExerciseSummaryItem } from "../components";
 import { StyleSheet } from "react-native";
 import { useSelectedExerciseSchedule } from '../domains/exerciseSchedule/hooks';
 import { getTodaysDayOfTheWeek, getDayOfTheWeek, todaysDateRegular, formatDateHeader } from "../utility";
@@ -22,14 +22,16 @@ export const FitnessScreen = ({ navigation }) => {
         setSelectedDayDay(dayString);
     };
 
-    const goToCalendarScreen = () => {
-        console.log('go to calendar screen');
-    };
+    const goToCalendarScreen = () => {};
 
     const dateHeader = formatDateHeader(date);
 
     const goToExerciseSearchScreen = () => {
         navigation.navigate('ExerciseSearchScreen')
+    };
+
+    const goToExerciseSessionScreen = (id:string) => {
+        navigation.navigate('ExerciseSessionScreen', {id});
     };
 
     return  <ScrollView style={{backgroundColor: 'white'}}>
@@ -50,14 +52,16 @@ export const FitnessScreen = ({ navigation }) => {
             <View>
                 <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
             </View>
-            <View style={{gap: 20, paddingBottom: 84}}>
+            <View style={{gap: 40, paddingBottom: 84}}>
                 {selectedExerciseSchedule?.map((schedule: ExerciseSchedule, idx)=> {
-                    return <View style={{flexDirection: 'row', justifyContent: 'space-between', backgroundColor: Colors.gray01, height: 96, alignItems:'center', padding: 10, borderRadius: 10}} key={schedule.id}>
-                        <Text key={idx} variant="paragraph1">{schedule?.exercise?.name}</Text>
-                        <TouchableOpacity onPress={()=>navigation.navigate('ExerciseSessionScreen', {id: schedule.id})}>
-                            <Text variant="header3">start exercie</Text>
-                        </TouchableOpacity>
-                    </View>
+                    const exercise = schedule.exercise;
+                    return exercise ? <ExerciseSummaryItem 
+                        key={exercise.id}
+                        exerciseId={exercise.id}
+                        scheduleId={schedule.id} 
+                        title={exercise.name} 
+                        onStartPress={goToExerciseSessionScreen} 
+                    /> : null;
                 })}
             </View>
         </View>

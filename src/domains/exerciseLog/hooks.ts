@@ -46,7 +46,7 @@ export const useWeeklyExerciseLogs = () => {
         {enabled: !!user?.id}
     );
 
-    const getWeeklyLogsByDate = (date: string ) => ExerciseLogService.getExerciseLogsByDate({ logs: data, date})
+    const getWeeklyLogsByDate = (date: string ) => ExerciseLogService.getExerciseLogsByDate({ logs: data, date});
 
     return { 
         data,
@@ -85,6 +85,18 @@ export const useCreateExerciseLog = () => {
     return { createExerciseLog, status, error };
 };
 
-
+export const useExerciseLogFromExercise = ({ exerciseId, date }: {exerciseId: string, date: string}) => {
+    const { data: exerciseLogs, error } = useWeeklyExerciseLogs();
+    const data: ExerciseLog[] = exerciseLogs?.filter((item)=>{
+        return item.exercise_id === exerciseId && item.date.startsWith(date)
+    }) || [];
+    const isFinished = !!data?.[0];
+    console.log('exerciseId - ', exerciseId, date, isFinished);
+    return { 
+        data: data[0],
+        error,
+        isFinished
+    }
+};
 
 

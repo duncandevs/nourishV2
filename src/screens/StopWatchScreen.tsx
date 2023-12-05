@@ -55,7 +55,7 @@ export const StopWatchScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FF4C00',
+    backgroundColor: '#FFBA51',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,

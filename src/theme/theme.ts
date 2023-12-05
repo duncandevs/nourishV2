@@ -17,6 +17,7 @@ export const Colors = {
     background: '#ecf0f1',
     text: '#333',
     blue: '#246EC4',
+    lightGray01: 'F8FAFB'
 }
 
 export const theme = createTheme({

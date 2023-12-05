@@ -120,7 +120,6 @@ export const useTimer = (duration: number, onFinish?: ()=>void) => {
     }, [duration]);
 
     useEffect(()=>{
-        console.log('remainingTime - ', remainingTime)
         // handle Done
         if(remainingTime === 0){
             handleOnFinish();

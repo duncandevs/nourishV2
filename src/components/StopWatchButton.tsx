@@ -19,7 +19,7 @@ export const StopWatchButton = ({ onPress, containerStyle }: StopWatchButtonProp
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FF4C00',
+        backgroundColor: '#FFBA51',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

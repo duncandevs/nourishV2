@@ -10,37 +10,11 @@ export const ExerciseScheduleKeys = {
     scheduleById: (id: string) => ['exerciseSchedule', id],
 };
 
-function _organizeByDaysOfWeek(items) {
-    return items?.reduce((acc, item) => {
-        DAYS_OF_THE_WEEK.forEach((day: string) => {
-            if (item[day]) {
-                if (!acc[day]) {
-                    acc[day] = [];
-                }
-                acc[day].push(item);
-            }
-        });
-        return acc;
-    }, {});
-};
-
-
 export const useExerciseSchedules = () => {
     const user = useUser();
     const fetchExerciseSchedules = async (): Promise<ExerciseSchedule[]> => {
         const { data } = await ExerciseScheduleService.fetchUserExerciseSchedules({userId: user.id });
-
-        if(data) {
-            // TODO: Figure out how to properly cache individual schedules without them going stale
-            // data.forEach((schedule: ExerciseSchedule) => {
-            //     if(schedule.id) queryClient.setQueryData(
-            //         ExerciseScheduleKeys.scheduleById(schedule.id), 
-            //         schedule,
-            //     );
-            // });
-            return data
-        };
-
+        if(data) return data;
         return [];
     };
 
@@ -94,19 +68,20 @@ export const useSelectedExerciseSchedule = (day: string) => {
 };
 
 export const useExerciseScheduleById = (id: string) => {
-    const { data: exerciseSchedules } = useExerciseSchedules()
+    const { data: exerciseSchedules, isLoading, error } = useExerciseSchedules();
+    const [ exerciseSchedule, setExerciseSchedule ] = useState<ExerciseSchedule | null>(null);
+
+    useEffect(()=>{
+        setExerciseSchedule(
+            fetchScheduleById()
+        );
+    }, [exerciseSchedules]);
 
     // Fetch function to get data from the cache
     const fetchScheduleById = () => {
-        return exerciseSchedules?.find((schedule)=>schedule.id === id);
+        return exerciseSchedules?.find((schedule)=>schedule.id === id) || null;
     };
-
-    const { data, isLoading, error } = useQuery(
-        ExerciseScheduleKeys.scheduleById(id), 
-        fetchScheduleById,
-    );
-
-    return { data, isLoading, error };
+    return { exerciseSchedule, isLoading, error };
 };
 
 export const useCreateExerciseSchedule = () => {

@@ -6,7 +6,7 @@ import { ExerciseMeasurements } from "../domains/exercise/types";
 import { useStopWatch, useTimer } from "../domains/exercise/hooks";
 import { ExerciseSessionTimer, ExerciseSessionReps, Toast } from "../components";
 import { useEffect, useState } from "react";
-import { useCreateExerciseLog } from "../domains/exerciseLog/hooks";
+import { useCreateExerciseLog, useExerciseLogFromExercise } from "../domains/exerciseLog/hooks";
 
 import PlayButton from "../../assets/green-play-button.svg";
 import ResetButton from "../../assets/green-reset-button.svg";
@@ -14,6 +14,7 @@ import StopButton from "../../assets/green-stop-button.svg";
 import GreenPlayIcon from "../../assets/green-play-button.svg";
 import BlueCheckIcon from "../../assets/blue-check-button.svg";
 import SquareCheckIcon from "../../assets/square-check-icon.svg";
+import { todaysDateRegular } from "../utility";
 
 type ExerciseSessionScreenProps = {
     navigation: any;
@@ -162,23 +163,24 @@ export const ExerciseRepsSession = ({ sets, reps, onFinish, isExerciseFinished=f
 };
 
 
-export const ExerciseSessionScreen = ({ navigation, route }: ExerciseSessionScreenProps) => {
+export const ExerciseSessionScreen = ({ route }: ExerciseSessionScreenProps) => {
     const { params: { id } } = route;
 
-    const { data }  = useExerciseScheduleById(id) as {
-        data: ExerciseSchedule
+    const { exerciseSchedule }  = useExerciseScheduleById(id) as {
+        exerciseSchedule: ExerciseSchedule
     };
     const { createExerciseLog } = useCreateExerciseLog();
+    const {  isFinished } = useExerciseLogFromExercise({ exerciseId: exerciseSchedule?.exercise?.id || "", date: todaysDateRegular});
 
-    if(data === undefined) console.log('exercise schedule data went cold - ', data);
+    if(exerciseSchedule === undefined) console.log('exercise schedule exerciseSchedule went cold - ', exerciseSchedule);
 
-    const duration = data?.time_in_seconds || 0;
-    const exerciseName = data?.exercise?.name;
-    const exerciseId = data?.exercise?.id;
-    const isTimedExerciseShown = data?.exercise?.measurement === ExerciseMeasurements.TIME;
-    const isRepsExerciseShown = data?.exercise?.measurement === ExerciseMeasurements.REPS;
-    const sets = data?.sets || 0;
-    const reps = data?.reps || 0;
+    const duration = exerciseSchedule?.time_in_seconds || 0;
+    const exerciseName = exerciseSchedule?.exercise?.name;
+    const exerciseId = exerciseSchedule?.exercise?.id;
+    const isTimedExerciseShown = exerciseSchedule?.exercise?.measurement === ExerciseMeasurements.TIME;
+    const isRepsExerciseShown = exerciseSchedule?.exercise?.measurement === ExerciseMeasurements.REPS;
+    const sets = exerciseSchedule?.sets || 0;
+    const reps = exerciseSchedule?.reps || 0;
     const [isSuccessToastShow, setIsSuccessToastShown] = useState(false);
     const [isExerciseFinished, setIsExerciseFinished] = useState(false);
 
@@ -195,6 +197,10 @@ export const ExerciseSessionScreen = ({ navigation, route }: ExerciseSessionScre
     };
 
     const exerciseNameArray = exerciseName?.split(' ');
+
+    useEffect(()=>{
+        setIsExerciseFinished(isFinished)
+    }, [isFinished])
 
     return <SafeAreaView style={styles.area}>
         <Toast 
