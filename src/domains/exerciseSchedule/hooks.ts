@@ -5,7 +5,7 @@ import { ExerciseSchedule } from './types';
 import ExerciseScheduleService, {  ExerciseScheduleParams } from './services';
 import { DAYS_OF_THE_WEEK } from '../../utility';
 
-export const ExerciseLogKeys = {
+export const ExerciseScheduleKeys = {
     schedules: 'exerciseSchedules',
     scheduleById: (id: string) => ['exerciseSchedule', id],
 };
@@ -26,19 +26,18 @@ function _organizeByDaysOfWeek(items) {
 
 
 export const useExerciseSchedules = () => {
-    const queryClient = useQueryClient();
     const user = useUser();
     const fetchExerciseSchedules = async (): Promise<ExerciseSchedule[]> => {
         const { data } = await ExerciseScheduleService.fetchUserExerciseSchedules({userId: user.id });
 
         if(data) {
-            // Cache individual day schedules
-            data.forEach((schedule: ExerciseSchedule) => {
-                if(schedule.id) queryClient.setQueryData(
-                    ExerciseLogKeys.scheduleById(schedule.id), 
-                    schedule,
-                );
-            });
+            // TODO: Figure out how to properly cache individual schedules without them going stale
+            // data.forEach((schedule: ExerciseSchedule) => {
+            //     if(schedule.id) queryClient.setQueryData(
+            //         ExerciseScheduleKeys.scheduleById(schedule.id), 
+            //         schedule,
+            //     );
+            // });
             return data
         };
 
@@ -47,12 +46,9 @@ export const useExerciseSchedules = () => {
 
     // Set all scheduled data
     const { data, error, isLoading, isError } = useQuery(
-        [ExerciseLogKeys.schedules],
+        [ExerciseScheduleKeys.schedules],
         fetchExerciseSchedules,
-        {
-            enabled: !!user?.id,
-            staleTime: 60 * 60 * 1000
-        },
+        { enabled: !!user?.id }
     );
 
     // set create new exercise schedule mutation
@@ -98,20 +94,20 @@ export const useSelectedExerciseSchedule = (day: string) => {
 };
 
 export const useExerciseScheduleById = (id: string) => {
-    const queryClient = useQueryClient();
+    const { data: exerciseSchedules } = useExerciseSchedules()
 
     // Fetch function to get data from the cache
     const fetchScheduleById = () => {
-      return queryClient.getQueryData(ExerciseLogKeys.scheduleById(id));
+        return exerciseSchedules?.find((schedule)=>schedule.id === id);
     };
-  
+
     const { data, isLoading, error } = useQuery(
-        ExerciseLogKeys.scheduleById(id), 
+        ExerciseScheduleKeys.scheduleById(id), 
         fetchScheduleById,
     );
-  
+
     return { data, isLoading, error };
-  };
+};
 
 export const useCreateExerciseSchedule = () => {
     const user = useUser();
@@ -123,7 +119,7 @@ export const useCreateExerciseSchedule = () => {
         {
             onSuccess: () => {
                 // Invalidate and refetch exercise schedules after a successful creation
-                queryClient.invalidateQueries(ExerciseLogKeys.schedules);
+                queryClient.invalidateQueries(ExerciseScheduleKeys.schedules);
             }
         }
     );
@@ -152,7 +148,7 @@ export const useUpdateExerciseSchedule = () => {
         {
             onSuccess: () => {
                 // Invalidate and refetch exercise schedules after a successful creation
-                queryClient.invalidateQueries(ExerciseLogKeys.schedules);
+                queryClient.invalidateQueries(ExerciseScheduleKeys.schedules);
             }
         }
     );
@@ -181,7 +177,7 @@ export const useCreateOrUpdateExerciseSchedule = () => {
         {
             onSuccess: () => {
                 // Invalidate and refetch exercise schedules after a successful creation
-                queryClient.invalidateQueries(ExerciseLogKeys.schedules);
+                queryClient.invalidateQueries(ExerciseScheduleKeys.schedules);
             }
         }
     );

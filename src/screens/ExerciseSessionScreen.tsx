@@ -12,8 +12,6 @@ import PlayButton from "../../assets/green-play-button.svg";
 import ResetButton from "../../assets/green-reset-button.svg";
 import StopButton from "../../assets/green-stop-button.svg";
 import GreenPlayIcon from "../../assets/green-play-button.svg";
-import GreenCheckIcon from "../../assets/green-check-button.svg";
-import BlueCooldownIcon from "../../assets/blue-cooldown-button.svg"
 import BlueCheckIcon from "../../assets/blue-check-button.svg";
 import SquareCheckIcon from "../../assets/square-check-icon.svg";
 
@@ -29,18 +27,22 @@ type ExerciseSessionScreenProps = {
 type ExerciseTimedSessionProps = {
     duration: number;
     onFinish?: () => void;
-    isFinished?: boolean;
+    isExerciseFinished?: boolean;
 };
 
 type ExerciseRepsSessionProps = {
     sets: number;
     reps: number;
-    isFinished?: boolean;
+    isExerciseFinished: boolean;
     onFinish?: () => void;
 };
 
-export const ExerciseTimedSession = ({ duration, onFinish }: ExerciseTimedSessionProps) => {
+export const ExerciseTimedSession = ({ duration, onFinish, isExerciseFinished }: ExerciseTimedSessionProps) => {
     const { handleStartStop, handleReset, remainingTime, isRunning } = useTimer(duration || 0, onFinish);
+
+    useEffect(()=>{
+        if(isExerciseFinished) handleReset();
+    }, [isExerciseFinished]);
 
     return <View style={styles.timerContainer}>
             <View>
@@ -60,12 +62,12 @@ export const ExerciseTimedSession = ({ duration, onFinish }: ExerciseTimedSessio
         </View>
 };
 
-export const ExerciseRepsSession = ({ sets, reps, onFinish }: ExerciseRepsSessionProps) => {
+export const ExerciseRepsSession = ({ sets, reps, onFinish, isExerciseFinished=false }: ExerciseRepsSessionProps) => {
     const [ isResting, setIsResting ] = useState(false);
     const [ isActive, setIsActive ] = useState(false);
-    const { handleResetStart, handleEnd, elapsedTime } = useStopWatch();
+    const { handleResetStart, handleEnd, elapsedTime, handleReset } = useStopWatch();
     const [ setsData, setSetsData ] = useState(sets);
-    const [ isFinished, setIsFinished ] = useState(false);
+    const [ isFinished, setIsFinished ] = useState(isExerciseFinished);
 
     const subtractReps = () => {
         const isReady = !isActive && !isResting
@@ -129,17 +131,9 @@ export const ExerciseRepsSession = ({ sets, reps, onFinish }: ExerciseRepsSessio
         setIsFinished(false);
     };
 
-    // const activityString = isFinished ? 'RESTART' : isActive ? 'START RESTING' : 'START ACTIVITY'
-    /*
-        NOTES:
-        1. FIX EMPTY SCREEN ISSUE -> WHY IS THE SCREEN TIMING OUT ?
-        2. FIX THE CONTROL LOGIC -> GOING FROM RESTING TO ACTIVE
-        3. CREATE A NEW EXERCISE LOG WHEN THE EXERCISE IS FINISHED
-    */
-
     useEffect(()=>{
-        console.log('isActive - ', isActive)
-    }, [isActive])
+        if(isFinished) onEndExercise();
+    }, [isFinished]);
 
     return <View style={styles.repsContainer}>
         <ExerciseSessionReps 
@@ -165,12 +159,12 @@ export const ExerciseRepsSession = ({ sets, reps, onFinish }: ExerciseRepsSessio
             </TouchableOpacity>
         </View>
     </View>
-}
+};
 
 
 export const ExerciseSessionScreen = ({ navigation, route }: ExerciseSessionScreenProps) => {
     const { params: { id } } = route;
-    console.log('ExerciseSessionScreen exercise id - ', id);
+
     const { data }  = useExerciseScheduleById(id) as {
         data: ExerciseSchedule
     };
@@ -219,22 +213,25 @@ export const ExerciseSessionScreen = ({ navigation, route }: ExerciseSessionScre
                             </>
                     })}
                 </View>
-                <TouchableOpacity onPress={handleExerciseIsFinished} style={styles.finishButton}>
-                    <Text>SET DONE</Text>
+                {!isExerciseFinished && <TouchableOpacity onPress={handleExerciseIsFinished} style={styles.finishButton}>
+                    <Text color="white">SET DONE</Text>
                     <SquareCheckIcon />
-                </TouchableOpacity>
+                </TouchableOpacity>}
+                {isExerciseFinished && <View style={styles.finishedBadge}>
+                    <Text fontWeight="500">FINISHED</Text>
+                </View>}
             </View>
             { isTimedExerciseShown && 
                 <ExerciseTimedSession 
                     duration={duration} 
                     onFinish={handleExerciseIsFinished}
-                    isFinished={isExerciseFinished}
+                    isExerciseFinished={isExerciseFinished}
                 />}
             {isRepsExerciseShown && 
                 <ExerciseRepsSession 
                     sets={sets} 
                     reps={reps}
-                    isFinished={isExerciseFinished}
+                    isExerciseFinished={isExerciseFinished}
                     onFinish={handleExerciseIsFinished}
                 />}
         </View>
@@ -284,6 +281,14 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.blue,
         alignItems: 'center',
         justifyContent: 'space-between',
+        alignSelf: 'flex-start',
+        padding: 10,
+        borderRadius: 10
+    },
+    finishedBadge: {
+        width: 150,
+        backgroundColor: Colors.highlight,
+        alignItems: 'center',
         alignSelf: 'flex-start',
         padding: 10,
         borderRadius: 10
