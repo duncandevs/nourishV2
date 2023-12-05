@@ -32,24 +32,24 @@ export const FitnessScreen = ({ navigation }) => {
         navigation.navigate('ExerciseSearchScreen')
     };
 
-    return <View style={[styles.container, styles.gutter]}>
-        <View style={[styles.row, styles.header]}>
-            <View>
-                <Text variant="paragraph1" fontWeight="600" style={{maxWidth: 175}}>Your Fitness Schedule</Text>
-                <Text variant='paragraph3' fontWeight="600" color="gray03" marginTop="s">{dateHeader}</Text>  
+    return  <ScrollView style={{backgroundColor: 'white'}}>
+        <View style={[styles.container, styles.gutter]}>
+            <View style={[styles.row, styles.header]}>
+                <View>
+                    <Text variant="paragraph1" fontWeight="600" style={{maxWidth: 175}}>Your Fitness Schedule</Text>
+                    <Text variant='paragraph3' fontWeight="600" color="gray03" marginTop="s">{dateHeader}</Text>  
+                </View>
+                <AddWorkoutButton handleOnPress={()=>goToExerciseSearchScreen()} />
             </View>
-            <AddWorkoutButton handleOnPress={()=>goToExerciseSearchScreen()} />
-        </View>
-        <View>
-            <CalendarWeekPills 
-                handleCalendarIconPress={goToCalendarScreen} 
-                handleCalendarDayPress={handleDaySelect}
-            />
-        </View>
-        <View>
-            <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
-        </View>
-        <ScrollView>
+            <View>
+                <CalendarWeekPills 
+                    handleCalendarIconPress={goToCalendarScreen} 
+                    handleCalendarDayPress={handleDaySelect}
+                />
+            </View>
+            <View>
+                <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
+            </View>
             <View style={{gap: 20, paddingBottom: 84}}>
                 {selectedExerciseSchedule?.map((schedule: ExerciseSchedule, idx)=> {
                     return <View style={{flexDirection: 'row', justifyContent: 'space-between', backgroundColor: Colors.gray01, height: 96, alignItems:'center', padding: 10, borderRadius: 10}} key={schedule.id}>
@@ -60,8 +60,8 @@ export const FitnessScreen = ({ navigation }) => {
                     </View>
                 })}
             </View>
-        </ScrollView>
-    </View>
+        </View>
+    </ScrollView>
 };
 
 const styles = StyleSheet.create({
