@@ -3,7 +3,6 @@ import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { useUser } from '../users/hooks';
 import { ExerciseSchedule } from './types';
 import ExerciseScheduleService, {  ExerciseScheduleParams } from './services';
-import { DAYS_OF_THE_WEEK } from '../../utility';
 
 export const ExerciseScheduleKeys = {
     schedules: 'exerciseSchedules',

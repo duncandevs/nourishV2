@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import ExerciseService from './services';
 
-const ExerciseKeys = {
+export const ExerciseKeys = {
     all: 'exercises'
 }
 
