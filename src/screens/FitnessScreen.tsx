@@ -1,19 +1,20 @@
-import { useState } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native"
-import { Colors, Text } from "../theme"
+import { useEffect, useState } from "react";
+import { ScrollView, View } from "react-native"
+import { Text } from "../theme"
 import { CalendarWeekPills, ExerciseSummaryItem } from "../components";
 import { StyleSheet } from "react-native";
 import { useSelectedExerciseSchedule } from '../domains/exerciseSchedule/hooks';
-import { getTodaysDayOfTheWeek, getDayOfTheWeek, todaysDateRegular, formatDateHeader } from "../utility";
+import { getDayOfTheWeek, formatDateHeader } from "../utility";
 import { AddWorkoutButton } from "../components/AddWorkoutButton";
 import { StopWatchButton } from "../components/StopWatchButton";
 import { ExerciseSchedule } from "../domains/exerciseSchedule/types";
-
-const TODAY = getTodaysDayOfTheWeek();
+import { useCalendar } from "../domains/calendar/hooks";
 
 export const FitnessScreen = ({ navigation }) => {
-    const [ date, setDate ] = useState(todaysDateRegular);
-    const [ selectedDay, setSelectedDayDay ] = useState(TODAY);
+    const {  todaysDate, todaysDayOfTheWeek, selectedDate } = useCalendar();
+    const [ date, setDate ] = useState(todaysDate);
+    const [ selectedDay, setSelectedDayDay ] = useState(todaysDayOfTheWeek);
+
     const { selectedExerciseSchedule  } = useSelectedExerciseSchedule(selectedDay);
 
     const handleDaySelect = (date: string) => {
@@ -24,7 +25,8 @@ export const FitnessScreen = ({ navigation }) => {
 
     const goToCalendarScreen = () => {};
 
-    const dateHeader = formatDateHeader(date);
+    const dateHeader = formatDateHeader(date); // returns Dec 05, TUESDAY
+    const dateWorkoutHeader = dateHeader.split(',')[1];
 
     const goToExerciseSearchScreen = () => {
         navigation.navigate('ExerciseSearchScreen')
@@ -53,6 +55,7 @@ export const FitnessScreen = ({ navigation }) => {
                 <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
             </View>
             <View style={{gap: 40, paddingBottom: 84}}>
+                <Text variant="header3" fontWeight="500" marginTop="l">{dateWorkoutHeader} WORKOUT</Text>
                 {selectedExerciseSchedule?.map((schedule: ExerciseSchedule, idx)=> {
                     const exercise = schedule.exercise;
                     return exercise ? <ExerciseSummaryItem 

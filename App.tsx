@@ -21,7 +21,7 @@ import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
 import * as Updates from 'expo-updates';
 import { ProfileIconHeader } from "./src/components";
-import { useAppInitializer } from './src/domains/apps/hooks';
+import { useAppInitializer } from './src/domains/app/hooks';
 
 const STALETIME = 60 * 60 * 1000; // set to 5 minutes
 

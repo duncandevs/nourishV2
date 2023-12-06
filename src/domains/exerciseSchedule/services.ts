@@ -52,6 +52,7 @@ const createOrUpdateExerciseSchedule = async ({ exerciseScheduleParams }: {exerc
     // If it exists, update it; otherwise, create a new schedule
     if (existingSchedule) {
         const updateResponse = await updateExerciseSchedule({ updateExerciseScheduleParams: exerciseScheduleParams });
+        console.log('updateResponse error - ', updateResponse.error);
         return updateResponse;
     } else {
         const createResponse = await createExerciseSchedule({ exerciseScheduleParams });
@@ -59,9 +60,21 @@ const createOrUpdateExerciseSchedule = async ({ exerciseScheduleParams }: {exerc
     }
 };
 
+const isExerciseScheduled = (exerciseSchedule: ExerciseSchedule | null) => {
+    if(!exerciseSchedule) return false
+    // Check if any of the days is true
+    const isAnyDayTrue = exerciseSchedule.monday || exerciseSchedule.tuesday || exerciseSchedule.wednesday || 
+                         exerciseSchedule.thursday || exerciseSchedule.friday || exerciseSchedule.saturday || exerciseSchedule.sunday;
+    // Check if sets or reps is greater than 0
+    const isSetsOrRepsTrue = (exerciseSchedule.sets && exerciseSchedule.sets > 0) || (exerciseSchedule.reps && exerciseSchedule.reps > 0);
+  
+    return isAnyDayTrue || isSetsOrRepsTrue;
+};
+
 export default {
     fetchUserExerciseSchedules,
     createExerciseSchedule,
     updateExerciseSchedule,
-    createOrUpdateExerciseSchedule
+    createOrUpdateExerciseSchedule,
+    isExerciseScheduled
 };

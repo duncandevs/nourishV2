@@ -8,8 +8,10 @@ import { ExerciseRepsSelector, ExerciseTimeSelector } from "../components";
 import { useExerciseSchedules } from "../domains/exerciseSchedule/hooks";
 import BlueCheck from "../../assets/blue-check.svg"
 import { ExerciseScheduleParams } from '../domains/exerciseSchedule/services';
+import { ExerciseSchedule } from '../domains/exerciseSchedule/types';
 
-type ExerciseProps = {
+type ExerciseItemProps = {
+    exerciseSchedule: ExerciseSchedule | null
     exercise: Exercise
     containerStyle?: {}
 };
@@ -39,8 +41,9 @@ type ExerciseScheduleDays = {
 }
 
 const TimeDisplay = ({ seconds }:TimeDisplayProps) => {
-    const displayTime = formatDisplayTime(seconds)
-    return <Text variant="paragraph2" color="gray03" fontWeight="500">{displayTime}</Text>
+    const displayTime = formatDisplayTime(seconds);
+    const displayColor = seconds ? "blue" : "gray02"
+    return <Text variant="paragraph2" color={displayColor} fontWeight="500">{displayTime}</Text>
 };
 
 const CalendarSelector = ({ handleDaySelect, scheduledDays }: CalendarSelectorProps) => {
@@ -55,9 +58,8 @@ const CalendarSelector = ({ handleDaySelect, scheduledDays }: CalendarSelectorPr
 };
 
 
-export const ExerciseItem = ({ exercise, containerStyle }: ExerciseProps) => {
-    const { createOrUpdateExerciseSchedule, getExerciseScheduleByExerciseId } = useExerciseSchedules();
-    const exerciseSchedule = getExerciseScheduleByExerciseId(exercise.id);
+export const ExerciseItem = ({ exercise, exerciseSchedule, containerStyle }: ExerciseItemProps) => {
+    const { createOrUpdateExerciseSchedule } = useExerciseSchedules();
     const isExerciseTimerShown = exercise.measurement === 'time';
     const isExerciseRepsShown = exercise.measurement === 'reps';
 
@@ -148,10 +150,8 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 10,
         backgroundColor: '#F8FAFB',
-        paddingBottom: 48
     },
     miniContainer: {
-        height: 114,
         width: '100%',
         padding: 16,
         alignItems: 'center'
@@ -166,7 +166,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     calendarContainer: {
-        alignSelf: 'center'
+        alignSelf: 'center',
+        margin: 16,
     },
     calendarWrapper: {
         flexDirection: 'row'
@@ -185,7 +186,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     expandedView: {
-        gap: 32
+        gap: 24,
+        paddingBottom: 24
     },
     save: {
         alignSelf: 'center'

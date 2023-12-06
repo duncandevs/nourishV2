@@ -4,6 +4,7 @@ import { Colors } from "../theme";
 import StopWatchIcon from "../../assets/stop-watch-icon.svg";
 import { useExerciseLogFromExercise } from "../domains/exerciseLog/hooks";
 import { todaysDateRegular } from "../utility";
+import { useCalendar } from "../domains/calendar/hooks";
 
 type ExerciseSummaryItemProps = {
     exerciseId: string;
@@ -16,32 +17,36 @@ export const ExerciseSummaryItem = ({ scheduleId, exerciseId, title, onStartPres
     // TODO: date here has to be replaced with the date selected not today's date > any date of the week may render this
     const {isFinished} = useExerciseLogFromExercise({ exerciseId, date: todaysDateRegular });
     const formatedTime = 0;
-    
+    const { selectedDate, todaysDate } = useCalendar();
+    const isAfterToday = selectedDate ? new Date(selectedDate) > new Date(todaysDate) : false;
+
     return <View style={styles.container}>
         <View style={[styles.row]}>
-            <Text variant="header3" style={styles.title}>{title.toUpperCase()}</Text>
+            <Text variant="header3" style={styles.title} fontWeight="600">{title.toUpperCase()}</Text>
             <View style={[styles.row, styles.duration]}>
                 <StopWatchIcon color={Colors.blue} width={32} height={32}/>
-                <Text marginLeft="m" variant="paragraph1" color="blue" fontWeight="600">{formatedTime || "00:00:00"}</Text>
+                <Text marginLeft="m" variant="header3" color="blue" fontWeight="600">{formatedTime || "00:00:00"}</Text>
             </View>
         </View>
-        {isFinished && <TouchableOpacity style={styles.finished} onPress={()=>onStartPress(scheduleId)}>
-            <Text variant="paragraph4" fontWeight="500">FINISHED</Text>
-        </TouchableOpacity>}
-        {!isFinished && <TouchableOpacity style={styles.button} onPress={()=>onStartPress(scheduleId)}>
-            <Text variant="paragraph4" color="white" fontWeight="500">START EXERCISE</Text>
-        </TouchableOpacity>}
+        {!isAfterToday && <View>
+            {isFinished && <TouchableOpacity style={styles.finished} onPress={()=>onStartPress(scheduleId)}>
+                <Text variant="paragraph4" fontWeight="500">FINISHED</Text>
+            </TouchableOpacity>}
+            {!isFinished && <TouchableOpacity style={styles.button} onPress={()=>onStartPress(scheduleId)}>
+                <Text variant="paragraph4" color="white" fontWeight="500">START EXERCISE</Text>
+            </TouchableOpacity>}
+        </View>}
     </View>
 };
 
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        paddingTop: 32,
-        paddingBottom: 32,
+        paddingTop: 24,
+        paddingBottom: 24,
         backgroundColor: "#F8FAFB",
         borderRadius: 10,
-        minHeight: 160,
+        // minHeight: 160,
     },
     duration: {
         width: 150,

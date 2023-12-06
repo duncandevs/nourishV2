@@ -9,6 +9,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { validateEmail, validatePasswordWithConfirmation} from "../utility";
 import UserService from "../domains/users/services";
 import { DeleteAccountModal, Toast } from "../components";
+import { supabase } from "../clients/supabase";
 
 
 export const ProfileScreen = ({ navigation }) => {
@@ -83,6 +84,7 @@ export const ProfileScreen = ({ navigation }) => {
         UserService.logOutUser().then(async ()=>{
             await handleLogOut();
             await UserService.deleteUserFromStorage();
+            await supabase.auth.signOut();
             navigation.navigate('AuthScreen');
         })
     };

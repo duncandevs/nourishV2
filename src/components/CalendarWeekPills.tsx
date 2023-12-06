@@ -1,7 +1,8 @@
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Text } from "../theme";
 import CalendarSvg from "../../assets/calendar-svg.svg";
-import { getDaysOfCurrentWeek, getTodaysDayOfTheWeek } from "../utility/dates";
+import { useCalendar } from "../domains/calendar/hooks";
+import { DayOfWeek } from "../domains/calendar/types";
 
 type CalendarPillProps = {
     date: string;
@@ -53,23 +54,26 @@ const CalendarIconPill = ({ handleOnPress }: CalendarIconPillProps) => {
 
 
 export const CalendarWeekPills = ({ handleCalendarIconPress, handleCalendarDayPress, disableFutureDates=false}: CalendarWeekPillsProps) => {
-    const daysOfTheWeekMap = getDaysOfCurrentWeek();
-    const daysOfTheWeekArray = Object.keys(daysOfTheWeekMap);
-    const dayOfTheWeek = getTodaysDayOfTheWeek();
+    const { daysOfTheWeekMap, daysOfTheWeekArray, todaysDayOfTheWeek, updateSelectedDate } = useCalendar();
 
+    const handleDatePress = (date:string) => {
+        handleCalendarDayPress(date);
+        updateSelectedDate(date);
+    };
+    
     return (
         <View style={styles.calendarContainer}>
             <CalendarIconPill handleOnPress={handleCalendarIconPress}/>
-            {daysOfTheWeekArray.map((fullDay) => {
-                const highlighted = fullDay === dayOfTheWeek;
+            {daysOfTheWeekArray.map((fullDay: DayOfWeek) => {
+                const highlighted = fullDay === todaysDayOfTheWeek;
                 const dayString = fullDay.substring(0, 3);
-                const isDisabled = disableFutureDates && new Date(daysOfTheWeekMap[dayOfTheWeek]) < new Date(daysOfTheWeekMap[fullDay]);
+                const isDisabled = disableFutureDates && new Date(daysOfTheWeekMap[todaysDayOfTheWeek]) < new Date(daysOfTheWeekMap[fullDay]);
                 const date = daysOfTheWeekMap[fullDay];
                 return <View key={fullDay}>
                     <CalendarDayPill 
                         date={date} 
                         dayString={dayString} 
-                        handleOnPress={handleCalendarDayPress} 
+                        handleOnPress={handleDatePress} 
                         highlighted={highlighted} 
                         disabled={isDisabled}
                     />

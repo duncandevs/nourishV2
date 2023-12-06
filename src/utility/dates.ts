@@ -8,9 +8,9 @@ import {
     startOfWeek, 
     endOfWeek, 
     eachDayOfInterval,
-    getDay,
     addMinutes,
 } from 'date-fns';
+import { DayOfWeek } from '../domains/calendar/types';
 
 const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 const REGULAR_DATE = "yyyy-MM-dd";
@@ -72,7 +72,7 @@ export const getDaysOfCurrentWeek = () => {
     
     let result = {} as Record<string, string>
 
-    const dayDateMap = dates.reduce((acc, date) => {
+    const dayDateMap: Record<DayOfWeek, string> = dates.reduce((acc, date) => {
         const dayName = format(date, 'EEEE').toLowerCase(); // Day of the week
         acc[dayName] = format(date, 'yyyy-MM-dd'); // Date in 'YYYY-MM-DD' format
         return acc;
@@ -80,12 +80,14 @@ export const getDaysOfCurrentWeek = () => {
     return dayDateMap;
 };
 
-export const getTodaysDayOfTheWeek = () => {
+export const getTodaysDayOfTheWeek = (): DayOfWeek => {
     const today = new Date();
-    return format(today, 'EEEE')?.toLowerCase();
+    //@ts-ignore
+    const day: DayOfWeek = format(today, 'EEEE')?.toLowerCase()
+    return day;
 };
 
-export const getDayOfTheWeek = (date:string) => {
+export const getDayOfTheWeek = (date:string): DayOfWeek => {
    // Create a Date object from the input
    const dateObj = new Date(date);
 
@@ -93,6 +95,7 @@ export const getDayOfTheWeek = (date:string) => {
    const adjustedDate = addMinutes(dateObj, dateObj.getTimezoneOffset());
 
    // Format the date to get the day of the week
+   // @ts-ignore
    return format(adjustedDate, 'EEEE').toLocaleLowerCase();
 };
 

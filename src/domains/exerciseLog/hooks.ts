@@ -91,7 +91,7 @@ export const useExerciseLogFromExercise = ({ exerciseId, date }: {exerciseId: st
         return item.exercise_id === exerciseId && item.date.startsWith(date)
     }) || [];
     const isFinished = !!data?.[0];
-    console.log('exerciseId - ', exerciseId, date, isFinished);
+
     return { 
         data: data[0],
         error,
