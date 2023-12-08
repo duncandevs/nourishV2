@@ -63,7 +63,7 @@ export const CalendarScreen = () => {
     useEffect(()=>{
         const result = FoodLogsService.getAverageMacrosPerMonth({dailyAverages: dailyAvgMacros });
         setMonthlyAvgMacros(result);
-    }, [dailyAvgMacros])
+    }, [dailyAvgMacros]);
 
     const selectedDateString = selectedDate?.dateString
     const title = selectedDateString ? `On ${selectedDate?.month}/${selectedDate?.day} you logged` : 'This month you averaged';

@@ -30,6 +30,8 @@ export const ExerciseSearchScreen = () => {
         setFilteredExercises(f);
     };
 
+    const isUnscheduledExercisesShown = !!unscheduledExercises?.length;
+
     useEffect(()=>{
         const exerciseItems = exercises?.map((exercise): FormattedExerciseItem=>({
             exercise: exercise,
@@ -50,8 +52,8 @@ export const ExerciseSearchScreen = () => {
 
     useEffect(()=>{
         setIsFilteredShown(!scheduledExercises?.length);
-    }, [scheduledExercises])
-    
+    }, [scheduledExercises]);
+
 
     return <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
@@ -65,12 +67,12 @@ export const ExerciseSearchScreen = () => {
                                 {scheduledExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={exercise.name}/>)}
                             </View>
                         </View>
-                        <View>
-                            <Text variant="header3" fontWeight="600">Other Workouts</Text>
+                        {isUnscheduledExercisesShown && <View>
+                            <Text variant="header3" fontWeight="600">Workouts</Text>
                             <View style={styles.exercises}>
                                 {unscheduledExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={exercise.name}/>)}
                             </View>
-                        </View>
+                        </View>}
                     </>}
                     {isFilteredShown && <>
                         <View style={styles.exercises}>

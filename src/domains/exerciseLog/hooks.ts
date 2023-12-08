@@ -2,6 +2,7 @@ import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { useUser } from '../users/hooks';
 import ExerciseLogService, { CreateExerciseLogParams } from './services';
 import { ExerciseLog } from './type'
+import { useCalendar } from '../calendar/hooks';
 
 export const ExerciseLogKeys = {
     all: 'exerciseLogs',
@@ -61,7 +62,6 @@ export const useCreateExerciseLog = () => {
     const user = useUser();
     const queryClient = useQueryClient();
 
-    // Define the mutation for creating a new exercise schedule
     const  { mutateAsync: mutation, status, error } = useMutation(
         (exerciseLogParams: ExerciseLog) => ExerciseLogService.createExerciseLog({ exerciseLogParams }),
         {
@@ -90,6 +90,7 @@ export const useExerciseLogFromExercise = ({ exerciseId, date }: {exerciseId: st
     const data: ExerciseLog[] = exerciseLogs?.filter((item)=>{
         return item.exercise_id === exerciseId && item.date.startsWith(date)
     }) || [];
+
     const isFinished = !!data?.[0];
 
     return { 

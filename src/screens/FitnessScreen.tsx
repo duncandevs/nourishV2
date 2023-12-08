@@ -9,13 +9,15 @@ import { AddWorkoutButton } from "../components/AddWorkoutButton";
 import { StopWatchButton } from "../components/StopWatchButton";
 import { ExerciseSchedule } from "../domains/exerciseSchedule/types";
 import { useCalendar } from "../domains/calendar/hooks";
+import { useCreateExerciseLog } from "../domains/exerciseLog/hooks";
 
 export const FitnessScreen = ({ navigation }) => {
     const {  todaysDate, todaysDayOfTheWeek, selectedDate } = useCalendar();
     const [ date, setDate ] = useState(todaysDate);
     const [ selectedDay, setSelectedDayDay ] = useState(todaysDayOfTheWeek);
 
-    const { selectedExerciseSchedule  } = useSelectedExerciseSchedule(selectedDay);
+    const { selectedExerciseSchedules  } = useSelectedExerciseSchedule(selectedDay);
+    const { createExerciseLog } = useCreateExerciseLog();
 
     const handleDaySelect = (date: string) => {
         setDate(date);
@@ -34,6 +36,18 @@ export const FitnessScreen = ({ navigation }) => {
 
     const goToExerciseSessionScreen = (id:string) => {
         navigation.navigate('ExerciseSessionScreen', {id});
+    };
+
+    const handleExerciseIsFinished = (exerciseId:string, finishDate:string) => {
+        const date = selectedDate && new Date(finishDate);
+        const schedule = selectedExerciseSchedules?.find((s:ExerciseSchedule)=> s.exercise && s.exercise.id===exerciseId);
+        date && createExerciseLog({
+            exercise_id: exerciseId,
+            sets: schedule?.sets,
+            reps: schedule?.reps,
+            date,
+            time_in_seconds: schedule?.time_in_seconds
+        });
     };
 
     return  <ScrollView style={{backgroundColor: 'white'}}>
@@ -56,14 +70,16 @@ export const FitnessScreen = ({ navigation }) => {
             </View>
             <View style={{gap: 40, paddingBottom: 84}}>
                 <Text variant="header3" fontWeight="500" marginTop="l">{dateWorkoutHeader} WORKOUT</Text>
-                {selectedExerciseSchedule?.map((schedule: ExerciseSchedule, idx)=> {
+                {selectedExerciseSchedules?.map((schedule: ExerciseSchedule, idx)=> {
                     const exercise = schedule.exercise;
                     return exercise ? <ExerciseSummaryItem 
                         key={exercise.id}
                         exerciseId={exercise.id}
+                        //@ts-ignore
                         scheduleId={schedule.id} 
                         title={exercise.name} 
                         onStartPress={goToExerciseSessionScreen} 
+                        onFinishExercise={handleExerciseIsFinished}
                     /> : null;
                 })}
             </View>

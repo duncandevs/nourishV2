@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { 
     format, 
     endOfDay, 
@@ -14,6 +15,11 @@ import { DayOfWeek } from '../domains/calendar/types';
 
 const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 const REGULAR_DATE = "yyyy-MM-dd";
+
+
+export const getCurrentDateTimeStamp = () => {
+    return moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'); // ISO 8601 format
+}
 
 export const getTodaysDate = () => format(startOfDay(new Date()), DATE_FORMAT);
 

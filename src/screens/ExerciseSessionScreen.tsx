@@ -7,6 +7,7 @@ import { useStopWatch, useTimer } from "../domains/exercise/hooks";
 import { ExerciseSessionTimer, ExerciseSessionReps, Toast } from "../components";
 import { useEffect, useState } from "react";
 import { useCreateExerciseLog, useExerciseLogFromExercise } from "../domains/exerciseLog/hooks";
+import { useCalendar } from "../domains/calendar/hooks";
 
 import PlayButton from "../../assets/green-play-button.svg";
 import ResetButton from "../../assets/green-reset-button.svg";
@@ -14,7 +15,8 @@ import StopButton from "../../assets/green-stop-button.svg";
 import GreenPlayIcon from "../../assets/green-play-button.svg";
 import BlueCheckIcon from "../../assets/blue-check-button.svg";
 import SquareCheckIcon from "../../assets/square-check-icon.svg";
-import { todaysDateRegular } from "../utility";
+import { getCurrentDateTimeStamp, todaysDateRegular } from "../utility";
+import moment from "moment"
 
 type ExerciseSessionScreenProps = {
     navigation: any;
@@ -66,7 +68,7 @@ export const ExerciseTimedSession = ({ duration, onFinish, isExerciseFinished }:
 export const ExerciseRepsSession = ({ sets, reps, onFinish, isExerciseFinished=false }: ExerciseRepsSessionProps) => {
     const [ isResting, setIsResting ] = useState(false);
     const [ isActive, setIsActive ] = useState(false);
-    const { handleResetStart, handleEnd, elapsedTime, handleReset } = useStopWatch();
+    const { handleResetStart, handleEnd, elapsedTime } = useStopWatch();
     const [ setsData, setSetsData ] = useState(sets);
     const [ isFinished, setIsFinished ] = useState(isExerciseFinished);
 
@@ -183,15 +185,17 @@ export const ExerciseSessionScreen = ({ route }: ExerciseSessionScreenProps) => 
     const reps = exerciseSchedule?.reps || 0;
     const [isSuccessToastShow, setIsSuccessToastShown] = useState(false);
     const [isExerciseFinished, setIsExerciseFinished] = useState(false);
+    const { selectedDate } = useCalendar();
+    const date = selectedDate ? new Date(selectedDate) : new Date(todaysDateRegular);
 
     const handleExerciseIsFinished = () => {
         setIsSuccessToastShown(true);
         setIsExerciseFinished(true);
         if(exerciseId) createExerciseLog({
             exercise_id: exerciseId,
-            date: new Date(),
             sets,
             reps,
+            date,
             time_in_seconds: duration
         });
     };
@@ -213,14 +217,14 @@ export const ExerciseSessionScreen = ({ route }: ExerciseSessionScreenProps) => 
             <View style={styles.row}>
                 <View>
                     {exerciseNameArray?.map((name)=>{
-                        return <>
+                        return <View key={name}>
                                 <Text color="white" variant="display3" style={styles.exerciseTitle}>{name?.toLocaleUpperCase()}</Text>
                                 {/* <Text color="white" variant="display3" style={styles.exerciseTitle}>{name?.toLocaleUpperCase()}</Text> */}
-                            </>
+                            </View>
                     })}
                 </View>
                 {!isExerciseFinished && <TouchableOpacity onPress={handleExerciseIsFinished} style={styles.finishButton}>
-                    <Text color="white">SET DONE</Text>
+                    <Text color="white">DONE</Text>
                     <SquareCheckIcon />
                 </TouchableOpacity>}
                 {isExerciseFinished && <View style={styles.finishedBadge}>

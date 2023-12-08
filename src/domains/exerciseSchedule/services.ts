@@ -52,7 +52,6 @@ const createOrUpdateExerciseSchedule = async ({ exerciseScheduleParams }: {exerc
     // If it exists, update it; otherwise, create a new schedule
     if (existingSchedule) {
         const updateResponse = await updateExerciseSchedule({ updateExerciseScheduleParams: exerciseScheduleParams });
-        console.log('updateResponse error - ', updateResponse.error);
         return updateResponse;
     } else {
         const createResponse = await createExerciseSchedule({ exerciseScheduleParams });

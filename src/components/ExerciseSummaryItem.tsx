@@ -2,23 +2,27 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text } from "../theme";
 import { Colors } from "../theme";
 import StopWatchIcon from "../../assets/stop-watch-icon.svg";
+import CheckBoxIcon from "../../assets/square-check-icon.svg"
 import { useExerciseLogFromExercise } from "../domains/exerciseLog/hooks";
-import { todaysDateRegular } from "../utility";
 import { useCalendar } from "../domains/calendar/hooks";
+
 
 type ExerciseSummaryItemProps = {
     exerciseId: string;
     scheduleId:string;
     title: string;
-    onStartPress: (id:String) => void;
+    onStartPress: (id:string) => void;
+    onFinishExercise: (exerciseId: string, finishDate:string) => void
 };
 
-export const ExerciseSummaryItem = ({ scheduleId, exerciseId, title, onStartPress }: ExerciseSummaryItemProps) => {
-    // TODO: date here has to be replaced with the date selected not today's date > any date of the week may render this
-    const {isFinished} = useExerciseLogFromExercise({ exerciseId, date: todaysDateRegular });
+export const ExerciseSummaryItem = ({ scheduleId, exerciseId, title, onStartPress, onFinishExercise }: ExerciseSummaryItemProps) => {
+    const { selectedDate, isSelectedDateAfterToday, isSelectedDateBeforeToday, isSelectedDateToday } = useCalendar();
+    const {isFinished} = useExerciseLogFromExercise({ exerciseId, date: selectedDate });
     const formatedTime = 0;
-    const { selectedDate, todaysDate } = useCalendar();
-    const isAfterToday = selectedDate ? new Date(selectedDate) > new Date(todaysDate) : false;
+
+    const handleFinished = () => {
+        selectedDate && onFinishExercise(exerciseId, selectedDate);
+    };
 
     return <View style={styles.container}>
         <View style={[styles.row]}>
@@ -28,7 +32,7 @@ export const ExerciseSummaryItem = ({ scheduleId, exerciseId, title, onStartPres
                 <Text marginLeft="m" variant="header3" color="blue" fontWeight="600">{formatedTime || "00:00:00"}</Text>
             </View>
         </View>
-        {!isAfterToday && <View>
+        {isSelectedDateToday && <View>
             {isFinished && <TouchableOpacity style={styles.finished} onPress={()=>onStartPress(scheduleId)}>
                 <Text variant="paragraph4" fontWeight="500">FINISHED</Text>
             </TouchableOpacity>}
@@ -36,6 +40,16 @@ export const ExerciseSummaryItem = ({ scheduleId, exerciseId, title, onStartPres
                 <Text variant="paragraph4" color="white" fontWeight="500">START EXERCISE</Text>
             </TouchableOpacity>}
         </View>}
+        {isSelectedDateBeforeToday && <View>
+            {isFinished && <TouchableOpacity style={styles.finished} onPress={()=>onStartPress(scheduleId)}>
+                <Text variant="paragraph4" fontWeight="500">FINISHED</Text>
+            </TouchableOpacity>}
+            {!isFinished && <TouchableOpacity style={[styles.button, styles.row]} onPress={handleFinished}>
+                <Text variant="paragraph4" color="white" fontWeight="500">DONE</Text>
+                <CheckBoxIcon />
+            </TouchableOpacity>}
+        </View>}
+        {isSelectedDateAfterToday && <Text variant="paragraph4" color="blue" fontWeight="600" marginTop="s">SCHEDULED</Text>}
     </View>
 };
 

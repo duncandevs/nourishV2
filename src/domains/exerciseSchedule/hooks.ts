@@ -3,6 +3,7 @@ import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { useUser } from '../users/hooks';
 import { ExerciseSchedule } from './types';
 import ExerciseScheduleService, {  ExerciseScheduleParams } from './services';
+import { DayOfWeek } from '../calendar/types';
 
 export const ExerciseScheduleKeys = {
     schedules: 'exerciseSchedules',
@@ -51,18 +52,18 @@ export const useExerciseSchedules = () => {
     };
 };
 
-export const useSelectedExerciseSchedule = (day: string) => {
+export const useSelectedExerciseSchedule = (day: DayOfWeek) => {
     const { data } = useExerciseSchedules();
-    const [selectedExerciseSchedule, setDailySchedule] = useState([]);
+    const [selectedExerciseSchedules, setDailySchedules] = useState<ExerciseSchedule[]>([]);
     
     useEffect(()=>{
-        setDailySchedule(
-            data?.filter((schedule)=> !!schedule[day])
+        setDailySchedules(
+            data?.filter((schedule) => !!schedule[day]) || []
         )
     }, [data, day]);
 
     return { 
-        selectedExerciseSchedule 
+        selectedExerciseSchedules
     };
 };
 

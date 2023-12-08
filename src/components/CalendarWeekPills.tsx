@@ -35,7 +35,7 @@ const CalendarDayPill = ({ dayString, date, handleOnPress, disabled, highlighted
 
     const handlePress = () => {
         handleOnPress(date)
-    }
+    };
 
     return (
         <TouchableOpacity disabled={disabled} style={[styles.pill, backgroundStyles]} onPress={handlePress}>
@@ -60,7 +60,7 @@ export const CalendarWeekPills = ({ handleCalendarIconPress, handleCalendarDayPr
         handleCalendarDayPress(date);
         updateSelectedDate(date);
     };
-    
+
     return (
         <View style={styles.calendarContainer}>
             <CalendarIconPill handleOnPress={handleCalendarIconPress}/>
