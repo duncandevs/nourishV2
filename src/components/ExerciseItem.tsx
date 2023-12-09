@@ -6,9 +6,10 @@ import { ABBREV_DAYS, DAYS_OF_THE_WEEK, formatDisplayTime } from '../utility';
 import { CheckBox } from 'react-native-elements';
 import { ExerciseRepsSelector, ExerciseTimeSelector } from "../components";
 import { useExerciseSchedules } from "../domains/exerciseSchedule/hooks";
-import BlueCheck from "../../assets/blue-check.svg"
 import { ExerciseScheduleParams } from '../domains/exerciseSchedule/services';
 import { ExerciseSchedule } from '../domains/exerciseSchedule/types';
+import BlueCheck from "../../assets/blue-check.svg"
+import CircularDownArrow from "../../assets/circular-down-arrow.svg";
 
 type ExerciseItemProps = {
     exerciseSchedule: ExerciseSchedule | null
@@ -46,6 +47,19 @@ const TimeDisplay = ({ seconds }:TimeDisplayProps) => {
     return <Text variant="paragraph2" color={displayColor} fontWeight="500">{displayTime}</Text>
 };
 
+const RepsCounterDisplay = ({ sets, reps }:{sets:number, reps:number}) => {
+    return <View style={[styles.row, styles.repsCounter]}>
+            <View style={styles.repsWrapper}>
+                <Text variant="header3" color="blue" fontWeight="500" textAlign="center">{sets || 0}</Text>
+                <Text variant="paragraph3" color="blue">SETS</Text>
+            </View>
+            <View style={styles.repsWrapper}>
+                <Text variant="header3" color="blue" fontWeight="500" textAlign="center">{reps || 0}</Text>
+                <Text variant="paragraph3" color="blue">REPS</Text>
+            </View>
+        </View>
+}
+
 const CalendarSelector = ({ handleDaySelect, scheduledDays }: CalendarSelectorProps) => {
     return <View style={styles.calendarWrapper}>
         {DAYS_OF_THE_WEEK?.map((day:string, idx: number)=>{
@@ -62,6 +76,7 @@ export const ExerciseItem = ({ exercise, exerciseSchedule, containerStyle }: Exe
     const { createOrUpdateExerciseSchedule } = useExerciseSchedules();
     const isExerciseTimerShown = exercise.measurement === 'time';
     const isExerciseRepsShown = exercise.measurement === 'reps';
+    const isScheduled = exerciseSchedule?.monday || exerciseSchedule?.tuesday || exerciseSchedule?.wednesday || exerciseSchedule?.thursday || exerciseSchedule?.friday || exerciseSchedule?.saturday || exerciseSchedule?.sunday
 
     const [ exerciseScheduleData, setExerciseScheduleData ] = useState<ExerciseScheduleParams>({
         exercise_id: exercise.id,
@@ -77,7 +92,8 @@ export const ExerciseItem = ({ exercise, exerciseSchedule, containerStyle }: Exe
         sunday: exerciseSchedule?.sunday || false,
     });
     const [ isExpanded, setIsExpanded ] = useState(false);
-    const isTimerShown = !isExpanded;
+    const isTimerShown = !isExpanded && exercise.measurement === 'time';
+    const isRepsCounterShown = !isExpanded && exercise.measurement === 'reps';
     const [scheduledDays, setScheduledDays ] = useState({
         monday: exerciseScheduleData.monday || false,
         tuesday: exerciseScheduleData.tuesday || false,
@@ -122,7 +138,17 @@ export const ExerciseItem = ({ exercise, exerciseSchedule, containerStyle }: Exe
         <Pressable style={[ styles.miniContainer, styles.row ]} onPress={handleExpandSection}>
             <View style={[styles.titleContent]}>
                 <Text variant="paragraph2" fontWeight="500">{exercise.name.toUpperCase()}</Text>
-                {isTimerShown && <TimeDisplay seconds={exerciseScheduleData.time_in_seconds || 0}/>}
+                {isScheduled &&
+                    <View>
+                        {isTimerShown && <TimeDisplay seconds={exerciseScheduleData.time_in_seconds || 0}/>}
+                        {isRepsCounterShown && <RepsCounterDisplay reps={exerciseRepsData.reps} sets={exerciseRepsData.sets} />}
+                    </View>
+                }
+                {!isScheduled && 
+                    <View>
+                        {!isExpanded && <CircularDownArrow width={24} height={24}/>}
+                    </View>  
+                }
             </View>
         </Pressable>
         {isExpanded && <View style={styles.expandedView}> 
@@ -157,7 +183,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     row: {
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     titleContent: {
         width: '100%',
@@ -191,5 +217,13 @@ const styles = StyleSheet.create({
     },
     save: {
         alignSelf: 'center'
+    },
+    repsWrapper: {
+        alignItems:'center',
+        justifyContent: 'center',
+        textAlign: 'center'
+    },
+    repsCounter: {
+        gap: 12
     }
 })

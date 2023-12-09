@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useExerciseSchedules } from "../domains/exerciseSchedule/hooks";
 import { ExerciseSchedule } from "../domains/exerciseSchedule/types";
 import ExerciseScheduleService from "../domains/exerciseSchedule/services";
+import SearchIcon from "../../assets/search-icon.svg"
 
 type FormattedExerciseItem = {
     exercise: Exercise;
@@ -57,18 +58,23 @@ export const ExerciseSearchScreen = () => {
 
     return <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
-                <Text variant="paragraph1" marginTop="l">Search Workouts</Text>
-                <Input onChangeText={(value)=>handleSearch(value)} />
+                <View style={{marginTop: 40}}>
+                    <Input 
+                        leftIcon={<SearchIcon />} 
+                        onChangeText={(value)=>handleSearch(value)} 
+                        placeholder="Exercise"
+                    />
+                </View>
                 <View>
                     {!isFilteredShown && <>
                         <View style={styles.exerciseListContainer}>
-                            <Text variant="header3" fontWeight="600">My Workouts</Text>
+                            <Text variant="header3" fontWeight="600" textAlign="center">My Workouts</Text>
                             <View style={styles.exercises}>
                                 {scheduledExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={exercise.name}/>)}
                             </View>
                         </View>
                         {isUnscheduledExercisesShown && <View>
-                            <Text variant="header3" fontWeight="600">Workouts</Text>
+                            <Text variant="header3" fontWeight="600" textAlign="center">All Workouts</Text>
                             <View style={styles.exercises}>
                                 {unscheduledExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={exercise.name}/>)}
                             </View>

@@ -15,8 +15,7 @@ import StopButton from "../../assets/green-stop-button.svg";
 import GreenPlayIcon from "../../assets/green-play-button.svg";
 import BlueCheckIcon from "../../assets/blue-check-button.svg";
 import SquareCheckIcon from "../../assets/square-check-icon.svg";
-import { getCurrentDateTimeStamp, todaysDateRegular } from "../utility";
-import moment from "moment"
+import { todaysDateRegular } from "../utility";
 
 type ExerciseSessionScreenProps = {
     navigation: any;

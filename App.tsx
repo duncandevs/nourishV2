@@ -75,7 +75,7 @@ const App = () => {
             <Stack.Navigator initialRouteName="AuthScreen">
               <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
               <Stack.Screen name="HomeScreen" component={HomeScreen} options={headerOptionsWithProfileNav}/>
-              <Stack.Screen name="FitnessScreen" component={FitnessScreen} options={{headerTitle: 'Fitness', headerBackTitle:"back"}}/>
+              <Stack.Screen name="FitnessScreen" component={FitnessScreen} options={{headerTitle: 'Fitness', headerBackTitle:"back" }}/>
               <Stack.Screen name="NutritionScreen" component={NutritionScreen} options={{headerTitle: 'Nutrition', headerBackTitle:"back"}}/>
               <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerTitle: 'search', headerBackTitle:"back"}} />
               <Stack.Screen name="SearchResultScreen" component={SearchResultScreen} options={{headerTitle: '', headerBackTitle:"back"}} />
@@ -85,7 +85,7 @@ const App = () => {
               <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: 'profile', headerBackTitle:"back"}} />
               <Stack.Screen name="FoodVisionScreen" component={FoodVisionScreen} options={{headerBackTitle:"", headerTitle: 'food vision'}} />
               <Stack.Screen name="StopWatchScreen" component={StopWatchScreen} options={{ headerShown: false }} />
-              <Stack.Screen name="ExerciseSearchScreen" component={ExerciseSearchScreen} />
+              <Stack.Screen name="ExerciseSearchScreen" component={ExerciseSearchScreen} options={{headerTitle: ''}}/>
               <Stack.Screen name="ExerciseSessionScreen" component={ExerciseSessionScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
           </NavigationContainer>

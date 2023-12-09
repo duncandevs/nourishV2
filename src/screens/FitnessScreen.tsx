@@ -68,15 +68,13 @@ export const FitnessScreen = ({ navigation }) => {
             <View>
                 <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
             </View>
-            <View style={{gap: 40, paddingBottom: 84}}>
+            <View style={styles.scheduleList}>
                 <Text variant="header3" fontWeight="500" marginTop="l">{dateWorkoutHeader} WORKOUT</Text>
                 {selectedExerciseSchedules?.map((schedule: ExerciseSchedule, idx)=> {
                     const exercise = schedule.exercise;
                     return exercise ? <ExerciseSummaryItem 
                         key={exercise.id}
-                        exerciseId={exercise.id}
-                        //@ts-ignore
-                        scheduleId={schedule.id} 
+                        schedule={schedule}
                         title={exercise.name} 
                         onStartPress={goToExerciseSessionScreen} 
                         onFinishExercise={handleExerciseIsFinished}
@@ -108,5 +106,9 @@ const styles = StyleSheet.create({
     stopWatch: {
         marginTop: 32,
         marginBottom: 32
+    },
+    scheduleList: {
+        gap: 40, 
+        paddingBottom: 84,
     }
 })

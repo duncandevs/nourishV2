@@ -85,7 +85,7 @@ export const useCreateExerciseLog = () => {
     return { createExerciseLog, status, error };
 };
 
-export const useExerciseLogFromExercise = ({ exerciseId, date }: {exerciseId: string, date: string}) => {
+export const useExerciseLogFromExercise = ({ exerciseId, date }: {exerciseId?: string, date?: string}) => {
     const { data: exerciseLogs, error } = useWeeklyExerciseLogs();
     const data: ExerciseLog[] = exerciseLogs?.filter((item)=>{
         return item.exercise_id === exerciseId && item.date.startsWith(date)
