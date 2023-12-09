@@ -58,7 +58,24 @@ const RepsCounterDisplay = ({ sets, reps }:{sets:number, reps:number}) => {
                 <Text variant="paragraph3" color="blue">REPS</Text>
             </View>
         </View>
-}
+};
+
+const DatesScheduled = ({ schedule }:{schedule: ExerciseSchedule}) => {
+    const scheduleArray = [
+        { display: "m", isShown: schedule.monday },
+        { display: "t", isShown: schedule.tuesday },
+        { display: "w", isShown: schedule.wednesday },
+        { display:"th", isShown: schedule.thursday},
+        { display: "f", isShown: schedule.friday },
+        { display: "s", isShown: schedule.saturday},
+        { display: "su", isShown: schedule.sunday},
+    ]
+    return <View style={styles.scheduledDays}>{scheduleArray?.map((item) => {
+                return item.isShown && <View style={styles.scheduledDaysItem}> 
+                    <Text color='white' variant='paragraph4'>{item.display}</Text> 
+                </View>
+            })}</View>
+};
 
 const CalendarSelector = ({ handleDaySelect, scheduledDays }: CalendarSelectorProps) => {
     return <View style={styles.calendarWrapper}>
@@ -151,6 +168,9 @@ export const ExerciseItem = ({ exercise, exerciseSchedule, containerStyle }: Exe
                 }
             </View>
         </Pressable>
+        <View>
+            <DatesScheduled schedule={exerciseScheduleData}/>
+        </View>
         {isExpanded && <View style={styles.expandedView}> 
             <View style={styles.calendarContainer}>
                 <CalendarSelector scheduledDays={scheduledDays} handleDaySelect={handleDaySelect}/>
@@ -225,5 +245,20 @@ const styles = StyleSheet.create({
     },
     repsCounter: {
         gap: 12
+    },
+    scheduledDays: {
+        flexDirection: 'row',
+        gap: 8,
+        paddingLeft: 16,
+        paddingBottom: 16
+    },
+    scheduledDaysItem: {
+        width: 32,
+        height: 32,
+        backgroundColor: 'black',
+        borderRadius: 32,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: 2
     }
 })

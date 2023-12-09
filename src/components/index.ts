@@ -17,3 +17,5 @@ export { ExerciseTimeSelector } from "./ExerciseTimeSelector";
 export { ExerciseSessionTimer } from "./ExerciseSessionTimer";
 export { ExerciseSessionReps } from "./ExerciseSessionReps";
 export { ExerciseSummaryItem } from "./ExerciseSummaryItem";
+export { ExerciseItem } from "./ExerciseItem";
+export { ExerciseCategoryList } from "./ExerciseCategoryList";

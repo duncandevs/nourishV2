@@ -1,8 +1,9 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "../theme";
 import { useExercises } from '../domains/exercise/hooks';
-import { ExerciseItem } from '../components/ExerciseItem';
-import { Exercise } from "../domains/exercise/types";
+import { ExerciseItem } from '../components';
+import { ExerciseCategoryList } from "../components";
+import { Exercise, ExerciseCategory } from "../domains/exercise/types";
 import { Input } from "react-native-elements";
 import { useEffect, useState } from "react";
 import { useExerciseSchedules } from "../domains/exerciseSchedule/hooks";
@@ -24,6 +25,7 @@ export const ExerciseSearchScreen = () => {
     const { getExerciseScheduleByExerciseId } = useExerciseSchedules();
     const [ isFilteredShown, setIsFilteredShown ] = useState(!scheduledExercises?.length);
     const { data: exerciseSchedules } = useExerciseSchedules();
+    const [ selectedCategory, setSelectedCategory ] = useState<ExerciseCategory | null>(null);
 
     const handleSearch = (searchTerm: string) => {
         setIsFilteredShown(!!searchTerm || !scheduledExercises?.length);
@@ -33,7 +35,15 @@ export const ExerciseSearchScreen = () => {
 
     const isUnscheduledExercisesShown = !!unscheduledExercises?.length;
 
-    useEffect(()=>{
+    const handleSelectCategory = (category: ExerciseCategory) => {
+        if(selectedCategory === category) {
+            setSelectedCategory(null);
+        } else {
+            setSelectedCategory(category)
+        };
+    };
+
+    useEffect(() => {
         const exerciseItems = exercises?.map((exercise): FormattedExerciseItem=>({
             exercise: exercise,
             exerciseSchedule: getExerciseScheduleByExerciseId(exercise.id)
@@ -42,7 +52,7 @@ export const ExerciseSearchScreen = () => {
         setFilteredExercises(exerciseItems);
     }, [exercises, exerciseSchedules]);
 
-    useEffect(()=>{
+    useEffect(() => {
         setScheduledExercises (
             exerciseItems?.filter(({ exerciseSchedule })=>ExerciseScheduleService.isExerciseScheduled(exerciseSchedule))
         );
@@ -51,10 +61,21 @@ export const ExerciseSearchScreen = () => {
         );
     }, [exerciseItems]);
 
-    useEffect(()=>{
+    useEffect(() => {
         setIsFilteredShown(!scheduledExercises?.length);
     }, [scheduledExercises]);
 
+    useEffect(() => {
+        if(selectedCategory === null) {
+            setIsFilteredShown(!scheduledExercises?.length);
+            setFilteredExercises(exerciseItems);
+        } else {
+            setIsFilteredShown(true);
+            setFilteredExercises(
+                exerciseItems?.filter(({ exerciseSchedule }) => exerciseSchedule?.exercise?.category === selectedCategory)
+            );
+        }
+    }, [selectedCategory]);
 
     return <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
@@ -64,25 +85,29 @@ export const ExerciseSearchScreen = () => {
                         onChangeText={(value)=>handleSearch(value)} 
                         placeholder="Exercise"
                     />
+                    <ExerciseCategoryList 
+                        categories={['cardio', 'arms', 'legs', 'shoulders', 'back', 'chest', 'stretch', 'sport']}
+                        handleSelectCategory={handleSelectCategory}
+                    />
                 </View>
                 <View>
                     {!isFilteredShown && <>
                         <View style={styles.exerciseListContainer}>
                             <Text variant="header3" fontWeight="600" textAlign="center">My Workouts</Text>
                             <View style={styles.exercises}>
-                                {scheduledExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={exercise.name}/>)}
+                                {scheduledExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={`myexercise-${exercise.name}`}/>)}
                             </View>
                         </View>
                         {isUnscheduledExercisesShown && <View>
                             <Text variant="header3" fontWeight="600" textAlign="center">All Workouts</Text>
                             <View style={styles.exercises}>
-                                {unscheduledExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={exercise.name}/>)}
+                                {unscheduledExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={`all-${exercise.name}`}/>)}
                             </View>
                         </View>}
                     </>}
                     {isFilteredShown && <>
                         <View style={styles.exercises}>
-                                {filteredExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={exercise.name}/>)}
+                                {filteredExercises?.map(({ exercise, exerciseSchedule })=><ExerciseItem exercise={exercise} exerciseSchedule={exerciseSchedule} key={`filtered-${exercise.name}`}/>)}
                         </View>
                     </>}
                 </View>
