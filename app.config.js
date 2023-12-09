@@ -5,7 +5,7 @@ export default {
     "runtimeVersion": "exposdk:49.0.13",
     "name": "nourish",
     "slug": "nourish-fit",
-    "version": "1.2.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/nourish-app-icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
-      "buildNumber": "4",
+      "buildNumber": "1",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to recognize food and beverages."
       }
@@ -31,7 +31,7 @@ export default {
         "backgroundColor": "#ffffff",
       },
       "package": "com.nourish.fit",
-      "versionCode": 4,
+      "versionCode": 1,
       "icon": "./assets/nourish-app-icon.png",
     },
     "web": {
