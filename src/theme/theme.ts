@@ -17,7 +17,7 @@ export const Colors = {
     background: '#ecf0f1',
     text: '#333',
     blue: '#246EC4',
-    lightGray01: 'F8FAFB'
+    lightGray01: '#F8FAFB'
 }
 
 export const theme = createTheme({
@@ -82,6 +82,10 @@ export const theme = createTheme({
     },
     paragraph4: {
       fontSize: 12,
+      color: 'text',
+    },
+    paragraph5: {
+      fontSize: 10,
       color: 'text',
     },
     link1:{

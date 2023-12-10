@@ -4,6 +4,8 @@ import { useUser } from '../users/hooks';
 import { ExerciseSchedule } from './types';
 import ExerciseScheduleService, {  ExerciseScheduleParams } from './services';
 import { DayOfWeek } from '../calendar/types';
+import { useCalendar } from '../calendar/hooks';
+import { ExerciseCategory } from '../exercise/types';
 
 export const ExerciseScheduleKeys = {
     schedules: 'exerciseSchedules',
@@ -64,6 +66,23 @@ export const useSelectedExerciseSchedule = (day: DayOfWeek) => {
 
     return { 
         selectedExerciseSchedules
+    };
+};
+
+export const useTodaysExerciseSchedule = () => {
+    const {todaysDayOfTheWeek} = useCalendar();
+    const { selectedExerciseSchedules: todaysExerciseSchedules } = useSelectedExerciseSchedule(todaysDayOfTheWeek);
+    const [ todaysExerciseCategories, setCategories ] = useState<(ExerciseCategory | undefined)[]>([]) ;
+
+    useEffect(()=>{
+        if(todaysExerciseSchedules) setCategories(
+            todaysExerciseSchedules?.map((s)=>s?.exercise?.category)
+        )
+    }, [todaysExerciseSchedules])
+
+    return {
+        todaysExerciseSchedules,
+        todaysExerciseCategories
     };
 };
 

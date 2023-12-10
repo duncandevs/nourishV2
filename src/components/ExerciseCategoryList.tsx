@@ -16,12 +16,12 @@ import { ExerciseCategory } from "../domains/exercise/types";
 
 type ExerciseCategoryListProps = {
     categories: ExerciseCategory[],
-    handleSelectCategory: (category: ExerciseCategory) => void,
+    handleSelectCategory?: (category: ExerciseCategory) => void,
     selectedCategory?: ExerciseCategory | null,
 };
 
 type CategoryProps = {
-    onSelect: (category: ExerciseCategory) => void,
+    onSelect?: (category: ExerciseCategory) => void,
     category: ExerciseCategory,
     selectedCategory?: ExerciseCategory | null
 }
@@ -43,7 +43,7 @@ export const ExerciseCategoryMap: Record<string, any> = {
 const Category = ({ category, onSelect, selectedCategory }: CategoryProps) => {
     const isSelected = selectedCategory === category;
     const textColor = isSelected ? "blue" : "black" 
-    return <TouchableOpacity style={styles.container} onPress={()=>onSelect(category)}>
+    return <TouchableOpacity style={styles.container} onPress={()=>onSelect && onSelect(category)}>
         <View style={styles.icon}>
             {ExerciseCategoryMap?.[category]}
         </View>
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
     },
     icon: {
         height: 69,
-        width: 69
+        width: 69,
     }
 })
