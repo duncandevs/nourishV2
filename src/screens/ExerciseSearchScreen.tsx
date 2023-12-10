@@ -5,6 +5,7 @@ import { ExerciseItem } from '../components';
 import { ExerciseCategoryList } from "../components";
 import { Input } from "react-native-elements";
 import SearchIcon from "../../assets/search-icon.svg"
+import { LoadingView } from "../components/LoadingView";
 
 export const ExerciseSearchScreen = () => {
     const {
@@ -14,9 +15,13 @@ export const ExerciseSearchScreen = () => {
         isFilteredShown,
         handleSearch,
         handleSelectCategory,
+        isExerciseItemsLoading,
+        selectedCategory,
     } = useExerciseSearch();
 
     const isUnscheduledExercisesShown = !!unscheduledExercises?.length;
+
+    if(isExerciseItemsLoading) return <LoadingView />
 
     return <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
@@ -29,6 +34,7 @@ export const ExerciseSearchScreen = () => {
                     <ExerciseCategoryList 
                         categories={['all', 'cardio', 'arms', 'legs', 'shoulders', 'back', 'chest', 'stretch', 'sport']}
                         handleSelectCategory={handleSelectCategory}
+                        selectedCategory={selectedCategory}
                     />
                 </View>
                 <View>

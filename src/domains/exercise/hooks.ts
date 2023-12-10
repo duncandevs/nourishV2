@@ -141,7 +141,7 @@ export const useTimer = (duration: number, onFinish?: ()=>void) => {
 };
 
 export const useExerciseItems = () => {
-    const { exercises } = useExercises() as {exercises: Exercise[]};
+    const { exercises, isLoading: isExerciseItemsLoading } = useExercises() as {exercises: Exercise[], isLoading: boolean};
     const [ exerciseItems , setExerciseItems ] = useState<FormattedExerciseItem[]>([]);
     const { data: exerciseSchedules } = useExerciseSchedules();
     const { getExerciseScheduleByExerciseId } = useExerciseSchedules();
@@ -154,7 +154,11 @@ export const useExerciseItems = () => {
         setExerciseItems(exerciseItems);
     }, [exercises, exerciseSchedules]);
 
-    return { exerciseItems, setExerciseItems }
+    return { 
+        exerciseItems, 
+        setExerciseItems,
+        isExerciseItemsLoading
+    }
 };
 
 export const useFilteredExerciseItems = () => {
@@ -198,7 +202,7 @@ export const useFilteredExerciseItems = () => {
 
 
 export const useExerciseSearch = () => {
-    const { exerciseItems, setExerciseItems } = useExerciseItems();
+    const { exerciseItems, setExerciseItems, isExerciseItemsLoading } = useExerciseItems();
     const [ scheduledExercises, setScheduledExercises] = useState<FormattedExerciseItem[]>([]);
     const { filteredExercises, setFilteredExercises, setIsFilteredShown, selectedCategory, setSelectedCategory, isFilteredShown, handleSelectCategory } = useFilteredExerciseItems();
     const { exercises } = useExercises() as {exercises: Exercise[]};
@@ -249,5 +253,6 @@ export const useExerciseSearch = () => {
         setIsFilteredShown,
         handleSearch,
         handleSelectCategory,
+        isExerciseItemsLoading,
     }
 };

@@ -13,16 +13,16 @@ import SportSvg from "../../assets/exercise-sport.svg";
 import CalendarSvg from "../../assets/exercise-calendar.svg";
 import { ExerciseCategory } from "../domains/exercise/types";
 
-
-
 type ExerciseCategoryListProps = {
     categories: ExerciseCategory[],
-    handleSelectCategory: (category: ExerciseCategory) => void
+    handleSelectCategory: (category: ExerciseCategory) => void,
+    selectedCategory?: ExerciseCategory | null,
 };
 
 type CategoryProps = {
     onSelect: (category: ExerciseCategory) => void,
-    category: ExerciseCategory
+    category: ExerciseCategory,
+    selectedCategory?: ExerciseCategory | null
 }
 
 export const ExerciseCategoryMap: Record<string, any> = {
@@ -39,19 +39,27 @@ export const ExerciseCategoryMap: Record<string, any> = {
     'pilates': null,
 };
 
-const Category = ({ category, onSelect }: CategoryProps) => {
+const Category = ({ category, onSelect, selectedCategory }: CategoryProps) => {
+    const isSelected = selectedCategory === category;
+    const textColor = isSelected ? "blue" : "black" 
     return <TouchableOpacity style={styles.container} onPress={()=>onSelect(category)}>
         <View style={styles.icon}>
             {ExerciseCategoryMap?.[category]}
         </View>
-        <Text>{category}</Text>
+        <Text color={textColor}>{category}</Text>
     </TouchableOpacity>
 };
 
-export const ExerciseCategoryList = ({ categories, handleSelectCategory } : ExerciseCategoryListProps) => {
+export const ExerciseCategoryList = ({ categories, handleSelectCategory, selectedCategory } : ExerciseCategoryListProps) => {
     return <FlatList 
         data={categories}
-        renderItem={({item}:{item: ExerciseCategory}) => <Category category={item} onSelect={handleSelectCategory}/>}
+        renderItem={({item}:{item: ExerciseCategory}) => 
+            <Category 
+                category={item} 
+                onSelect={handleSelectCategory}
+                selectedCategory={selectedCategory}
+            />
+        }
         horizontal
         showsHorizontalScrollIndicator={false}
     />
