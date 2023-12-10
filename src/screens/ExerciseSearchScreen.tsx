@@ -1,81 +1,22 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "../theme";
-import { useExercises } from '../domains/exercise/hooks';
+import { useExerciseSearch } from '../domains/exercise/hooks';
 import { ExerciseItem } from '../components';
 import { ExerciseCategoryList } from "../components";
-import { Exercise, ExerciseCategory } from "../domains/exercise/types";
 import { Input } from "react-native-elements";
-import { useEffect, useState } from "react";
-import { useExerciseSchedules } from "../domains/exerciseSchedule/hooks";
-import { ExerciseSchedule } from "../domains/exerciseSchedule/types";
-import ExerciseScheduleService from "../domains/exerciseSchedule/services";
 import SearchIcon from "../../assets/search-icon.svg"
 
-type FormattedExerciseItem = {
-    exercise: Exercise;
-    exerciseSchedule: ExerciseSchedule | null;
-};
-
 export const ExerciseSearchScreen = () => {
-    const { exercises } = useExercises() as {exercises: Exercise[]};
-    const [ exerciseItems , setExerciseItems ] = useState<FormattedExerciseItem[]>([]);
-    const [ filteredExercises, setFilteredExercises ] = useState<FormattedExerciseItem[]>(exerciseItems);
-    const [ scheduledExercises, setScheduledExercises] = useState<FormattedExerciseItem[]>([]);
-    const [ unscheduledExercises, setUnscheduledExercises ] = useState<FormattedExerciseItem[]>([]);
-    const { getExerciseScheduleByExerciseId } = useExerciseSchedules();
-    const [ isFilteredShown, setIsFilteredShown ] = useState(!scheduledExercises?.length);
-    const { data: exerciseSchedules } = useExerciseSchedules();
-    const [ selectedCategory, setSelectedCategory ] = useState<ExerciseCategory | null>(null);
-
-    const handleSearch = (searchTerm: string) => {
-        setIsFilteredShown(!!searchTerm || !scheduledExercises?.length);
-        const f = exerciseItems?.filter(({ exercise })=>exercise.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()));
-        setFilteredExercises(f);
-    };
+    const {
+        scheduledExercises,
+        unscheduledExercises,
+        filteredExercises,
+        isFilteredShown,
+        handleSearch,
+        handleSelectCategory,
+    } = useExerciseSearch();
 
     const isUnscheduledExercisesShown = !!unscheduledExercises?.length;
-
-    const handleSelectCategory = (category: ExerciseCategory) => {
-        if(selectedCategory === category) {
-            setSelectedCategory(null);
-        } else {
-            setSelectedCategory(category)
-        };
-    };
-
-    useEffect(() => {
-        const exerciseItems = exercises?.map((exercise): FormattedExerciseItem=>({
-            exercise: exercise,
-            exerciseSchedule: getExerciseScheduleByExerciseId(exercise.id)
-        }));
-        setExerciseItems(exerciseItems);
-        setFilteredExercises(exerciseItems);
-    }, [exercises, exerciseSchedules]);
-
-    useEffect(() => {
-        setScheduledExercises (
-            exerciseItems?.filter(({ exerciseSchedule })=>ExerciseScheduleService.isExerciseScheduled(exerciseSchedule))
-        );
-        setUnscheduledExercises (
-            exerciseItems?.filter(({ exerciseSchedule })=>!ExerciseScheduleService.isExerciseScheduled(exerciseSchedule))
-        );
-    }, [exerciseItems]);
-
-    useEffect(() => {
-        setIsFilteredShown(!scheduledExercises?.length);
-    }, [scheduledExercises]);
-
-    useEffect(() => {
-        if(selectedCategory === null) {
-            setIsFilteredShown(!scheduledExercises?.length);
-            setFilteredExercises(exerciseItems);
-        } else {
-            setIsFilteredShown(true);
-            setFilteredExercises(
-                exerciseItems?.filter(({ exerciseSchedule }) => exerciseSchedule?.exercise?.category === selectedCategory)
-            );
-        }
-    }, [selectedCategory]);
 
     return <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
@@ -86,7 +27,7 @@ export const ExerciseSearchScreen = () => {
                         placeholder="Exercise"
                     />
                     <ExerciseCategoryList 
-                        categories={['cardio', 'arms', 'legs', 'shoulders', 'back', 'chest', 'stretch', 'sport']}
+                        categories={['all', 'cardio', 'arms', 'legs', 'shoulders', 'back', 'chest', 'stretch', 'sport']}
                         handleSelectCategory={handleSelectCategory}
                     />
                 </View>

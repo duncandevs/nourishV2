@@ -10,6 +10,7 @@ import BackSvg from "../../assets/exercise-back.svg";
 import ChestSvg from "../../assets/exercise-chest.svg";
 import StretchSvg from "../../assets/exercise-stretch.svg";
 import SportSvg from "../../assets/exercise-sport.svg";
+import CalendarSvg from "../../assets/exercise-calendar.svg";
 import { ExerciseCategory } from "../domains/exercise/types";
 
 
@@ -25,6 +26,7 @@ type CategoryProps = {
 }
 
 export const ExerciseCategoryMap: Record<string, any> = {
+    'all': <CalendarSvg />,
     'cardio': <CardioSvg /> ,
     'arms': <ArmsSvg />,
     'legs': <LegsSvg />,
