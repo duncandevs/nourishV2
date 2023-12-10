@@ -125,7 +125,6 @@ export const ExerciseItem = ({ exercise, exerciseSchedule, containerStyle }: Exe
     };
 
     const handleExpandSection = () => {
-        console.log('exercise item category - ', exercise.category);
         !isExpanded && setIsExpanded(true)
     };
 

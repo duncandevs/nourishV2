@@ -164,12 +164,8 @@ export const useExerciseItems = () => {
 export const useFilteredExerciseItems = () => {
     const { exerciseItems } = useExerciseItems();
     const [ filteredExercises, setFilteredExercises ] = useState<FormattedExerciseItem[]>(exerciseItems);
-    const [ selectedCategory, setSelectedCategory ] = useState<ExerciseCategory | null>(null);
+    const [ selectedCategory, setSelectedCategory ] = useState<ExerciseCategory | null>('all');
     const [ isFilteredShown, setIsFilteredShown ] = useState(false);
-
-    useEffect(()=>{
-        setFilteredExercises(exerciseItems);
-    }, [exerciseItems]);
 
     useEffect(() => {
         if(selectedCategory === 'all') {
@@ -202,23 +198,11 @@ export const useFilteredExerciseItems = () => {
 
 
 export const useExerciseSearch = () => {
-    const { exerciseItems, setExerciseItems, isExerciseItemsLoading } = useExerciseItems();
+    const { exerciseItems, isExerciseItemsLoading } = useExerciseItems();
     const [ scheduledExercises, setScheduledExercises] = useState<FormattedExerciseItem[]>([]);
     const { filteredExercises, setFilteredExercises, setIsFilteredShown, selectedCategory, setSelectedCategory, isFilteredShown, handleSelectCategory } = useFilteredExerciseItems();
-    const { exercises } = useExercises() as {exercises: Exercise[]};
     const [ unscheduledExercises, setUnscheduledExercises ] = useState<FormattedExerciseItem[]>([]);
-    const { getExerciseScheduleByExerciseId } = useExerciseSchedules();
     const { data: exerciseSchedules } = useExerciseSchedules();
-
-    useEffect(() => {
-        const exerciseItems = exercises?.map((exercise): FormattedExerciseItem=>({
-            exercise: exercise,
-            exerciseSchedule: getExerciseScheduleByExerciseId(exercise.id)
-        }));
-        setExerciseItems(exerciseItems);
-        setFilteredExercises(exerciseItems);
-    }, [exercises, exerciseSchedules]);
-
 
     useEffect(() => {
         setScheduledExercises (
@@ -228,11 +212,6 @@ export const useExerciseSearch = () => {
             exerciseItems?.filter(({ exerciseSchedule })=>!ExerciseScheduleService.isExerciseScheduled(exerciseSchedule))
         );
     }, [exerciseItems]);
-
-
-    useEffect(() => {
-        setIsFilteredShown(!scheduledExercises?.length);
-    }, [scheduledExercises]);
 
     const handleSearch = (searchTerm: string) => {
         setIsFilteredShown(!!searchTerm || !scheduledExercises?.length);

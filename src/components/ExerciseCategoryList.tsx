@@ -11,6 +11,7 @@ import ChestSvg from "../../assets/exercise-chest.svg";
 import StretchSvg from "../../assets/exercise-stretch.svg";
 import SportSvg from "../../assets/exercise-sport.svg";
 import CalendarSvg from "../../assets/exercise-calendar.svg";
+import CoreSvg from "../../assets/exercise-core.svg";
 import { ExerciseCategory } from "../domains/exercise/types";
 
 type ExerciseCategoryListProps = {
@@ -30,7 +31,7 @@ export const ExerciseCategoryMap: Record<string, any> = {
     'cardio': <CardioSvg /> ,
     'arms': <ArmsSvg />,
     'legs': <LegsSvg />,
-    'core': null,
+    'core': <CoreSvg />,
     'shoulders': <ShouldersSvg />,
     'back': <BackSvg />,
     'chest': <ChestSvg />,
@@ -68,9 +69,10 @@ export const ExerciseCategoryList = ({ categories, handleSelectCategory, selecte
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        marginRight: 4
+        marginRight: 6
     },
     icon: {
-        height: 69
+        height: 69,
+        width: 69
     }
 })

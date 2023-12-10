@@ -14,7 +14,7 @@ export const ExerciseSearchScreen = () => {
         filteredExercises,
         isFilteredShown,
         handleSearch,
-        handleSelectCategory,
+        handleSelectCategory, 
         isExerciseItemsLoading,
         selectedCategory,
     } = useExerciseSearch();
@@ -25,14 +25,14 @@ export const ExerciseSearchScreen = () => {
 
     return <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
-                <View style={{marginTop: 40}}>
+                <View style={styles.searchGroup}>
                     <Input 
                         leftIcon={<SearchIcon />} 
                         onChangeText={(value)=>handleSearch(value)} 
                         placeholder="Exercise"
                     />
                     <ExerciseCategoryList 
-                        categories={['all', 'cardio', 'arms', 'legs', 'shoulders', 'back', 'chest', 'stretch', 'sport']}
+                        categories={['all', 'cardio', 'arms', 'legs','chest', 'back','shoulders', 'core', 'stretch', 'sport']}
                         handleSelectCategory={handleSelectCategory}
                         selectedCategory={selectedCategory}
                     />
@@ -78,6 +78,11 @@ const styles = StyleSheet.create({
         gap: 24,
         marginTop:32,
         paddingBottom: 64
+    },
+    searchGroup: {
+        marginTop: 40,
+        gap: 20,
+        marginBottom: 40
     }
 })
 
