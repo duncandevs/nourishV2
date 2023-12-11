@@ -47,7 +47,7 @@ const Category = ({ category, onSelect, selectedCategory }: CategoryProps) => {
         <View style={styles.icon}>
             {ExerciseCategoryMap?.[category]}
         </View>
-        <Text color={textColor}>{category}</Text>
+        <Text color={textColor} fontWeight="500">{category}</Text>
     </TouchableOpacity>
 };
 

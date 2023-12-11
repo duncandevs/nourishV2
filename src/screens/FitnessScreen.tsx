@@ -50,6 +50,8 @@ export const FitnessScreen = ({ navigation }) => {
         });
     };
 
+    const isScheduleEmpty = selectedExerciseSchedules.length === 0
+    console.log('isScheduleEmpty - ',isScheduleEmpty)
     return  <ScrollView style={{backgroundColor: 'white'}}>
         <View style={[styles.container, styles.gutter]}>
             <View style={[styles.row, styles.header]}>
@@ -65,10 +67,7 @@ export const FitnessScreen = ({ navigation }) => {
                     handleCalendarDayPress={handleDaySelect}
                 />
             </View>
-            <View>
-                <StopWatchButton onPress={()=>navigation.navigate('StopWatchScreen')} containerStyle={styles.stopWatch}/>
-            </View>
-            <View style={styles.scheduleList}>
+            {!isScheduleEmpty && <View style={styles.scheduleList}>
                 <Text variant="header3" fontWeight="500" marginTop="l">{dateWorkoutHeader} WORKOUT</Text>
                 {selectedExerciseSchedules?.map((schedule: ExerciseSchedule, idx)=> {
                     const exercise = schedule.exercise;
@@ -80,7 +79,11 @@ export const FitnessScreen = ({ navigation }) => {
                         onFinishExercise={handleExerciseIsFinished}
                     /> : null;
                 })}
-            </View>
+            </View>}
+            {isScheduleEmpty && <View style={styles.emptySchedule}>
+                <Text textAlign="center">No Exercises Scheduled</Text>
+                <Text textAlign="center" textDecorationLine="underline" onPress={goToExerciseSearchScreen}>click to add workout</Text>
+            </View>}
         </View>
     </ScrollView>
 };
@@ -110,5 +113,9 @@ const styles = StyleSheet.create({
     scheduleList: {
         gap: 40, 
         paddingBottom: 84,
+    },
+    emptySchedule: {
+        marginTop: '40%',
+        gap: 24
     }
 })

@@ -73,16 +73,21 @@ export const useTodaysExerciseSchedule = () => {
     const {todaysDayOfTheWeek} = useCalendar();
     const { selectedExerciseSchedules: todaysExerciseSchedules } = useSelectedExerciseSchedule(todaysDayOfTheWeek);
     const [ todaysExerciseCategories, setCategories ] = useState<(ExerciseCategory | undefined)[]>([]) ;
+    const [ numberOfTodaysExercises, setNumberOfExercises ] = useState(0);
 
     useEffect(()=>{
-        if(todaysExerciseSchedules) setCategories(
-            todaysExerciseSchedules?.map((s)=>s?.exercise?.category)
-        )
+        if(todaysExerciseSchedules) {
+             setCategories(
+                todaysExerciseSchedules?.map((s)=>s?.exercise?.category)
+            );
+            setNumberOfExercises(todaysExerciseSchedules.length)
+        }
     }, [todaysExerciseSchedules])
 
     return {
         todaysExerciseSchedules,
-        todaysExerciseCategories
+        todaysExerciseCategories,
+        numberOfTodaysExercises
     };
 };
 
