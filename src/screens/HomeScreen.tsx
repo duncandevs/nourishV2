@@ -44,7 +44,7 @@ export const HomeScreen  = ({ navigation }) => {
                 <Text variant="header1" fontWeight="500">Danni</Text>
             </View>
             <View style={styles.userGroup}>
-                <Image source={{uri: profilePic02}} style={styles.image}/>
+                <Image source={{uri: profilePic01}} style={styles.image}/>
                 <View style={styles.calendar}>
                     <Text color="white" variant="paragraph2">{calendarDateMonth.toLocaleUpperCase()}</Text>
                     <Text color="highlight" variant="display1">{calendarDateNumber}</Text>
