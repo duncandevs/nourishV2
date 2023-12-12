@@ -29,8 +29,18 @@ export const theme = createTheme({
     xl: 40,
   },
   textVariants: {
-    displayXl: {
+    display3Xl: {
       fontSize: 148,
+      fontWeight: 'bold',
+      color: 'text',
+    },
+    display2Xl: {
+      fontSize: 124,
+      fontWeight: 'bold',
+      color: 'text',
+    },
+    displayXl: {
+      fontSize: 96,
       fontWeight: 'bold',
       color: 'text',
     },

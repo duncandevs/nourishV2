@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { useUser } from '../users/hooks';
 import ExerciseLogService, { CreateExerciseLogParams } from './services';
-import { ExerciseLog } from './type'
-import { useCalendar } from '../calendar/hooks';
+import { ExerciseLog } from './type';
+import { formatDisplayTime } from '../../utility';
+
 
 export const ExerciseLogKeys = {
     all: 'exerciseLogs',
@@ -87,16 +89,16 @@ export const useCreateExerciseLog = () => {
 
 export const useExerciseLogFromExercise = ({ exerciseId, date }: {exerciseId?: string, date?: string}) => {
     const { data: exerciseLogs, error } = useWeeklyExerciseLogs();
-    const data: ExerciseLog[] = exerciseLogs?.filter((item)=>{
+    const data: ExerciseLog = exerciseLogs?.find((item)=>{
         return item.exercise_id === exerciseId && item.date.startsWith(date)
-    }) || [];
+    }) || null;
 
-    const isFinished = !!data?.[0];
+    const isFinished = !!data;
 
     return { 
-        data: data[0],
+        data,
         error,
-        isFinished
+        isFinished,
     }
 };
 

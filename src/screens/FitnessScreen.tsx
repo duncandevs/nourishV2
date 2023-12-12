@@ -51,7 +51,7 @@ export const FitnessScreen = ({ navigation }) => {
     };
 
     const isScheduleEmpty = selectedExerciseSchedules.length === 0
-    console.log('isScheduleEmpty - ',isScheduleEmpty)
+
     return  <ScrollView style={{backgroundColor: 'white'}}>
         <View style={[styles.container, styles.gutter]}>
             <View style={[styles.row, styles.header]}>

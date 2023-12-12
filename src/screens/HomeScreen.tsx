@@ -6,7 +6,6 @@ import { todaysDateRegular } from "../utility";
 import { useCalendar } from "../domains/calendar/hooks";
 import { useFoodLogMacrosByDate } from "../domains/foodLog/hooks";
 import { useTodaysExerciseSchedule } from "../domains/exerciseSchedule/hooks";
-import { ExerciseCategoryList } from "../components";
 import RightArrowIcon from "../../assets/right-arrow.svg"
 
 const profilePic01 = "https://images.unsplash.com/photo-1562771242-a02d9090c90c?q=80&w=2671&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -44,7 +43,7 @@ export const HomeScreen  = ({ navigation }) => {
                 <Text variant="header1" fontWeight="500">Danni</Text>
             </View>
             <View style={styles.userGroup}>
-                <Image source={{uri: profilePic01}} style={styles.image}/>
+                <Image source={{uri: profilePic08}} style={styles.image}/>
                 <View style={styles.calendar}>
                     <Text color="white" variant="paragraph2">{calendarDateMonth.toLocaleUpperCase()}</Text>
                     <Text color="highlight" variant="display1">{calendarDateNumber}</Text>

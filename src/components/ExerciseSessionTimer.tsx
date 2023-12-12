@@ -17,7 +17,7 @@ export const ExerciseSessionTimer = ({ timeInSeconds }: TimerSessionProps) => {
     return <View style={styles.timerContainer}>
         <View style={styles.row}>
             <View style={styles.timerDisplayWrapper}>
-                <Text variant="displayXl" color="white">{hoursDisplay}</Text>
+                <Text variant="display2Xl" color="white">{hoursDisplay}</Text>
             </View>
             <View style={styles.timerLabelWrapper}>
                 <Text color="white" variant="display2" style={styles.timerLabel}>h</Text>
@@ -25,7 +25,7 @@ export const ExerciseSessionTimer = ({ timeInSeconds }: TimerSessionProps) => {
         </View>
         <View style={styles.row}>
             <View style={styles.timerDisplayWrapper}>
-                <Text variant="displayXl" color="white">{minutesDisplay}</Text>
+                <Text variant="display2Xl" color="white">{minutesDisplay}</Text>
             </View>
             <View style={styles.timerLabelWrapper}>
                 <Text color="white" variant="display2" style={styles.timerLabel}>m</Text>
@@ -33,7 +33,7 @@ export const ExerciseSessionTimer = ({ timeInSeconds }: TimerSessionProps) => {
         </View>
         <View style={styles.row}>
             <View style={styles.timerDisplayWrapper}>
-                <Text variant="displayXl" color="white">{secondsDisplay}</Text>
+                <Text variant="display2Xl" color="white">{secondsDisplay}</Text>
             </View>
             <View style={styles.timerLabelWrapper}>
                 <Text color="white" variant="display2" style={styles.timerLabel}>s</Text>

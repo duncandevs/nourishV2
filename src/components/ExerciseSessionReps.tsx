@@ -20,7 +20,7 @@ export const ExerciseSessionReps = ({ sets=3, reps=0, elapsedTime=0, isResting=f
     return <View style={styles.container}>
         <Text color="white" variant="display1">{reps} REPS</Text>
         <View style={[styles.sets, styles.row]}>
-            <Text variant="displayXl" color={activityColor}>{sets.toString().padStart(2, '0')}</Text>
+            <Text variant="display3Xl" color={activityColor}>{sets.toString().padStart(2, '0')}</Text>
             <View>
                 <Text variant="header1" color={activityColor}>SETS</Text>
                 <Text variant="paragraph2" color={activityColor}>TO GO</Text>
