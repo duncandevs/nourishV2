@@ -9,6 +9,7 @@ import { useExerciseLogFromExercise } from "../domains/exerciseLog/hooks";
 import { useCalendar } from "../domains/calendar/hooks";
 import { ExerciseSchedule } from "../domains/exerciseSchedule/types";
 import { formatDisplayTime } from "../utility";
+import CalendarIcon from "../../assets/calendar-svg.svg"
 
 
 type ExerciseSummaryItemProps = {
@@ -23,12 +24,11 @@ export const ExerciseSummaryItem = ({ schedule, title, onStartPress, onFinishExe
     const exerciseId = schedule?.exercise?.id;
     const { selectedDate, isSelectedDateAfterToday, isSelectedDateBeforeToday, isSelectedDateToday } = useCalendar();
     const { isFinished, data: log } = useExerciseLogFromExercise({ exerciseId, date: selectedDate });
-
     const [formattedExerciseTime, setFormattedExerciseTime] = useState<string | null>(null);
 
     useEffect(()=>{
         let time = null;
-        if(isSelectedDateToday && log?.time_in_seconds){
+        if(isSelectedDateToday){
             if(isFinished && log?.time_in_seconds){
                 time = log?.time_in_seconds
             } else {    
@@ -82,7 +82,7 @@ export const ExerciseSummaryItem = ({ schedule, title, onStartPress, onFinishExe
                 <CheckBoxIcon width={14} height={14}/>
             </TouchableOpacity>}
         </View>}
-        {isSelectedDateToday && <View style={styles.actions}>
+        {(!isSelectedDateBeforeToday && !isSelectedDateAfterToday) && <View style={styles.actions}>
             {isFinished && <TouchableOpacity style={styles.finished} onPress={()=>scheduleId && onStartPress(scheduleId)}>
                 <Text variant="paragraph4" fontWeight="500" textAlign='center'>FINISHED</Text>
             </TouchableOpacity>}
@@ -95,9 +95,10 @@ export const ExerciseSummaryItem = ({ schedule, title, onStartPress, onFinishExe
                 <PlayButton width={32} height={32}/>
             </TouchableOpacity>}
         </View>}
-        <View>
-            {isSelectedDateAfterToday && <Text variant="paragraph4" color="blue" fontWeight="600" marginTop="s">SCHEDULED</Text>}
-        </View>
+        {isSelectedDateAfterToday && <View style={styles.schedule}>
+            <CalendarIcon width={20} height={20} fill={Colors.gray04}/>
+            <Text variant="paragraph4" color="gray04" fontWeight="600">SCHEDULED</Text>
+        </View>}
     </View>
 };
 
@@ -152,5 +153,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 24,
         justifyContent: 'space-between'
+    },
+    schedule: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        paddingTop: 8,
     }
 });

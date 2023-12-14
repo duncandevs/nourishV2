@@ -23,6 +23,7 @@ type CalendarWeekPillsProps = {
 }
 
 const CalendarDayPill = ({ dayString, date, handleOnPress, disabled, highlighted }: CalendarPillProps) => {
+    const { selectedDate } = useCalendar();
     let backgroundStyles = {} as Record<string, string>;
     let fontColor = 'white' as 'white' | 'black';
 
@@ -36,18 +37,20 @@ const CalendarDayPill = ({ dayString, date, handleOnPress, disabled, highlighted
     const handlePress = () => {
         handleOnPress(date)
     };
-
+    const isSelected = selectedDate === date
     return (
-        <TouchableOpacity disabled={disabled} style={[styles.pill, backgroundStyles]} onPress={handlePress}>
-            <Text variant="paragraph4" color={fontColor}>{dayString}</Text>
-        </TouchableOpacity>
+        <View>
+            <TouchableOpacity disabled={disabled} style={[styles.pill, backgroundStyles]} onPress={handlePress}>
+                <Text variant="paragraph4" color={fontColor}>{dayString}</Text>
+            </TouchableOpacity>
+        </View>
     );
 };
 
 const CalendarIconPill = ({ handleOnPress }: CalendarIconPillProps) => {
     return (
         <TouchableOpacity style={[styles.pill, styles.calendarIcon]} onPress={handleOnPress}>
-            <CalendarSvg />
+            <CalendarSvg color="white"/>
         </TouchableOpacity>
     );
 }
