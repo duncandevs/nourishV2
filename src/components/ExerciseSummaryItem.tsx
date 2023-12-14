@@ -73,23 +73,30 @@ export const ExerciseSummaryItem = ({ schedule, title, onStartPress, onFinishExe
                 </View>
             </View>}
         </View>
+        {isSelectedDateBeforeToday && <View style={styles.actions}>
+            {isFinished && <TouchableOpacity style={styles.finished} onPress={()=>scheduleId && onStartPress(scheduleId)}>
+                <Text variant="paragraph4" fontWeight="500" textAlign='center'>FINISHED</Text>
+            </TouchableOpacity>}
+            {!isFinished && <TouchableOpacity style={[styles.doneButton, styles.row]} onPress={handleFinished}>
+                <Text variant="paragraph4" color="white" fontWeight="500">DONE</Text>
+                <CheckBoxIcon width={14} height={14}/>
+            </TouchableOpacity>}
+        </View>}
+        {isSelectedDateToday && <View style={styles.actions}>
+            {isFinished && <TouchableOpacity style={styles.finished} onPress={()=>scheduleId && onStartPress(scheduleId)}>
+                <Text variant="paragraph4" fontWeight="500" textAlign='center'>FINISHED</Text>
+            </TouchableOpacity>}
+            {!isFinished && <TouchableOpacity style={[styles.doneButton, styles.row]} onPress={handleFinished}>
+                <Text variant="paragraph4" color="white" fontWeight="500">DONE</Text>
+                <CheckBoxIcon width={14} height={14}/>
+            </TouchableOpacity>}
+            {!isSelectedDateBeforeToday && <TouchableOpacity style={styles.startExercise} onPress={handleStart}>
+                <Text variant="paragraph5" fontWeight="500">START EXERCISE</Text>
+                <PlayButton width={32} height={32}/>
+            </TouchableOpacity>}
+        </View>}
         <View>
-            {isSelectedDateBeforeToday || isSelectedDateToday && <View style={styles.actions}>
-                {isFinished && <TouchableOpacity style={styles.finished} onPress={()=>scheduleId && onStartPress(scheduleId)}>
-                    <Text variant="paragraph4" fontWeight="500" textAlign='center'>FINISHED</Text>
-                </TouchableOpacity>}
-                {!isFinished && <TouchableOpacity style={[styles.doneButton, styles.row]} onPress={handleFinished}>
-                    <Text variant="paragraph4" color="white" fontWeight="500">DONE</Text>
-                    <CheckBoxIcon width={14} height={14}/>
-                </TouchableOpacity>}
-                <TouchableOpacity style={styles.startExercise} onPress={handleStart}>
-                    <Text variant="paragraph5" fontWeight="500">START EXERCISE</Text>
-                    <PlayButton width={32} height={32}/>
-                </TouchableOpacity>
-            </View>}
-            <View>
-                {isSelectedDateAfterToday && <Text variant="paragraph4" color="blue" fontWeight="600" marginTop="s">SCHEDULED</Text>}
-            </View>
+            {isSelectedDateAfterToday && <Text variant="paragraph4" color="blue" fontWeight="600" marginTop="s">SCHEDULED</Text>}
         </View>
     </View>
 };
@@ -126,7 +133,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: Colors.highlight,
         borderRadius: 6,
-        marginTop: 16,
+        marginTop: 4,
     },
     measurement: {
         flexDirection: 'row',

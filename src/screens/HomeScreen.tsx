@@ -1,13 +1,13 @@
 import { useState } from "react";
 import moment from "moment";
-import { FlatList, Image, ImageBackground, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Colors, Text } from "../theme";
 import { todaysDateRegular } from "../utility";
 import { useCalendar } from "../domains/calendar/hooks";
 import { useFoodLogMacrosByDate } from "../domains/foodLog/hooks";
 import { useTodaysExerciseSchedule } from "../domains/exerciseSchedule/hooks";
 import RightArrowIcon from "../../assets/right-arrow.svg"
-import { ProfilePicPicker, profilePics } from "../components";
+import { ProfilePicPicker } from "../components";
 import { useProfilePicture } from "../domains/users/hooks";
 
 
@@ -18,9 +18,7 @@ export const HomeScreen  = ({ navigation }) => {
     const calendarDateNumber = moment(todaysDate).format('DD');
     const calendarDateMonth = moment(todaysDate).format('MMM');
     const fitnessTitle = numberOfTodaysExercises === 1 ? "EXERCISE SCHEDULED" : "EXERCISES SCHEDULED";
-
     const { userProfilePic, setNewProfilePic } = useProfilePicture();
-    // const [profilePic, setProfilePic] = useState(profilePics[0])
     const [isProfilePickerOpen, setIsProfilePickerOpen] = useState(false);
 
     const goToNutritionScreen = () => {
