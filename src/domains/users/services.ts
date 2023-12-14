@@ -3,6 +3,13 @@ import { supabase, supabaseAdminClient } from '../../clients/supabase';
 import { FetchMethod } from '../types';
 import { SignUpArgs, UpdateUserProfileArgs, UpdateUserCalorieTargetArgs, UserModel } from './types';
 import { setItemToAsyncStorage, getItemFromStorage, deleteItemFromStorage } from "../../utility";
+import { profilePics } from "../../components";
+
+
+const storageKeys = {
+    user: 'user',
+    userProfilePic: 'userProfilePic'
+}
 
 const handleAuth = async ({ email, password }: SupabaseAuthArgs): FetchMethod => {
     try {
@@ -68,7 +75,7 @@ const handleSignUp = async ({ email, password, name }: SignUpArgs) => {
 const updateUserProfile = async ({ userId, name, email, password }: UpdateUserProfileArgs) => {
     try {
         if(email) {
-            const {error: emailError, data} = await supabase.auth.updateUser({ email });
+            const {error: emailError} = await supabase.auth.updateUser({ email });
             if(emailError) throw(emailError);
         };
 
@@ -92,7 +99,7 @@ const updateUserProfile = async ({ userId, name, email, password }: UpdateUserPr
 const logOutUser = () => supabase.auth.signOut();
 
 const deleteAccount = async ({ userId }: {userId: string}) => {
-    const { data, error } = await supabaseAdminClient.auth.admin.deleteUser(userId);
+    const { error } = await supabaseAdminClient.auth.admin.deleteUser(userId);
     if(!error) logOutUser();
 };
 
@@ -116,14 +123,24 @@ const getUserFromAuth = async () => {
 };
 
 const setUserToStorage = async (user: UserModel) => {
-    setItemToAsyncStorage("user", user);
+    setItemToAsyncStorage(storageKeys.user, user);
 };
 
 const getUserFromStorage = async () => {
-    return getItemFromStorage("user")
+    return getItemFromStorage(storageKeys.user)
 };
 
-const deleteUserFromStorage =async () => deleteItemFromStorage("user");
+const deleteUserFromStorage =async () => deleteItemFromStorage(storageKeys.user);
+
+const setProfilePicToStorage = async (pic: string) => {
+    setItemToAsyncStorage(storageKeys.userProfilePic, pic);
+};
+
+const getProfilePicFromStorage = async () => {
+    const storedProfilePic = await getItemFromStorage(storageKeys.userProfilePic);
+    return storedProfilePic || profilePics[0];
+};
+
 
 
 export default {
@@ -138,5 +155,7 @@ export default {
     getUserFromAuth,
     getUserFromStorage,
     setUserToStorage,
-    deleteUserFromStorage
+    deleteUserFromStorage,
+    setProfilePicToStorage,
+    getProfilePicFromStorage
 }

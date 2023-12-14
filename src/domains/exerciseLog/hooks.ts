@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import { useUser } from '../users/hooks';
 import ExerciseLogService, { CreateExerciseLogParams } from './services';
 import { ExerciseLog } from './type';
-import { formatDisplayTime } from '../../utility';
 
 
 export const ExerciseLogKeys = {
