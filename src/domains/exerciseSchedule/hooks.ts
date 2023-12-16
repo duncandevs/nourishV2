@@ -57,6 +57,7 @@ export const useExerciseSchedules = () => {
 export const useSelectedExerciseSchedule = (day: DayOfWeek) => {
     const { data } = useExerciseSchedules();
     const [selectedExerciseSchedules, setDailySchedules] = useState<ExerciseSchedule[]>([]);
+    const [selectedExerciseScheduleCategories, setSelectedExerciseScheduleCategories] = useState<ExerciseCategory[] | null>(null);
     
     useEffect(()=>{
         setDailySchedules(
@@ -64,8 +65,17 @@ export const useSelectedExerciseSchedule = (day: DayOfWeek) => {
         )
     }, [data, day]);
 
+    useEffect(()=>{
+        const categories = selectedExerciseSchedules?.reduce((acc: ExerciseCategory[], val: ExerciseSchedule)=>{
+            if(val.exercise?.category && !acc.includes(val.exercise?.category)) acc.push(val.exercise?.category)
+            return acc;
+        }, []);
+        setSelectedExerciseScheduleCategories(categories);
+    }, [selectedExerciseSchedules])
+
     return { 
-        selectedExerciseSchedules
+        selectedExerciseSchedules,
+        selectedExerciseScheduleCategories
     };
 };
 

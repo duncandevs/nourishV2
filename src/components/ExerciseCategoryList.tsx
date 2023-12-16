@@ -18,12 +18,14 @@ type ExerciseCategoryListProps = {
     categories: ExerciseCategory[],
     handleSelectCategory?: (category: ExerciseCategory) => void,
     selectedCategory?: ExerciseCategory | null,
+    disableButtons?: boolean
 };
 
 type CategoryProps = {
     onSelect?: (category: ExerciseCategory) => void,
     category: ExerciseCategory,
-    selectedCategory?: ExerciseCategory | null
+    selectedCategory?: ExerciseCategory | null,
+    disableButtons?: boolean
 }
 
 export const ExerciseCategoryMap: Record<string, any> = {
@@ -40,10 +42,10 @@ export const ExerciseCategoryMap: Record<string, any> = {
     'pilates': null,
 };
 
-const Category = ({ category, onSelect, selectedCategory }: CategoryProps) => {
+const Category = ({ category, onSelect, selectedCategory, disableButtons }: CategoryProps) => {
     const isSelected = selectedCategory === category;
     const textColor = isSelected ? "blue" : "black" 
-    return <TouchableOpacity style={styles.container} onPress={()=>onSelect && onSelect(category)}>
+    return <TouchableOpacity style={styles.container} onPress={()=>onSelect && onSelect(category)} disabled={disableButtons}>
         <View style={styles.icon}>
             {ExerciseCategoryMap?.[category]}
         </View>
@@ -51,7 +53,7 @@ const Category = ({ category, onSelect, selectedCategory }: CategoryProps) => {
     </TouchableOpacity>
 };
 
-export const ExerciseCategoryList = ({ categories, handleSelectCategory, selectedCategory } : ExerciseCategoryListProps) => {
+export const ExerciseCategoryList = ({ categories, handleSelectCategory, selectedCategory, disableButtons } : ExerciseCategoryListProps) => {
     return <FlatList 
         data={categories}
         renderItem={({item}:{item: ExerciseCategory}) => 
@@ -59,6 +61,7 @@ export const ExerciseCategoryList = ({ categories, handleSelectCategory, selecte
                 category={item} 
                 onSelect={handleSelectCategory}
                 selectedCategory={selectedCategory}
+                disableButtons={disableButtons}
             />
         }
         horizontal

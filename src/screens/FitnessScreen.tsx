@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native"
 import { Text } from "../theme"
-import { CalendarWeekPills, ExerciseSummaryItem } from "../components";
+import { CalendarWeekPills, ExerciseCategoryList, ExerciseSummaryItem } from "../components";
 import { StyleSheet } from "react-native";
 import { useSelectedExerciseSchedule } from '../domains/exerciseSchedule/hooks';
 import { getDayOfTheWeek, formatDateHeader } from "../utility";
@@ -16,7 +16,7 @@ export const FitnessScreen = ({ navigation }) => {
     const [ date, setDate ] = useState(todaysDate);
     const [ selectedDay, setSelectedDayDay ] = useState(todaysDayOfTheWeek);
 
-    const { selectedExerciseSchedules  } = useSelectedExerciseSchedule(selectedDay);
+    const { selectedExerciseSchedules, selectedExerciseScheduleCategories  } = useSelectedExerciseSchedule(selectedDay);
     const { createExerciseLog } = useCreateExerciseLog();
 
     const handleDaySelect = (date: string) => {
@@ -68,7 +68,10 @@ export const FitnessScreen = ({ navigation }) => {
                 />
             </View>
             {!isScheduleEmpty && <View style={styles.scheduleList}>
-                <Text variant="header3" fontWeight="500" marginTop="l">{dateWorkoutHeader} WORKOUT</Text>
+                <View style={{gap: 20}}>
+                    <Text variant="header3" fontWeight="500" marginTop="l">{dateWorkoutHeader} WORKOUT</Text>
+                    <ExerciseCategoryList categories={selectedExerciseScheduleCategories || []} disableButtons/>
+                </View>
                 {selectedExerciseSchedules?.map((schedule: ExerciseSchedule, idx)=> {
                     const exercise = schedule.exercise;
                     return exercise ? <ExerciseSummaryItem 
