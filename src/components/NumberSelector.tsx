@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     },
     input: {
         color: 'white',
-        fontSize: 36,
+        fontSize: 32,
         fontWeight: '500',
     },
     inputContainer: {
