@@ -20,7 +20,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nourish.fit",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to recognize food and beverages."
       }
@@ -31,7 +31,7 @@ export default {
         "backgroundColor": "#ffffff",
       },
       "package": "com.nourish.fit",
-      "versionCode": 2,
+      "versionCode": 3,
       "icon": "./assets/nourish-app-icon.png",
     },
     "web": {
