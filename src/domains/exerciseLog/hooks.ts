@@ -10,7 +10,7 @@ export const ExerciseLogKeys = {
 };
 
 export const useExerciseLogs = () => {
-    const user = useUser();
+    const { user } = useUser();
     const fetchLogs = async () => {
         const response = await ExerciseLogService.fetchAllExerciseLogs({userId: user.id });
         return response.data;
@@ -35,7 +35,7 @@ export const useExerciseLogs = () => {
 };
 
 export const useWeeklyExerciseLogs = () => {
-    const user = useUser();
+    const { user }  = useUser();
     const fetchWeeklyLogs = async () => {
         const response = await ExerciseLogService.fetchWeeklyExerciseLogs({userId: user.id });
         return response.data;
@@ -59,7 +59,7 @@ export const useWeeklyExerciseLogs = () => {
 
 
 export const useCreateExerciseLog = () => {
-    const user = useUser();
+    const { user }  = useUser();
     const queryClient = useQueryClient();
 
     const  { mutateAsync: mutation, status, error } = useMutation(

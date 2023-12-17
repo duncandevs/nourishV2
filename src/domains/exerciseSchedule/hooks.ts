@@ -13,7 +13,7 @@ export const ExerciseScheduleKeys = {
 };
 
 export const useExerciseSchedules = () => {
-    const user = useUser();
+    const { user }  = useUser();
     const fetchExerciseSchedules = async (): Promise<ExerciseSchedule[]> => {
         const { data } = await ExerciseScheduleService.fetchUserExerciseSchedules({userId: user.id });
         if(data) return data;
@@ -119,7 +119,7 @@ export const useExerciseScheduleById = (id: string) => {
 };
 
 export const useCreateExerciseSchedule = () => {
-    const user = useUser();
+    const { user }  = useUser();
     const queryClient = useQueryClient();
 
     // Define the mutation for creating a new exercise schedule
@@ -146,7 +146,7 @@ export const useCreateExerciseSchedule = () => {
 };
 
 export const useUpdateExerciseSchedule = () => {
-    const user = useUser();
+    const { user } = useUser();
     const queryClient = useQueryClient();
 
     // Define the mutation for creating a new exercise schedule
@@ -175,7 +175,7 @@ export const useUpdateExerciseSchedule = () => {
 };
 
 export const useCreateOrUpdateExerciseSchedule = () => {
-    const user = useUser();
+    const { user }  = useUser();
     const queryClient = useQueryClient();
 
     // Define the mutation for creating a new exercise schedule

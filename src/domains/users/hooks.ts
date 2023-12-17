@@ -19,8 +19,13 @@ export const useUserAuth = () => {
 };
 
 export const useUser = () => {
-    const { user: { data: user } } = useAppState();
-    return user;
+    const { user: { data: userData } } = useAppState();
+    const userFirstName = userData?.name?.split(' ')[0];
+
+    return {
+      user: userData,
+      userFirstName,
+    };
 };
 
 export const useProfilePicture = () => {

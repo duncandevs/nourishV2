@@ -8,7 +8,7 @@ import { useFoodLogMacrosByDate } from "../domains/foodLog/hooks";
 import { useTodaysExerciseSchedule } from "../domains/exerciseSchedule/hooks";
 import RightArrowIcon from "../../assets/right-arrow.svg"
 import { ProfilePicPicker } from "../components";
-import { useProfilePicture } from "../domains/users/hooks";
+import { useProfilePicture, useUser } from "../domains/users/hooks";
 
 
 export const HomeScreen  = ({ navigation }) => {
@@ -20,6 +20,7 @@ export const HomeScreen  = ({ navigation }) => {
     const fitnessTitle = numberOfTodaysExercises === 1 ? "EXERCISE SCHEDULED" : "EXERCISES SCHEDULED";
     const { userProfilePic, setNewProfilePic } = useProfilePicture();
     const [isProfilePickerOpen, setIsProfilePickerOpen] = useState(false);
+    const { userFirstName } = useUser()
 
     const goToNutritionScreen = () => {
         navigation.navigate("NutritionScreen");
@@ -33,7 +34,7 @@ export const HomeScreen  = ({ navigation }) => {
         <View style={styles.content}>
             <View>
                 <Text variant="header1" fontWeight="500">Hi,</Text>
-                <Text variant="header1" fontWeight="500">Danni</Text>
+                <Text variant="header1" fontWeight="500">{userFirstName}</Text>
             </View>
             <View style={styles.userGroup}>
                 <TouchableOpacity onPress={()=>setIsProfilePickerOpen(true)}>
