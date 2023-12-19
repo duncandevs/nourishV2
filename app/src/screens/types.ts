@@ -12,4 +12,5 @@ export type RootStackParamList = {
     Profile: undefined;
     FoodVisionScreen: undefined;
     StopWatchScreen: undefined;
+    ChatScreen: undefined
 };

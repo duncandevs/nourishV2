@@ -16,6 +16,7 @@ import {
   StopWatchScreen,
   ExerciseSearchScreen,
   ExerciseSessionScreen,
+  ChatScreen,
 } from './src/screens';
 import { ThemeProvider } from '@shopify/restyle';
 import { theme } from './src/theme';
@@ -87,6 +88,7 @@ const App = () => {
               <Stack.Screen name="StopWatchScreen" component={StopWatchScreen} options={{ headerShown: false }} />
               <Stack.Screen name="ExerciseSearchScreen" component={ExerciseSearchScreen} options={{headerTitle: ''}}/>
               <Stack.Screen name="ExerciseSessionScreen" component={ExerciseSessionScreen} options={{ headerShown: false }}/>
+              <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ headerShown: false }}/>
             </Stack.Navigator>
           </NavigationContainer>
         </ThemeProvider>

@@ -9,7 +9,7 @@ import { useTodaysExerciseSchedule } from "../domains/exerciseSchedule/hooks";
 import RightArrowIcon from "../../assets/right-arrow.svg"
 import { ProfilePicPicker } from "../components";
 import { useProfilePicture, useUser } from "../domains/users/hooks";
-import {TEST_SHARED} from '@shared/domains';
+import { ChatBottomTab } from '../components';
 
 export const HomeScreen  = ({ navigation }) => {
     const { todaysDayOfTheWeek, todaysDate } = useCalendar();
@@ -30,69 +30,72 @@ export const HomeScreen  = ({ navigation }) => {
         navigation.navigate("FitnessScreen");
     };
 
-    return <ScrollView style={styles.container}>
-        <View style={styles.content}>
-            <View>
-                <Text variant="header1" fontWeight="500">Hi, {TEST_SHARED}</Text>
-                <Text variant="header1" fontWeight="500">{userFirstName}</Text>
-            </View>
-            <View style={styles.userGroup}>
-                <TouchableOpacity onPress={()=>setIsProfilePickerOpen(true)}>
-                    <Image source={{uri: userProfilePic}} style={styles.image} />
-                </TouchableOpacity>
-                <View style={styles.calendar}>
-                    <Text color="white" variant="paragraph2">{calendarDateMonth.toLocaleUpperCase()}</Text>
-                    <Text color="highlight" variant="display1">{calendarDateNumber}</Text>
-                    <Text color="white" variant="paragraph3">{todaysDayOfTheWeek.toUpperCase()}</Text>
+    return <View>
+        <ScrollView style={styles.container}>
+            <View style={styles.content}>
+                <View>
+                    <Text variant="header1" fontWeight="500">Hi,</Text>
+                    <Text variant="header1" fontWeight="500">{userFirstName}</Text>
+                </View>
+                <View style={styles.userGroup}>
+                    <TouchableOpacity onPress={()=>setIsProfilePickerOpen(true)}>
+                        <Image source={{uri: userProfilePic}} style={styles.image} />
+                    </TouchableOpacity>
+                    <View style={styles.calendar}>
+                        <Text color="white" variant="paragraph2">{calendarDateMonth.toLocaleUpperCase()}</Text>
+                        <Text color="highlight" variant="display1">{calendarDateNumber}</Text>
+                        <Text color="white" variant="paragraph3">{todaysDayOfTheWeek.toUpperCase()}</Text>
+                    </View>
+                </View>
+                {isProfilePickerOpen && <View style={{width: '90%'}}>
+                    <ProfilePicPicker  onPressPicture={(pic:string)=>setNewProfilePic(pic)} onClose={()=>setIsProfilePickerOpen(false)}/>
+                </View>}
+                <View style={styles.summary}>
+                    <Text variant="paragraph1" fontWeight="500" marginBottom="s">Daily Summary</Text>
+                    <TouchableOpacity onPress={goToFitnessScreen}>
+                        <ImageBackground style={styles.summaryItem} source={{uri: 'https://plus.unsplash.com/premium_photo-1671436822885-0ef977b97959?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}} borderRadius={20}>
+                            <View style={styles.fitnessTitle}>
+                                <Text variant="display1" color="white">{numberOfTodaysExercises}</Text>
+                                <Text fontWeight="600" variant="header3" color="white">{fitnessTitle}</Text>
+                            </View>
+                            <View style={styles.summarySubtitle}>
+                                <Text color="white">FITNESS</Text>
+                                <RightArrowIcon width={24} height={24} fill="white" />
+                            </View>
+                        </ImageBackground>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={goToNutritionScreen}>
+                        <ImageBackground style={styles.summaryItem} source={{uri: 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}} borderRadius={20}>
+                            <Text fontWeight="600" color="white">YOUR DAILY MACROS</Text>
+                            <View style={styles.macrosContainer}>
+                                <View style={[styles.macroWrapper, styles.calories]}>
+                                    <Text color="white" variant="paragraph5" fontWeight="700">CALORIES</Text>
+                                    <Text color="white" variant="paragraph2" fontWeight="500">{macros?.calories || 0}</Text>
+                                </View>
+                                <View style={[styles.macroWrapper, styles.protein]}>
+                                    <Text color="white" variant="paragraph5" fontWeight="700">PROTEIN</Text>
+                                    <Text color="white" variant="paragraph2" fontWeight="500">{macros?.protein?.toFixed(0) || 0} G</Text>
+                                </View>
+                                <View style={[styles.macroWrapper, styles.fat]}>
+                                    <Text color="white" variant="paragraph5" fontWeight="700">FAT</Text>
+                                    <Text color="white" variant="paragraph2" fontWeight="500">{macros?.fat.toFixed(0) || 0} G</Text>
+                                </View>
+                                <View style={[styles.macroWrapper, styles.carbs]}>
+                                    <Text color="white" variant="paragraph5" fontWeight="700">CARBS</Text>
+                                    <Text color="white" variant="paragraph2" fontWeight="500">{macros?.carbs.toFixed(0) || 0} G</Text>
+                                </View>
+                            </View>
+                            <View style={styles.summarySubtitle}>
+                                <Text color="white">NUTRITION</Text>
+                                <RightArrowIcon width={24} height={24} fill="white" />
+                            </View>
+                        </ImageBackground>
+                    </TouchableOpacity>
                 </View>
             </View>
-            {isProfilePickerOpen && <View style={{width: '90%'}}>
-                <ProfilePicPicker  onPressPicture={(pic:string)=>setNewProfilePic(pic)} onClose={()=>setIsProfilePickerOpen(false)}/>
-            </View>}
-            <View style={styles.summary}>
-                <Text variant="paragraph1" fontWeight="500" marginBottom="s">Daily Summary</Text>
-                <TouchableOpacity onPress={goToFitnessScreen}>
-                    <ImageBackground style={styles.summaryItem} source={require('../../assets/tennis-shoes-image-mask.png')} borderRadius={20}>
-                        <View style={styles.fitnessTitle}>
-                            <Text variant="display1" color="white">{numberOfTodaysExercises}</Text>
-                            <Text fontWeight="600" variant="header3" color="white">{fitnessTitle}</Text>
-                        </View>
-                        <View style={styles.summarySubtitle}>
-                            <Text color="white">FITNESS</Text>
-                            <RightArrowIcon width={24} height={24} fill="white" />
-                        </View>
-                    </ImageBackground>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={goToNutritionScreen}>
-                    <ImageBackground style={styles.summaryItem} source={require('../../assets/tomato-image-mask.png')} borderRadius={20}>
-                        <Text fontWeight="600" color="white">YOUR DAILY MACROS</Text>
-                        <View style={styles.macrosContainer}>
-                            <View style={[styles.macroWrapper, styles.calories]}>
-                                <Text color="white" variant="paragraph5" fontWeight="700">CALORIES</Text>
-                                <Text color="white" variant="paragraph2" fontWeight="500">{macros?.calories || 0}</Text>
-                            </View>
-                            <View style={[styles.macroWrapper, styles.protein]}>
-                                <Text color="white" variant="paragraph5" fontWeight="700">PROTEIN</Text>
-                                <Text color="white" variant="paragraph2" fontWeight="500">{macros?.protein?.toFixed(0) || 0} G</Text>
-                            </View>
-                            <View style={[styles.macroWrapper, styles.fat]}>
-                                <Text color="white" variant="paragraph5" fontWeight="700">FAT</Text>
-                                <Text color="white" variant="paragraph2" fontWeight="500">{macros?.fat.toFixed(0) || 0} G</Text>
-                            </View>
-                            <View style={[styles.macroWrapper, styles.carbs]}>
-                                <Text color="white" variant="paragraph5" fontWeight="700">CARBS</Text>
-                                <Text color="white" variant="paragraph2" fontWeight="500">{macros?.carbs.toFixed(0) || 0} G</Text>
-                            </View>
-                        </View>
-                        <View style={styles.summarySubtitle}>
-                            <Text color="white">NUTRITION</Text>
-                            <RightArrowIcon width={24} height={24} fill="white" />
-                        </View>
-                    </ImageBackground>
-                </TouchableOpacity>
-            </View>
-        </View>
-    </ScrollView>
+        </ScrollView>
+        <ChatBottomTab navigation={navigation} />
+    </View>
 };
 
 const styles = StyleSheet.create({
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
         paddingTop: 24,
         marginLeft: 'auto',
         marginRight: 'auto',
-        paddingBottom: 80
+        paddingBottom: 140
     },
     image:{
         width: 156,

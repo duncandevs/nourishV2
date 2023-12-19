@@ -12,4 +12,5 @@ export { FoodVisionScreen } from "./FoodVisionScreen";
 export { StopWatchScreen } from "./StopWatchScreen";
 export { ExerciseSearchScreen } from "./ExerciseSearchScreen";
 export { ExerciseSessionScreen } from "./ExerciseSessionScreen";
+export { ChatScreen } from "./ChatScreen";
 export {RootStackParamList} from "./types"

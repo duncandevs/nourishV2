@@ -20,3 +20,4 @@ export { ExerciseSummaryItem } from "./ExerciseSummaryItem";
 export { ExerciseItem } from "./ExerciseItem";
 export { ExerciseCategoryList } from "./ExerciseCategoryList";
 export { ProfilePicPicker, profilePics } from "./ProfilePicPicker";
+export { ChatBottomTab } from "./ChatBottomTab";
