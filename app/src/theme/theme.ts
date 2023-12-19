@@ -115,7 +115,7 @@ export const theme = createTheme({
     },
     defaults: {
       fontSize: 16,
-    }
+    },
   },
   // ... any other theme properties you want
 });
