@@ -5,5 +5,8 @@
     "target": "es6",
     "module": "commonjs",
     "jsx": "react-jsx", // or "react-native" for React Native projects
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    },
   }
 }

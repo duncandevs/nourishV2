@@ -9,7 +9,7 @@ import { useTodaysExerciseSchedule } from "../domains/exerciseSchedule/hooks";
 import RightArrowIcon from "../../assets/right-arrow.svg"
 import { ProfilePicPicker } from "../components";
 import { useProfilePicture, useUser } from "../domains/users/hooks";
-
+import {TEST_SHARED} from '@shared/domains';
 
 export const HomeScreen  = ({ navigation }) => {
     const { todaysDayOfTheWeek, todaysDate } = useCalendar();
@@ -33,7 +33,7 @@ export const HomeScreen  = ({ navigation }) => {
     return <ScrollView style={styles.container}>
         <View style={styles.content}>
             <View>
-                <Text variant="header1" fontWeight="500">Hi,</Text>
+                <Text variant="header1" fontWeight="500">Hi, {TEST_SHARED}</Text>
                 <Text variant="header1" fontWeight="500">{userFirstName}</Text>
             </View>
             <View style={styles.userGroup}>
