@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Colors, Text } from "../theme";
-import { getChatResponse } from "../domains/chat/service";
 import { Button, Input } from "react-native-elements";
+import { useGptTextChat } from "../domains/chat/hooks";
+import ChatService from "../domains/chat/service";
 
 /*
     https://www.npmjs.com/package/react-native-markdown-display - for markdown display
@@ -11,31 +12,39 @@ import { Button, Input } from "react-native-elements";
 
 export const ChatScreen = () => {
     const [userMessage, setUserMessage] = useState('');
+    const { getChatResponse, isGetChatResponseLoading} = useGptTextChat();
     const [chatMessages, setChatMessages] = useState<string[]>([]);
 
-    const addNewMessage = (message: string)=>{
-        const allMsgs = [...chatMessages, message];
-        setChatMessages(allMsgs)
-    }
+    const addNewMessage = async (message: string)=>{
+        setChatMessages(prevMessages => [...prevMessages, message]);
+    };
 
     const handleChatReponse = async () => {
-        addNewMessage(userMessage);
+        await addNewMessage(userMessage);
         const chatResponse: string = await getChatResponse(userMessage);
-       
         if(chatResponse) {
-            addNewMessage(chatResponse)
+            await addNewMessage(chatResponse)
         };
     };
 
+    useEffect(()=>{
+        ChatService.loadChatMessagesToStorage().then((msgs)=>{
+            setChatMessages(msgs);
+        })
+    }, []);
+
     return <SafeAreaView style={styles.container}>
             <ScrollView>
-                <View style={styles.chatBox}>
-                    {chatMessages.map((msg: string, idx:number)=>{
+                {<View style={styles.chatBox}>
+                    {chatMessages?.map((msg: string, idx:number)=>{
                         return <View key={idx}>
                             <Text color="black">{msg}</Text>
                         </View>
                     })}
-                </View>
+                    {isGetChatResponseLoading && 
+                        <Text>Loading...</Text>
+                    }
+                </View>}
             </ScrollView>
             <View>
                 <Input onChangeText={(text)=>setUserMessage(text)} inputStyle={{color: 'black'}}/>
