@@ -30,8 +30,9 @@ export const ChatMessage = ({ chatMsg }: {chatMsg: ChatMessageType }) => {
     </View>
 }
 
-export const ChatScreen = () => {
-    const [userMessage, setUserMessage] = useState('');
+export const ChatScreen = ( { route: { params } }) => {
+    const initMessage = params?.message
+    const [ userMessage, setUserMessage] = useState(initMessage || '');
     const { getChatResponse, isGetChatResponseLoading} = useGptTextChat();
     const [chatMessages, setChatMessages] = useState<ChatMessageType[]>([]);
 
@@ -51,11 +52,20 @@ export const ChatScreen = () => {
         };
     };
 
+    const getInitialChatEntry = (): ChatMessageType => {
+        return {message: initMessage, user: 'user'};
+    };
+
     useEffect(()=>{
         ChatService.loadChatMessagesToStorage().then((msgs)=>{
-            setChatMessages(msgs);
-        })
-    }, []);
+            if(initMessage) {
+                setChatMessages(msgs);
+                handleChatReponse();
+            } else {
+                setChatMessages(msgs)
+            };
+        });
+    }, [initMessage]);
 
     return <SafeAreaView style={styles.container}>
             <ScrollView>

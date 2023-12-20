@@ -2,15 +2,24 @@ import { Image, View } from "react-native";
 import { StyleSheet } from "react-native";
 import { Colors, Text } from "../theme";
 import { Input } from "react-native-elements";
+import { useState } from "react";
 
 export const ChatBottomTab =  ({ navigation }) => {
+    const [message, setMessage] = useState('');
+
     const goToChatScreen = () => {
-        navigation.navigate('ChatScreen')
-    }
+        navigation.navigate('ChatScreen', { message });
+    };
+
     return <View style={styles.container}>
         <View style={styles.row}>
             <Image source={require('../../assets/ara-profile-mini.png')} style={styles.aiImg}/>
-            <Input containerStyle={styles.textInputContainer} inputContainerStyle={{borderBottomWidth:0}} inputStyle={{color: 'white'}}/>
+            <Input 
+                containerStyle={styles.textInputContainer} 
+                inputContainerStyle={{borderBottomWidth:0}} 
+                inputStyle={{color: 'white'}}
+                onChangeText={(text)=>setMessage(text)}
+            />
             <Text color="white" onPress={goToChatScreen}>GO</Text>
         </View>
     </View>
