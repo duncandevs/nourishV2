@@ -1,5 +1,6 @@
 import axios from "axios"
 import { getItemFromStorage, setItemToAsyncStorage } from '../../utility';
+import { ChatMessage } from "./types";
 
 const SERVER_URL = 'http://localhost:3000';
 const CHAT_STORAGE_KEY = 'chatMessages';
@@ -10,14 +11,14 @@ const fetchChatResponse = async (message: string) => {
     return response?.data?.message;
 }; 
 
-const loadChatMessagesToStorage = async () => {
-    const chatMessages = await getItemFromStorage(CHAT_STORAGE_KEY);
-    return chatMessages;
+const loadChatMessagesToStorage = async (): Promise<ChatMessage[]> => {
+    const chatMessages: ChatMessage[] = await getItemFromStorage(CHAT_STORAGE_KEY);
+    return chatMessages || [];
 };
 
-const addChatMessageToStorage = async (newMessage: string) => {
+const addChatMessageToStorage = async (newChatMessage: ChatMessage) => {
     const chatMessages = await loadChatMessagesToStorage();
-    const updatedMessages = [...chatMessages, newMessage].slice(-50); // Keep only the last 50 messages
+    const updatedMessages: ChatMessage[] = [...chatMessages, newChatMessage].slice(-50); // Keep only the last 50 messages
     await setItemToAsyncStorage(CHAT_STORAGE_KEY, updatedMessages);
 };
 

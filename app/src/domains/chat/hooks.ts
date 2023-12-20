@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient, useQuery } from 'react-query';
 import ChatService from './service';
+import { ChatMessage } from './types';
 
 export const ChatKeys = {
     all: ['chatMessages']
@@ -13,28 +14,26 @@ export const useGptTextChat = () => {
 
     const { mutateAsync: getChatResponse, status, error, isLoading: isGetChatResponseLoading } = useMutation(
         async (userMessage:string) => {
-            await ChatService.addChatMessageToStorage(userMessage);
+            const chatEntry: ChatMessage = { message: userMessage, user: 'user'};
+            await ChatService.addChatMessageToStorage(chatEntry);
             return ChatService.fetchChatResponse(userMessage);
         },
         {
-            onSuccess: async (newData) => {
+            onSuccess: async (responseMessage: string) => {
                 // Update the existing chatMessages with the new data
                 queryClient.setQueryData(ChatKeys.all, (oldData: any) => {
                     // Ensure oldData is not undefined
                     if (!oldData) {
-                        return [newData];
+                        return [responseMessage];
                     };
-                    // Add newData as a new item to the chatMessages array
-                    return [...oldData, newData];
+                    // Add responseMessage as a new item to the chatMessages array
+                    return [...oldData, responseMessage];
                 });
-                await ChatService.addChatMessageToStorage(newData);
+                const chatResponseEntry: ChatMessage = {message: responseMessage, user:'ai'}
+                await ChatService.addChatMessageToStorage(chatResponseEntry);
             }
         }
     );
-
-    const addNewChatMessageToStorage = async (msg:string) => {
-        await ChatService.addChatMessageToStorage(msg);
-    }
 
     return { 
         messages,
@@ -42,6 +41,5 @@ export const useGptTextChat = () => {
         isGetChatResponseLoading, 
         status, 
         error,
-        addNewChatMessageToStorage, 
     };
 };

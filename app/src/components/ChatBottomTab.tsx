@@ -1,6 +1,7 @@
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import { StyleSheet } from "react-native";
 import { Colors, Text } from "../theme";
+import { Input } from "react-native-elements";
 
 export const ChatBottomTab =  ({ navigation }) => {
     const goToChatScreen = () => {
@@ -8,8 +9,9 @@ export const ChatBottomTab =  ({ navigation }) => {
     }
     return <View style={styles.container}>
         <View style={styles.row}>
-            <Text color="white" variant="header3">ARA</Text>
-            <Text color="white" onPress={goToChatScreen}>GO TO CHAT</Text>
+            <Image source={require('../../assets/ara-profile-mini.png')} style={styles.aiImg}/>
+            <Input containerStyle={styles.textInputContainer} inputContainerStyle={{borderBottomWidth:0}} inputStyle={{color: 'white'}}/>
+            <Text color="white" onPress={goToChatScreen}>GO</Text>
         </View>
     </View>
 };
@@ -22,12 +24,27 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 96,
         backgroundColor: Colors.black,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        padding:16
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        padding:16,
+        paddingTop: 20
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    aiImg: {
+        width: 40,
+        height: 40,
+        borderRadius: 20
+    },
+    textInputContainer: {
+        width: '70%',
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#272727',
+        textDecorationLine: 'none',
+        borderWidth: 0,
     }
 })
