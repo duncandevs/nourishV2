@@ -7,8 +7,8 @@ const GPT_MODELS = {
 }
 
 const openai = new OpenAI({ 
-    apiKey: process.env.OPEN_AI_API_KEY, 
-    organization: process.env.OPEN_AI_ORGANIZATION 
+    apiKey: process.env.EXPO_PUBLIC_OPEN_AI_API_KEY, 
+    organization: process.env.EXPO_PUBLIC_OPEN_AI_ORGANIZATION 
 });
 
 export const generateChatGPTReply = async ({ message }: {message: string}) => {

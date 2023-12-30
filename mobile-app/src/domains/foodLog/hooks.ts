@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useAppState } from "../../state";
-import FoodLogsService from "../foodLog/services";
+import FoodLogsService from "./services";
 import { FoodMealType } from "../food/types";
 import { FoodLog } from "./types";
 import { getRoundedMacros } from "../../utility";

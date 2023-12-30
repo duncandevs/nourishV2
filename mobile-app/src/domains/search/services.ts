@@ -1,8 +1,8 @@
 import { fetchGptByText, fetchGptByImage } from "../../clients/openAiClient";
 import { FetchMethod } from '../types';
-import SearchService from '../../domains/search/services';
-import FoodService from '../../domains/food/services';
-import { Food } from "../../domains/food/types";
+import SearchService from './services';
+import FoodService from '../food/services';
+import { Food } from "../food/types";
 import { FoodLog } from "../foodLog/types";
 import { getRoundedMacros } from "../../utility";
 import { Macros } from "../foodLog/types";

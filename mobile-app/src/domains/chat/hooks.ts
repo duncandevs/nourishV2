@@ -31,7 +31,8 @@ export const useGptTextChat = () => {
                 });
                 const chatResponseEntry: ChatMessage = {message: responseMessage, user:'ai'}
                 await ChatService.addChatMessageToStorage(chatResponseEntry);
-            }
+            },
+            onError: (error)=>console.log('fetch error - '),
         }
     );
 

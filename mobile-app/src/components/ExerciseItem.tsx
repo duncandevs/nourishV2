@@ -4,7 +4,7 @@ import { Text } from "../theme";
 import { Exercise } from "../domains/exercise/types";
 import { ABBREV_DAYS, DAYS_OF_THE_WEEK, formatDisplayTime } from '../utility';
 import { CheckBox } from 'react-native-elements';
-import { ExerciseRepsSelector, ExerciseTimeSelector } from "../components";
+import { ExerciseRepsSelector, ExerciseTimeSelector } from ".";
 import { useExerciseSchedules } from "../domains/exerciseSchedule/hooks";
 import { ExerciseScheduleParams } from '../domains/exerciseSchedule/services';
 import { ExerciseSchedule } from '../domains/exerciseSchedule/types';
